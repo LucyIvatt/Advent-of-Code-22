@@ -1,16 +1,27 @@
-def calculateDepthMeasurementIncreaseCount(input):
-    previous = None
-    increase_count = 0
+def importList(filename):
+    file = open(filename, "r")
+    input = file.readlines()
+    input = [int(line.strip()) for line in input]
+    return input
 
-    for line in input:
-        value = int(line.strip())
-        if previous != None:
-            if value > previous:
-                increase_count += 1
-        previous = value
-    
-    return increase_count
+def increaseDepthCount(input):
+    count = 0
+    for i in range(1, len(input)):
+            if input[i] > input[i-1]:
+                count += 1
+    return count
+
+def increaseDepthCountWindow(input):
+    windows = []
+    for i in range(0, len(input)):
+        if i > 1:
+            windows.append(input[i] + input[i - 1] + input[i - 2])
+        
+    return increaseDepthCount(windows)
 
 
-input = open("input.txt", "r")
-print(calculateDepthMeasurementIncreaseCount(input))
+
+input = importList("Day 1 Sonar Sweep\input.txt")
+
+print("Part One Answer: " + str(increaseDepthCount(input)))
+print("Part Two Answer: " + str(increaseDepthCountWindow(input)))
