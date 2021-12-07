@@ -23,5 +23,8 @@ def increaseDepthCountWindow(input):
 
 input = importList("Day 1 Sonar Sweep\input.txt")
 
+print("--------------------------------------")
+print("DAY ONE: SONAR SWEEP")
 print("Part One Answer: " + str(increaseDepthCount(input)))
 print("Part Two Answer: " + str(increaseDepthCountWindow(input)))
+print("--------------------------------------")
