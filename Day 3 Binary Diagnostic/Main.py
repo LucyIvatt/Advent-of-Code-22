@@ -39,15 +39,73 @@ def calculateGammaEpsilonRates(diagnostic_report):
 def calculatePowerConsumption(gamma_rate, epsilon_rate):
     decimal_gamma = int(gamma_rate, 2)
     decimal_epsilon = int(epsilon_rate, 2)
-    return decimal_gamma * decimal_epsilon         
+    return decimal_gamma * decimal_epsilon 
+
+def calculateOxygenRating(diagnostic_report):
+    binary_num_length = len(diagnostic_report[0])
+
+    for i in range(0, binary_num_length):
+        most_common_bit = calculateMostCommonBit(diagnostic_report, i)
+
+        remaining_binary_nums = []
+        for binary_num in diagnostic_report:
+            if most_common_bit == "equal":
+                if (binary_num[i] == "1"):
+                    remaining_binary_nums.append(binary_num)
+            elif binary_num[i] == most_common_bit:
+                remaining_binary_nums.append(binary_num)
+
+        diagnostic_report = remaining_binary_nums
+        if len(diagnostic_report) == 1:
+            return diagnostic_report[0]
+
+def calculateCO2Rating(diagnostic_report):
+    binary_num_length = len(diagnostic_report[0])
+    for i in range(0, binary_num_length):
+        remaining_binary_nums = []
+        most_common_bit = calculateMostCommonBit(diagnostic_report, i)
+        for binary_num in diagnostic_report:
+            if most_common_bit == "equal":
+                if (binary_num[i] == "0"):
+                    remaining_binary_nums.append(binary_num)
+            elif binary_num[i] != most_common_bit:
+                remaining_binary_nums.append(binary_num)
+        diagnostic_report = remaining_binary_nums
+        if len(diagnostic_report) == 1:
+            return diagnostic_report[0] 
+
+def calculateMostCommonBit(inputs, index):
+    zero_count = 0
+    one_count = 0
+
+    for binary_num in inputs:
+        if binary_num[index] == "0":
+            zero_count += 1
+        elif binary_num[index] == "1":
+            one_count += 1
+        else:
+            raise ValueError("Invalid bit value has been read")
+
+    if zero_count > one_count:
+        return "0"
+    elif one_count > zero_count:
+        return "1"
+    else:
+        return "equal"
+
+def calculateLifeSupportRating(oxygen_rating, co2_rating):
+    decimal_oxygen_rating = int(oxygen_rating, 2)
+    decimal_co2_rating = int(co2_rating, 2)
+    return decimal_oxygen_rating * decimal_co2_rating 
 
 
 input = importList("Day 3 Binary Diagnostic\input.txt")
 rates = calculateGammaEpsilonRates(input)
 power = calculatePowerConsumption(rates[0], rates[1])
+life_support = calculateLifeSupportRating(calculateOxygenRating(input), calculateCO2Rating(input))
 
 print("--------------------------------------")
 print("DAY THREE: BINARY DIAGNOSTIC")
 print("Part One Answer: " + str(power))
-print("Part Two Answer: ")
+print("Part Two Answer: " + str(life_support))
 print("--------------------------------------")
