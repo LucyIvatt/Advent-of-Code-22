@@ -36,11 +36,6 @@ def calculateGammaEpsilonRates(diagnostic_report):
     
     return ["".join(str(b) for b in gamma_rate), "".join(str(b) for b in epsilon_rate)]
 
-def calculatePowerConsumption(gamma_rate, epsilon_rate):
-    decimal_gamma = int(gamma_rate, 2)
-    decimal_epsilon = int(epsilon_rate, 2)
-    return decimal_gamma * decimal_epsilon 
-
 def calculateOxygenRating(diagnostic_report):
     binary_num_length = len(diagnostic_report[0])
 
@@ -93,16 +88,16 @@ def calculateMostCommonBit(inputs, index):
     else:
         return "equal"
 
-def calculateLifeSupportRating(oxygen_rating, co2_rating):
-    decimal_oxygen_rating = int(oxygen_rating, 2)
-    decimal_co2_rating = int(co2_rating, 2)
-    return decimal_oxygen_rating * decimal_co2_rating 
-
+def binaryMultiplication(x, y):
+    dec_x = int(x, 2)
+    dec_y = int(y, 2)
+    return dec_x * dec_y
 
 input = importList("Day 3 Binary Diagnostic\input.txt")
 rates = calculateGammaEpsilonRates(input)
-power = calculatePowerConsumption(rates[0], rates[1])
-life_support = calculateLifeSupportRating(calculateOxygenRating(input), calculateCO2Rating(input))
+
+power = binaryMultiplication(rates[0], rates[1])
+life_support = binaryMultiplication(calculateOxygenRating(input), calculateCO2Rating(input))
 
 print("--------------------------------------")
 print("DAY THREE: BINARY DIAGNOSTIC")
