@@ -4,6 +4,7 @@ def importList(filename):
     file = open(filename, "r")
     for line in file.readlines():
         instructions.append(line.strip().split())
+    file.close()
     
     return instructions
 

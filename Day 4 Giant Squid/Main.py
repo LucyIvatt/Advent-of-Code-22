@@ -46,6 +46,7 @@ def importData(filename):
     # Reads data from input file
     file = open(filename, "r")
     input = file.readlines()
+    file.close()
     input = [line.strip() for line in input if line.strip() != ""]
 
     # Removes number call order from list
@@ -59,10 +60,15 @@ def importData(filename):
     for i in range(len(input)):
         two_d_card.append(input[i].split())
         count += 1
-        if(count == 6):
+        if(count == 5):
+            print(two_d_card)
             bingo_cards.append(BingoCard(two_d_card))
-            count = 0
             two_d_card.clear()
+            count = 0
+    
+    print(len(bingo_cards))
+    for card in bingo_cards:
+        print(card)
 
     return [call_order, bingo_cards]
 
@@ -76,9 +82,6 @@ def find_winner(cards, call_order):
 
 data = importData("Day 4 Giant Squid\input.txt")
 call_order, cards = data[0], data[1]
-
-for card in cards:
-    print(card)
 
 score = find_winner(cards, call_order)
 

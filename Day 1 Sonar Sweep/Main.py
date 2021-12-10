@@ -1,6 +1,7 @@
 def importList(filename):
     file = open(filename, "r")
     input = file.readlines()
+    file.close()
     input = [int(line.strip()) for line in input]
     return input
 
