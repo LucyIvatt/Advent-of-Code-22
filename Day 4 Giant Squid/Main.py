@@ -1,3 +1,6 @@
+import time
+import copy
+
 class BingoCard:
     def __init__(self, card_values):
         self.card_values = card_values
@@ -61,14 +64,9 @@ def importData(filename):
         two_d_card.append(input[i].split())
         count += 1
         if(count == 5):
-            print(two_d_card)
-            bingo_cards.append(BingoCard(two_d_card))
+            bingo_cards.append(BingoCard(copy.deepcopy(two_d_card)))
             two_d_card.clear()
             count = 0
-    
-    print(len(bingo_cards))
-    for card in bingo_cards:
-        print(card)
 
     return [call_order, bingo_cards]
 
@@ -77,18 +75,29 @@ def find_winner(cards, call_order):
         for card in cards:
             card.mark_card(number)
             if(card.check_win_cond() == True):
-                print("Last called" + str(number))
                 return card.calculate_score(number)
+
+def find_last_winner(cards, call_order):
+    for number in call_order:
+        print("NUMBER CALLED: " + number)
+        for card in cards:
+            card.mark_card(number)
+            print(card)
+            if(card.check_win_cond() == True):
+                if (len(cards) > 1):
+                    cards.remove(card)
+                else:
+                    return card.calculate_score(number)
 
 data = importData("Day 4 Giant Squid\input.txt")
 call_order, cards = data[0], data[1]
 
-score = find_winner(cards, call_order)
-
+test_data = importData("Day 4 Giant Squid\testinput.txt")
+test_call_order, test_cards = test_data[0], test_data[1]
 
 
 print("--------------------------------------")
 print("DAY FOUR: GIANT SQUID")
-print("Part One Answer: " + str(score))
-print("Part Two Answer: ")
+print("Part One Answer: " + str(find_winner(cards, call_order)))
+print("Part Two Answer: " + str(find_last_winner(test_cards, test_call_order)))
 print("--------------------------------------")
