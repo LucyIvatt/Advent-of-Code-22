@@ -1,24 +1,27 @@
-import time
 import copy
+
 
 class BingoCard:
     def __init__(self, card_values):
         self.card_values = card_values
-    
+
     def __str__(self):
         string_rep = ""
         for line in self.card_values:
             string_rep += str(line) + "\n"
         return string_rep
-    
-    def mark_card(self, called_number):
+
+    """Replaces the cards number with a cross to show it as marked"""
+
+    def mark_card(self, drawn_number):
         for i in range(len(self.card_values)):
             for j in range(len(self.card_values[i])):
-                if self.card_values[i][j] == called_number:
+                if self.card_values[i][j] == drawn_number:
                     self.card_values[i][j] = "X"
 
+    """Checks if win condition is met - returns true or false"""
+
     def check_win_cond(self):
-        # check columns for win condition
         for i in range(0, 5):
             # Check row for win condition
             if all(element == "X" for element in self.card_values[i]):
@@ -29,36 +32,43 @@ class BingoCard:
             for j in range(0, 5):
                 if(self.card_values[j][i] != "X"):
                     column_matches = False
-                    break;
+                    break
             if(column_matches):
                 return True
 
+        # If no win found, return false
         return False
 
-    def calculate_score(self, last_called):
-        print("FOUND WINNER")
-        print(self)
+    """Calculates final score of the card, sum of remaining numbers * last drawed number"""
+
+    def calculate_score(self, last_drawn):
         score = 0
         for row in self.card_values:
             for number in row:
                 if number != "X":
                     score += int(number)
-        return score * int(last_called)
+        return score * int(last_drawn)
+
+
+"""Imports the data from the text file and converts it to BingoCard instances"""
+
 
 def importData(filename):
-    # Reads data from input file
+    # Reads data from input file line by line and strips empty lines & whitespace
     file = open(filename, "r")
     input = file.readlines()
     file.close()
     input = [line.strip() for line in input if line.strip() != ""]
 
-    # Removes number call order from list
-    call_order = input[0].split(",")
+    # Removes draw order from list
+    draw_order = input[0].split(",")
     del input[0]
 
     bingo_cards = []
     two_d_card = []
     count = 0
+
+    # For each line of bingo cards, adds 5 to temporary 2D list then generates a BingoCard instance from this and adds to bingo_cards list.
 
     for i in range(len(input)):
         two_d_card.append(input[i].split())
@@ -68,36 +78,53 @@ def importData(filename):
             two_d_card.clear()
             count = 0
 
-    return [call_order, bingo_cards]
+    return [draw_order, bingo_cards]
 
-def find_winner(cards, call_order):
-    for number in call_order:
+
+"""Iterates through the cards and marks them for each drawn number. When one meets the win condition, returns the score"""
+
+
+def find_winner(cards, draw_order):
+    for number in draw_order:
         for card in cards:
             card.mark_card(number)
             if(card.check_win_cond() == True):
                 return card.calculate_score(number)
 
-def find_last_winner(cards, call_order):
-    for number in call_order:
-        print("NUMBER CALLED: " + number)
-        for card in cards:
-            card.mark_card(number)
-            print(card)
-            if(card.check_win_cond() == True):
-                if (len(cards) > 1):
-                    cards.remove(card)
-                else:
-                    return card.calculate_score(number)
+
+"""Iterates through the cards and marks them for each drawn number. When one meets the win condition, returns the score"""
+
+
+def find_last_winner(cards, draw_order):
+
+    # Sets up list to show which cards have been solved, initialized to false for all.
+    solved = [False for card in cards]
+    final_card_index = None
+
+    for number in draw_order:
+        if(final_card_index == None):
+            # For all cards, marks each number drawn.
+            for card in cards:
+                card.mark_card(number)
+                # If a card meets the win condition, set as solved
+                if(card.check_win_cond() == True):
+                    solved[cards.index(card)] = True
+                    # If only one remains unsolved, final card index has been found
+                    if solved.count(False) == 1:
+                        final_card_index = solved.index(False)
+        else:
+            # When final card index has been found, continues to mark only this card until win condition met
+            cards[final_card_index].mark_card(number)
+            if(cards[final_card_index].check_win_cond() == True):
+                # Returns final score when win condition met
+                return cards[final_card_index].calculate_score(number)
+
 
 data = importData("Day 4 Giant Squid\input.txt")
-call_order, cards = data[0], data[1]
-
-test_data = importData("Day 4 Giant Squid\testinput.txt")
-test_call_order, test_cards = test_data[0], test_data[1]
-
+draw_order, cards = data[0], data[1]
 
 print("--------------------------------------")
 print("DAY FOUR: GIANT SQUID")
-print("Part One Answer: " + str(find_winner(cards, call_order)))
-print("Part Two Answer: " + str(find_last_winner(test_cards, test_call_order)))
+print("Part One Answer: " + str(find_winner(cards, draw_order)))
+print("Part Two Answer: " + str(find_last_winner(cards, draw_order)))
 print("--------------------------------------")
