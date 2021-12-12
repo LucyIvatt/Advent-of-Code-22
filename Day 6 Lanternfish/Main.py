@@ -44,7 +44,7 @@ def part_two():
     return calculate_fish_count(input, 256)
 
 print("--------------------------------------")
-print("DAY FIVE: HYDROTHERMAL VENTURE")
+print("DAY SIX: LANTERNFISH")
 print("Part One Answer: " + str(part_one()))
 print("Part Two Answer: " + str(part_two()))
 print("--------------------------------------")
