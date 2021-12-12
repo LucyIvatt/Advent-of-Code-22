@@ -39,7 +39,7 @@ class BingoCard:
         # If no win found, return false
         return False
 
-    """Calculates final score of the card, sum of remaining numbers * last drawed number"""
+    """Calculates final score of the card, sum of remaining numbers * last drawn number"""
 
     def calculate_score(self, last_drawn):
         score = 0
