@@ -5,7 +5,7 @@ def importList(filename):
     input = input.split(",")
     return [int(x) for x in input]
     
-# Slow & Resource Excessive Method
+# Slow/Resource Excessive Method
 def simulate_days(input, days):
     for day in range(days):
         for i in range(len(input)):
@@ -16,15 +16,32 @@ def simulate_days(input, days):
                 input[i] -= 1
     return input
 
-# Faster Method ? pls
+# Faster Method 
 def calculate_fish_count(input, days):
-    pass
+    fish_count = [0 for age in range(0, 9)]
+    for fish in input:
+        fish_count[fish] += 1
+    
+    for day in range(days):
+        new_fish_count = [0 for age in range(0, 9)]
+
+        # Shuffle ages by 1 day
+        for age in range(1, 9):
+            new_fish_count[age - 1] = fish_count[age]
+        
+        new_fish_count[6] += fish_count[0]
+        new_fish_count[8] += fish_count[0]
+        fish_count = new_fish_count
+    
+    return sum(fish_count)
 
 def part_one():
     input = importList("Day 6 Lanternfish\input.txt")
-    print(input)
-    fish = simulate_days(input, 80)
-    return len(fish)
+    return calculate_fish_count(input, 80)
+
+def part_two():
+    input = importList("Day 6 Lanternfish\input.txt")
+    return calculate_fish_count(input, 256)
 
 print("--------------------------------------")
 print("DAY FIVE: HYDROTHERMAL VENTURE")
