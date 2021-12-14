@@ -1,3 +1,6 @@
+import time
+
+
 def importList(filename):
     height_map = []
     with open(filename, "r") as file:
@@ -11,8 +14,6 @@ def importList(filename):
 
 def find_low_points(heatmap):
     low_points = []
-    risk_level_sum = 0
-
     for i in range(len(heatmap)):
         for j in range(len(heatmap[i])):
             low_point = True
@@ -21,9 +22,32 @@ def find_low_points(heatmap):
                     low_point = False
                     break
             if low_point:
-                risk_level_sum += 1 + heatmap[i][j]
-                low_points.append(heatmap[i][j])
-    return [low_points, risk_level_sum]
+                low_points.append((i, j))
+    return low_points
+
+
+def sum_risk_levels(heatmap, low_points):
+    risk_sums = 0
+    for point in low_points:
+        risk_sums += 1 + heatmap[point[0]][point[1]]
+    return risk_sums
+
+
+def find_lower_coords(heatmap, coords, found_coords):
+    if len(coords) == 0:
+        return set(found_coords)
+    else:
+        new_coords = []
+        for x, y in coords:
+            found_coords.append((x, y))
+            for dx, dy in [(0, -1), (0, 1), (-1, 0), (1, 0)]:
+                next_x, next_y = x + dx, y + dy
+                # if the coordinate is in the valid range
+                if next_x >= 0 and next_x < len(heatmap):
+                    if next_y >= 0 and next_y < len(heatmap[next_x]):
+                        if heatmap[next_x][next_y] > heatmap[x][y] and heatmap[next_x][next_y] != 9:
+                            new_coords.append((next_x, next_y))
+        return find_lower_coords(heatmap, new_coords, found_coords)
 
 
 def get_neighbors(heatmap, x, y):
@@ -39,11 +63,23 @@ def get_neighbors(heatmap, x, y):
 def part_one():
     input = importList("Day 9 Smoke Basin\input.txt")
     low_points = find_low_points(input)
-    return low_points[1]
+    return sum_risk_levels(input, low_points)
+
+
+def part_two():
+    input = importList("Day 9 Smoke Basin\input.txt")
+    low_points = find_low_points(input)
+    basin_sizes = []
+
+    for coord in low_points:
+        basin_coords = find_lower_coords(input, [coord], [])
+        basin_sizes.append(len(basin_coords))
+    basin_sizes = sorted(basin_sizes, reverse=True)
+    return basin_sizes[0] * basin_sizes[1] * basin_sizes[2]
 
 
 print("--------------------------------------")
 print("DAY NINE: SMOKE BASIN")
 print("Part One Answer: " + str(part_one()))
-# print("Part Two Answer: " + str(part_two()))
+print("Part Two Answer: " + str(part_two()))
 print("--------------------------------------")
