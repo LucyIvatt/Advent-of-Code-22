@@ -1,6 +1,3 @@
-import time
-
-
 def importList(filename):
     height_map = []
     with open(filename, "r") as file:
