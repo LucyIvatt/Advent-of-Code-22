@@ -61,21 +61,20 @@ def part_one():
     return total_flashes
 
 
-def print_formation(formation):
-    print("-----------------------")
-    for line in formation:
-        line_string = ""
-        for val in line:
-            if val > 9:
-                line_string += "F"
-            else:
-                line_string += str(val)
-        print(line_string)
-    print("-----------------------")
+def part_two():
+    formation = importList("Day 11 Dumbo Octopus\input.txt")
+    synchronized_flash = False
+    step = 0
+    while not synchronized_flash:
+        step += 1
+        formation, flashes = simulate_step(formation)
+        if(flashes == len(formation) * len(formation[0])):
+            synchronized_flash = True
+            return step
 
 
 print("--------------------------------------")
 print("DAY 11: DUMBO OCTOPUS")
 print("Part One Answer: " + str(part_one()))
-# print("Part Two Answer: " + str(part_two()))
+print("Part Two Answer: " + str(part_two()))
 print("--------------------------------------")
