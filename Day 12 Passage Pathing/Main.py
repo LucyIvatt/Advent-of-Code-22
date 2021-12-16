@@ -64,22 +64,11 @@ def importList(filename):
     return connections
 
 
-def part_one():
-    connections = importList("Day 12 Passage Pathing\input.txt")
-    cave_structure = CaveStructure(connections)
-    return cave_structure.path_count_p1
-
-
-def part_two():
-    connections = importList("Day 12 Passage Pathing\input.txt")
-    cave_structure = CaveStructure(connections)
-    # for path in cave_structure.paths_p2:
-    #     print(",".join(path))
-    return cave_structure.path_count_p2
-
+connections = importList("Day 12 Passage Pathing\input.txt")
+cave_structure = CaveStructure(connections)
 
 print("--------------------------------------")
 print("DAY 12: PASSAGE PATHING")
-print("Part One Answer: " + str(part_one()))
-print("Part Two Answer: " + str(part_two()))
+print("Part One Answer: " + str(cave_structure.path_count_p1))
+print("Part Two Answer: " + str(cave_structure.path_count_p2))
 print("--------------------------------------")
