@@ -58,7 +58,6 @@ class CaveStructure():
 
 
 def importList(filename):
-    connections = []
     with open(filename, "r") as file:
         connections = [line.strip().split("-") for line in file]
     return connections
