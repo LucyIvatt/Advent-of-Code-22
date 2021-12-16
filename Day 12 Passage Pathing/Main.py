@@ -6,8 +6,12 @@ class CaveStructure():
     def __init__(self, connections):
         self.graph = defaultdict(set)
         self.add_connections(connections)
-        self.valid_paths = []
-        self.find_all_valid_paths()
+        self.paths_p1 = []
+        self.paths_p2 = []
+        self.find_all_paths(True)
+        self.find_all_paths(False)
+        self.path_count_p1 = len(self.paths_p1)
+        self.path_count_p2 = len(self.paths_p2)
 
     def __str__(self):
         return '{}({})'.format(self.__class__.__name__, dict(self.graph))
@@ -17,15 +21,18 @@ class CaveStructure():
             self.graph[node1].add(node2)
             self.graph[node2].add(node1)
 
-    def find_all_valid_paths(self):
+    def find_all_paths(self, part_one):
         for node in self.graph["start"]:
-            self.find_valid_paths(node, ["start"])
+            self.find_paths(node, ["start"], part_one)
 
-    def find_valid_paths(self, current_node, current_path):
+    def find_paths(self, current_node, current_path, part_one=True, duplicated_yet=False):
         # Base case
         if (current_node == "end"):
             current_path.append("end")
-            self.valid_paths.append(current_path)
+            if(part_one and current_path not in self.paths_p1):
+                self.paths_p1.append(current_path)
+            elif(not part_one and current_path not in self.paths_p2):
+                self.paths_p2.append(current_path)
 
         # Recursive Case
         elif (current_node.islower() and current_node not in current_path) or (current_node.isupper()):
@@ -34,7 +41,18 @@ class CaveStructure():
 
             # Does same for all neighbors
             for next_node in self.graph[current_node]:
-                self.find_valid_paths(next_node, current_path.copy())
+                if(next_node != "start"):
+                    self.find_paths(next_node, current_path.copy(),
+                                    part_one, duplicated_yet)
+
+        elif not part_one and current_node.islower() and not duplicated_yet:
+            current_path.append(current_node)
+
+            # Does same for all neighbors
+            for next_node in self.graph[current_node]:
+                if next_node != "start":
+                    self.find_paths(
+                        next_node, current_path.copy(), part_one, True)
 
         # Else: dead end has been found
 
@@ -49,12 +67,19 @@ def importList(filename):
 def part_one():
     connections = importList("Day 12 Passage Pathing\input.txt")
     cave_structure = CaveStructure(connections)
-    paths = cave_structure.valid_paths
-    return (len(paths))
+    return cave_structure.path_count_p1
+
+
+def part_two():
+    connections = importList("Day 12 Passage Pathing\input.txt")
+    cave_structure = CaveStructure(connections)
+    # for path in cave_structure.paths_p2:
+    #     print(",".join(path))
+    return cave_structure.path_count_p2
 
 
 print("--------------------------------------")
-print("DAY 12: PASSAGE PATHIN")
+print("DAY 12: PASSAGE PATHING")
 print("Part One Answer: " + str(part_one()))
-# print("Part Two Answer: " + str(part_two()))
+print("Part Two Answer: " + str(part_two()))
 print("--------------------------------------")
