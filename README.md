@@ -14,7 +14,7 @@ My solutions for advent of code for the year 2021 - all solutions written in pyt
 | Day 9: Smoke Basin |⭐|⭐|
 | Day 10: Syntax Scoring |⭐|⭐|
 | Day 11: Dumbo Octopus |⭐|⭐|
-| Day 12: Passage Pathing |❌|❌|
+| Day 12: Passage Pathing |⭐|❌|
 | Day 13: Transparent Origami |❌|❌|
 | Day 14: Extended Polymerization |❌|❌|
 | Day 15: ?? |➖|➖|
