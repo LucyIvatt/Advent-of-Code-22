@@ -12,15 +12,12 @@ class Paper():
         for x, y in self.dots:
             paper_view[y][x] = "#"
 
-        string = self.__class__.__name__ + " - Width: " + \
-            str(self.width) + ", Height: " + \
-            str(self.height) + " Dot Count: " + str(self.dot_count) + " {\n"
+        string = ""
         for line in paper_view:
             line_string = ""
             for char in line:
                 line_string += char
             string += line_string + "\n"
-        string += "}"
         return string
 
     def fold(self, direction, index):
@@ -40,7 +37,6 @@ class Paper():
                 else:
                     new_dots.add((x, y))
             self.width = index
-            print("width: ", self.width)
         self.dots = new_dots
         self.dot_count = self.visible_dot_count()
 
@@ -67,15 +63,15 @@ def importList(filename):
     return zip(dot_x_coords, dot_y_coords), instructions, max(dot_x_coords) + 1, max(dot_y_coords) + 1
 
 
-# def run_all_folds(paper, instructions):
-#     for instruction in instructions:
-#         paper.fold(instruction[0], instruction[1])
-#         print(paper)
-
-
 def part_one(page, instructions):
     page.fold(instructions[0][0], instructions[0][1])
     return page.dot_count
+
+
+def part_two(page, instructions):
+    for instruction in instructions:
+        page.fold(instruction[0], instruction[1])
+    return(str(page))
 
 
 dots, instructions, width, height = importList(
@@ -85,5 +81,6 @@ page = Paper(dots, width, height)
 print("--------------------------------------")
 print("DAY 13: TRANSPARENT ORIGAMI")
 print("Part One Answer: " + str(part_one(page, instructions)))
-print("Part Two Answer: ")
+print("Part Two Answer: ZUJUAFHP")
+print(part_two(page, instructions))
 print("--------------------------------------")
