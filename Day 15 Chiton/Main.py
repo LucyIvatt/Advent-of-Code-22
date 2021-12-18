@@ -1,6 +1,7 @@
 from collections import defaultdict
 from sys import maxsize
 from queue import PriorityQueue
+import time
 
 
 class Weighted_Graph():
@@ -23,8 +24,8 @@ class Weighted_Graph():
     def get_nodes(self):
         return self.graph.keys()
 
-    def find_shortest_paths(self, start_node):
-        visited_nodes = []
+    def find_shortest_paths(self, start_node, end_node):
+        visited_nodes = defaultdict(lambda: False)
         shortest_paths = {node: maxsize for node in self.get_nodes()}
         shortest_paths[start_node] = 0
 
@@ -34,12 +35,14 @@ class Weighted_Graph():
         while not pq.empty():
             item = pq.get()
             current_node = item[1]
-            visited_nodes.append(current_node)
+            visited_nodes[current_node] = True
+            if current_node == end_node:
+                return shortest_paths
 
             for neighbor in self.graph[current_node]:
                 coord = neighbor[0]
                 weight = neighbor[1]
-                if coord not in visited_nodes:
+                if visited_nodes[coord] == False:
                     old_cost = shortest_paths[coord]
                     new_cost = shortest_paths[current_node] + weight
                     if new_cost < old_cost:
@@ -58,6 +61,25 @@ def get_neighbors(array, x, y):
     return neighbors_coords
 
 
+def generate_new_map(risk_map):
+    extended_map = []
+
+    # Extends in x direction
+    for row in risk_map:
+        extended_row = row
+        for i in range(4):
+            extended_row.extend(
+                [x + 1 if x < 9 else 1 for x in extended_row[-len(risk_map):]])
+        extended_map.append(row)
+
+    # Extends in y direction
+    for i in range(4):
+        for row in extended_map[-len(risk_map):]:
+            extended_map.append([x + 1 if x < 9 else 1 for x in row])
+
+    return extended_map
+
+
 def importList(filename):
     with open(filename, "r") as file:
         risk_map = [[int(x) for x in line.strip()]
@@ -65,17 +87,29 @@ def importList(filename):
     return risk_map
 
 
-def part_one(graph):
+def part_one(risk_map):
+    start_time = time.time()
+    graph = Weighted_Graph(risk_map)
     start_node, end_node = (0, 0), (graph.length - 1, graph.length - 1)
-    shortest_risk_totals = graph.find_shortest_paths(start_node)
-    return shortest_risk_totals[end_node]
+    shortest_risk_totals = graph.find_shortest_paths(start_node, end_node)
+    end_time = time.time()
+    return str(shortest_risk_totals[end_node]) + ", time taken: " + "{:.4f}".format(end_time - start_time) + "s"
+
+
+def part_two(risk_map):
+    start_time = time.time()
+    new_map = generate_new_map(risk_map)
+    graph = Weighted_Graph(new_map)
+    start_node, end_node = (0, 0), (graph.length - 1, graph.length - 1)
+    shortest_risk_totals = graph.find_shortest_paths(start_node, end_node)
+    end_time = time.time()
+    return str(shortest_risk_totals[end_node]) + ", time taken: " + "{:.4f}".format(end_time - start_time) + "s"
 
 
 risk_map = importList("Day 15 Chiton\input.txt")
-risk_graph = Weighted_Graph(risk_map)
 
 print("--------------------------------------")
 print("DAY 15: CHITON")
-print("Part One Answer: ", part_one(risk_graph))
-print("Part Two Answer: ")
+print("Part One Answer: ", part_one(risk_map))
+print("Part Two Answer: ", part_two(risk_map))
 print("--------------------------------------")
