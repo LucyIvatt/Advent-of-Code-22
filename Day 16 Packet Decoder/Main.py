@@ -21,14 +21,53 @@ class Packet():
         self.depth = depth
 
     def __str__(self):
-        string = "\n   " * self.depth + self.__class__.__name__ + "{" + "Version: " + str(self.ver) + ", Type ID: " + str(
-            self.type_id) + ", Type: " + str(self.type) + "Contents: "
-        if self.type == PACKET_TYPE.literal:
-            string += str(self.contents) + "}"
+        string = self.__class__.__name__ + "{" + "Version: " + str(self.ver) + ", Type ID: " + str(
+            self.type_id) + ", Type: " + str(self.type) + " Depth: " + str(self.depth) + " Contents: "
+        if not isinstance(self.contents, list):
+            string += str(self.contents)
+        else:
+            string += "\n"
+            for packet in self.contents:
+                string += ("   " * (self.depth + 1)) + str(packet) + "\n"
         return string
 
+    def value(self):
+        if self.type == PACKET_TYPE.literal:
+            return self.contents
+
+        elif isinstance(self.contents, Packet):
+            return self.contents.value()
+
+        else:
+            if self.type_id == 0:
+                sum = 0
+                for packet in self.contents:
+                    sum += packet.value()
+                return sum
+
+            elif self.type_id == 1:
+                prod = 1
+                for packet in self.contents:
+                    prod *= packet.value()
+                return prod
+
+            elif self.type_id == 2:
+                return min([packet.value() for packet in self.contents])
+
+            elif self.type_id == 3:
+                return max([packet.value() for packet in self.contents])
+
+            elif self.type_id == 5:
+                return 1 if (self.contents[0].value() > self.contents[1].value()) else 0
+
+            elif self.type_id == 6:
+                return 1 if (self.contents[0].value() < self.contents[1].value()) else 0
+
+            elif self.type_id == 7:
+                return 1 if (self.contents[0].value() == self.contents[1].value()) else 0
+
     def print_children(self):
-        print(self)
+        print(self.contents)
         for child in self.contents:
             print("   " * self.depth + str(child))
 
@@ -53,69 +92,70 @@ def parse_packets(binary_string, length, num_sub_packets=maxsize, depth=0):
     packets = []
     i = 0
     while num_sub_packets > 0 and i < length:
-        if (i + VER_LEN + ID_LEN) >= length:
-            if(len(packets) == 1):
-                return packets[0]
-            else:
-                return packets
+        if (i + 7) >= length:
+            return i, packets
 
-        # Header parses
         ver = int(binary_string[i:i+VER_LEN], 2)
         type_id = int(binary_string[i + ID_INDEX: i+ID_INDEX+ID_LEN], 2)
         type = PACKET_TYPE.literal if type_id == LIT_ID else PACKET_TYPE.operator
-        end_bit = None
+        i += VER_LEN + ID_LEN
 
         # Contents parse for literal packets
         if type == PACKET_TYPE.literal:
             data_bits = ""
-            start_bit = i + ID_INDEX + ID_LEN
             last_packet = False
             while not last_packet:
-                data_bits += binary_string[start_bit+1:start_bit+LIT_GRP_LEN]
+                data_bits += binary_string[i+1:i+LIT_GRP_LEN]
                 # If final group
-                if binary_string[start_bit] == "0":
+                if binary_string[i] == "0":
                     last_packet = True
-                    end_bit = start_bit+LIT_GRP_LEN
                     value = int(data_bits, 2)
-                    packets.append(Packet(ver, type_id, type, value, depth))
+                    packets.append(
+                        Packet(ver, type_id, type, int(value), depth))
+                i += LIT_GRP_LEN
 
-                else:
-                    start_bit += LIT_GRP_LEN
-            i = end_bit
         # Contents parse for operator packets
         else:
-            start_bit = ID_INDEX + ID_LEN
-
-            if binary_string[start_bit] == "0":
-                start_bit += 1
+            if binary_string[i] == "0":
+                i += 1
                 len_subpackets = int(
-                    binary_string[start_bit:start_bit+OPR_LT_ID_0], 2)
-                start_bit += OPR_LT_ID_0
+                    binary_string[i:i+OPR_LT_ID_0], 2)
+                i += OPR_LT_ID_0
                 # recursive
-                sub_packets = parse_packets(
-                    binary_string[start_bit:], len_subpackets, maxsize, depth + 1)
+                end_index, sub_packets = parse_packets(
+                    binary_string[i:], len_subpackets, maxsize, depth + 1)
                 packets.append(
                     Packet(ver, type_id, type, sub_packets, depth))
+                i += end_index
 
             else:
-                start_bit += 1
-                num_sub_packets = int(
-                    binary_string[start_bit:start_bit + OPR_LT_ID_1], 2)
-                start_bit += OPR_LT_ID_1
-                sub_packets = parse_packets(binary_string[start_bit:], len(
-                    binary_string[start_bit:]), num_sub_packets, depth + 1)
+                i += 1
+                new_sub_packets = int(
+                    binary_string[i:i + OPR_LT_ID_1], 2)
+                i += OPR_LT_ID_1
+                end_index, sub_packets = parse_packets(binary_string[i:], len(
+                    binary_string[i:]), new_sub_packets, depth + 1)
                 packets.append(
                     Packet(ver, type_id, type, sub_packets, depth))
-            i = len(binary_string) - 1
+                i += end_index
         num_sub_packets -= 1
-    return packets
+    return i, packets
 
 
 def part_one(binary_string):
-    root_packet = parse_packets(binary_string, len(binary_string))
-    root_packet.print_children()
+    start_time = time.time()
+    root_packet = parse_packets(binary_string, len(binary_string))[1][0]
     version_num_sums = root_packet.version_num_sums()
-    return version_num_sums
+    end_time = time.time()
+    return str(version_num_sums) + ", time taken: " + "{:.4f}".format(end_time - start_time) + "s"
+
+
+def part_two(binary_string):
+    start_time = time.time()
+    root_packet = parse_packets(binary_string, len(binary_string))[1][0]
+    root_packet_value = root_packet.value()
+    end_time = time.time()
+    return str(root_packet_value) + ", time taken: " + "{:.4f}".format(end_time - start_time) + "s"
 
 
 binary_string = importList("Day 16 Packet Decoder\input.txt")
@@ -123,5 +163,5 @@ binary_string = importList("Day 16 Packet Decoder\input.txt")
 print("--------------------------------------")
 print("DAY 16: PACKET DECODER")
 print("Part One Answer: ", part_one(binary_string))
-print("Part Two Answer: ")
+print("Part Two Answer: ", part_two(binary_string))
 print("--------------------------------------")
