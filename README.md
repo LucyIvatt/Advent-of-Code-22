@@ -19,7 +19,7 @@ My solutions for advent of code for the year 2021 - all solutions written in pyt
 | Day 14: Extended Polymerization |⭐|⭐|
 | Day 15: Chiton |⭐|⭐|
 | Day 16: Packet Decoder |⭐|⭐|
-| Day 17: Trick Shot |❌|❌|
+| Day 17: Trick Shot |⭐|⭐|
 | Day 18: Snailfish |❌|❌|
 | Day 19: Beacon Scanner |❌|❌|
 | Day 20: ?? |➖|➖|
