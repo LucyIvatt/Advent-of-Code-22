@@ -1,4 +1,4 @@
-def import_list(filename):
+def input_data(filename):
     """Returns list of calories - None is used as a separator between elves
     """
     file = open(filename, "r")
@@ -32,7 +32,7 @@ def find_highest_cals(input, num_elf):
     return sum(highest)
 
 
-input = import_list("day1/example.txt")
+input = input_data("day1/input.txt")
 
 print("--------------------------------------")
 print("Day 1: Calorie Counting")

@@ -1,14 +1,14 @@
 import unittest
 
 
-from day1 import import_list, find_highest_cals
+from day1.solution import input_data, find_highest_cals
 
 
 class TestDay1(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = import_list("day1/example.txt")
-        cls.input = import_list("day1/input.txt")
+        cls.example = input_data("day1/example.txt")
+        cls.input = input_data("day1/input.txt")
 
     def test_day_1_p1_example(self):
         """
