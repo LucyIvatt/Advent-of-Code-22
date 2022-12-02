@@ -1,17 +1,18 @@
-def importList(filename):
+def import_list(filename):
     """Returns list of calories - None is used as a separator between elves
-    """    
+    """
     file = open(filename, "r")
     input = file.readlines()
     file.close()
     input = [int(line.strip()) if line.strip() !=
              "" else None for line in input]
+    input.append(None)
     return input
 
 
 def find_highest_cals(input, num_elf):
     """Returns the sum of the highest calorie counts of the top 'num_elf' elves.
-    """    
+    """
     highest = [0 for _ in range(num_elf)]
     current = 0
 
@@ -20,7 +21,7 @@ def find_highest_cals(input, num_elf):
         if line != None:
             current += int(line)
 
-        # If no more calories for this elf and its higher than one of the current elves then 
+        # If no more calories for this elf and its higher than one of the current elves then
         # replaces the lowest calorie count with the new one
 
         else:
@@ -30,7 +31,8 @@ def find_highest_cals(input, num_elf):
             current = 0
     return sum(highest)
 
-input = importList("day1/input.txt")
+
+input = import_list("day1/example.txt")
 
 print("--------------------------------------")
 print("Day 1: Calorie Counting")
