@@ -1,5 +1,6 @@
 def input_data(filename):
-    """Returns list of calories - None is used as a separator between elves
+    """Returns the data imported from file - list of elves calories, None 
+    is used as a separator between elves.
     """
     file = open(filename, "r")
     input = file.readlines()

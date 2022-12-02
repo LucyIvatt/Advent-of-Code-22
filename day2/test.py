@@ -1,7 +1,6 @@
 import unittest
 
-# TODO: import other solution methods
-from day2.solution import input_data
+from day2.solution import input_data, calculate_score
 
 
 class TestDay2(unittest.TestCase):
@@ -14,20 +13,23 @@ class TestDay2(unittest.TestCase):
         """
         Tests Day 2 Part 1 using the example given in the scenario
         """
-        pass
+        answer = calculate_score(self.__class__.example)
+        self.assertEqual(answer, 15)
 
     def test_day_2_p1_actual(self):
         """
         Tests the Day 2 Part 1 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        pass
+        answer = calculate_score(self.__class__.input)
+        self.assertEqual(answer, 13221)
 
     def test_day_2_p2_example(self):
         """
         Tests Day 2 Part 2 using the example given in the scenario.
         """
-        pass
+        answer = calculate_score(self.__class__.example, fix_game=True)
+        self.assertEqual(answer, 12)
 
     def test_day_2_p2_actual(self):
         """
