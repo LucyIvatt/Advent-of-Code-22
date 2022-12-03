@@ -38,7 +38,7 @@ class TestDay1(unittest.TestCase):
         made to the program have not broken it.
         """
         answer = find_highest_cals(self.__class__.input, 3)
-        self.assertEqual(answer, 195625)
+        self.assertEqual(answer, 195_625)
 
 
 if __name__ == '__main__':

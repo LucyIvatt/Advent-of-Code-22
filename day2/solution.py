@@ -18,58 +18,68 @@ OPPONENT = {"A": Move.ROCK,
             "C": Move.SCISSORS}
 
 MOVE = {"X": Move.ROCK,
-       "Y": Move.PAPER,
-       "Z": Move.SCISSORS}
+        "Y": Move.PAPER,
+        "Z": Move.SCISSORS}
 
 OUTCOME = {"X": Result.Loss,
-            "Y": Result.Draw,
-            "Z": Result.Win}
+           "Y": Result.Draw,
+           "Z": Result.Win}
 
 
-def input_data(filename, fix_game=False):
-    """Returns the data imported from file - pairs of opponents choice and your choice
+def input_data(filename):
+    """Returns the data imported from file - pairs of strategy guide information
     """
     file = open(filename, "r")
     input = file.readlines()
     file.close()
-
     input = [line.split() for line in input]
-
-    if fix_game == True:
-        input = [(OPPONENT[x], OUTCOME[y]) for x, y in input]
-    else:
-        input = [(OPPONENT[x], MOVE[y]) for x, y in input]
-        
     return input
 
 
-def calculate_score(input, fix_game=False):
+def part_1(input):
+    input = [(OPPONENT[x], MOVE[y]) for x, y in input]
     score = 0
-    for game in input:
-        if fix_game:
-            outcome = game[0]
-            score += game[0].value + outcome.value
+
+    # Win, Loss & Draw conditions
+    for opp_move, your_move in input:
+        print(opp_move)
+        print(your_move)
+        if your_move.value == (opp_move.value - 1) % 3:
+            outcome = Result.Win
+        elif your_move.value == (opp_move.value + 1) % 3:
+            outcome = Result.Loss
         else:
-            match game:
-                # Loss
-                case(Move.ROCK, Move.PAPER) | (Move.PAPER, Move.SCISSORS) | (Move.SCISSORS, Move.ROCK):
-                    outcome = Result.Win
-                # Draw
-                case(Move.ROCK, Move.ROCK) | (Move.SCISSORS, Move.SCISSORS) | (Move.PAPER, Move.PAPER):
-                    outcome = Result.Draw
-                # Win
-                case _:
-                    outcome = Result.Loss
-            score += game[1].value + outcome.value
+            outcome = Result.Draw
+        print(outcome)
+
+        # Score of one match is shape + round outcome
+        score += your_move.value + outcome.value
     return score
 
 
+def part_2(input):
+    input = [(OPPONENT[x], OUTCOME[y]) for x, y in input]
+    score = 0
+
+    for opp_move, outcome in input:
+        match outcome:
+            case(Result.Win):
+                your_move = Move((opp_move.value + 1) % 3)
+            case(Result.Draw):
+                your_move = opp_move
+            case(Result.Loss):
+                your_move = Move((opp_move.value - 1) % 3)
+
+        # Score of one match is shape + round outcome
+        score += your_move.value + outcome.value
+    return score
+
 
 input_1 = input_data("day2/input.txt")
-input_2 = input_data("day2/input.txt", fix_game=True)
+input_2 = input_data("day2/example.txt")
 
 print("--------------------------------------")
 print("Day 2: Rock Paper Scissors")
-print("Part One Answer: " + str(calculate_score(input_1)))
-print("Part Two Answer: " + str(calculate_score(input_2, fix_game=True)))
+print("Part One Answer: " + str(part_1(input_1)))
+print("Part Two Answer: " + str(part_2(input_2)))
 print("--------------------------------------")
