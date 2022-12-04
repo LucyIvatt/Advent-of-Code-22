@@ -85,11 +85,10 @@ def part_2(input):
     return score
 
 
-input_1 = input_data("day2/input.txt")
-input_2 = input_data("day2/input.txt")
+input = input_data("day2/input.txt")
 
 print("--------------------------------------")
 print("Day 2: Rock Paper Scissors")
-print("Part One Answer: " + str(part_1(input_1)))
-print("Part Two Answer: " + str(part_2(input_2)))
+print("Part One Answer: " + str(part_1(input)))
+print("Part Two Answer: " + str(part_2(input)))
 print("--------------------------------------")
