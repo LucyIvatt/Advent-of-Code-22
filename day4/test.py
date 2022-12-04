@@ -33,7 +33,7 @@ class TestDay4(unittest.TestCase):
         Tests the Day 4 Part 2 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        self.assertEqual(part_Two(self.__class__.input), 938)
+        self.assertEqual(part_two(self.__class__.input), 938)
 
 
 if __name__ == '__main__':
