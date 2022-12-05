@@ -14,7 +14,7 @@ class TestDay5(unittest.TestCase):
         """
         Tests Day 5 Part 1 using the example given in the scenario
         """
-        self.assertEqual(part_one(self.__class__.example, "CMZ"))
+        self.assertEqual(part_one(self.__class__.example), "CMZ")
 
     def test_day_5_p1_actual(self):
         """
