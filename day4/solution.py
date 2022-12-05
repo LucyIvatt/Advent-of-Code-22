@@ -43,7 +43,7 @@ def part_two(input):
 input = input_data("day4/input.txt")
 
 print("--------------------------------------")
-print("Day 4: Camp")
+print("Day 4: Camp Cleanup")
 print("Part One Answer: " + str(part_one(input)))
 print("Part Two Answer: " + str(part_two(input)))
 print("--------------------------------------")
