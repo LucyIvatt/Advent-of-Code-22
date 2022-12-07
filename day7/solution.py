@@ -9,7 +9,7 @@ class Type(Enum):
 
 
 def input_data(filename):
-    """Returns the data imported from file - 
+    """Returns the data imported from file -
     """
     file = open(filename, "r")
     input = file.readlines()
@@ -31,7 +31,7 @@ def input_data(filename):
     return condensed_input[1:]
 
 
-def part_one(input):
+def solution(input):
     current_directory = ""
     root = Node("root", n_type=Type.Directory)
     r = Resolver('name')
@@ -49,22 +49,27 @@ def part_one(input):
     directories = findall(
         root, filter_=lambda node: node.n_type == Type.Directory)
 
-    overall_sum = 0
+    dir_sizes = dict()
     for dir in directories:
         dir_sum = 0
         for file in findall(dir, filter_=lambda node: node.n_type == Type.File):
             dir_sum += file.size
-        if dir_sum <= 100_000:
-            overall_sum += dir_sum
+        dir_sizes[dir] = dir_sum
 
-    return overall_sum
+    p1_ans = sum((x for x in dir_sizes.values() if x <= 100_000))
+
+    space_required = 30_000_000 - (70_000_000 - max(dir_sizes.values()))
+    p2_ans = min((x for x in dir_sizes.values() if x >= space_required))
+
+    return p1_ans, p2_ans
 
 
 input = input_data("day7/input.txt")
+p1_ans, p2_ans = solution(input)
 
 
 print("--------------------------------------")
 print("Day 7: No Space Left On Device")
-print("Part One Answer: " + str(part_one(input)))
-print("Part Two Answer: ")
+print("Part One Answer: " + str(p1_ans))
+print("Part Two Answer: " + str(p2_ans))
 print("--------------------------------------")
