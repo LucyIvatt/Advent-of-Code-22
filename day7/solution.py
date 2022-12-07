@@ -16,22 +16,24 @@ def input_data(filename):
     file.close()
     input = [line.strip().replace("/", "root") for line in input]
 
-    condensed_input = []
+    # Converts input into a list of cd commands and lists of files/dirs representing the output of $ lst commands
+    input_new = []
     i = 0
     while i < len(input):
         if "cd" in input[i]:
-            condensed_input.append(input[i].replace("$ ", ""))
+            input_new.append(input[i].replace("$ ", ""))
             i += 1
         elif "ls" in input[i]:
             j = 1
             while i+j < len(input) and "$" not in input[i+j]:
-                condensed_input.append(input[i+j])
+                input_new.append(input[i+j])
                 j += 1
             i += j
-    return condensed_input[1:]
+    return input_new[1:]
 
 
 def solution(input):
+    # Creates tree representing the directory
     current_directory = ""
     root = Node("root", n_type=Type.Directory)
     r = Resolver('name')
@@ -39,16 +41,21 @@ def solution(input):
     for line in input:
         x, y = line.split()
         if x == "cd":
+            # Keeps track of current directory so the parent for each node is known
             current_directory += y + "/"
         elif x == "dir":
+            # Adds type to the node to show it is a directory
             Node(y, parent=r.get(root, current_directory), n_type=Type.Directory)
         else:
+            # Adds type and size to node to show it is a file
             Node(y, parent=r.get(root, current_directory),
                  n_type=Type.File, size=int(x))
 
+    # Finds all directory nodes on the tree
     directories = findall(
         root, filter_=lambda node: node.n_type == Type.Directory)
 
+    # Calculates the sizes of each directory
     dir_sizes = dict()
     for dir in directories:
         dir_sum = 0
@@ -56,8 +63,10 @@ def solution(input):
             dir_sum += file.size
         dir_sizes[dir] = dir_sum
 
+    # Returns the sum of all directories smaller than 100_000
     p1_ans = sum((x for x in dir_sizes.values() if x <= 100_000))
 
+    # Returns the size of the smallest directory that can be removed to install the update
     space_required = 30_000_000 - (70_000_000 - max(dir_sizes.values()))
     p2_ans = min((x for x in dir_sizes.values() if x >= space_required))
 
