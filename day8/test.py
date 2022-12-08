@@ -1,7 +1,7 @@
 import unittest
 
 # TODO: import other solution methods
-from day8.solution import input_data, part_one, part_two
+from day8.solution import input_data, solution
 
 
 class TestDay8(unittest.TestCase):
@@ -14,27 +14,27 @@ class TestDay8(unittest.TestCase):
         """
         Tests Day 8 Part 1 using the example given in the scenario
         """
-        self.assertEquals(part_one(self.__class__.example), 21)
+        self.assertEquals(solution(self.__class__.example)[0], 21)
 
     def test_day_8_p1_actual(self):
         """
         Tests the Day 8 Part 1 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        self.assertEquals(part_one(self.__class__.input), 1_711)
+        self.assertEquals(solution(self.__class__.input)[0], 1_711)
 
     def test_day_8_p2_example(self):
         """
         Tests Day 8 Part 2 using the example given in the scenario.
         """
-        self.assertEquals(part_two(self.__class__.example), 8)
+        self.assertEquals(solution(self.__class__.example)[1], 8)
 
     def test_day_8_p2_actual(self):
         """
         Tests the Day 8 Part 2 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        self.assertEqual(part_two(self.__class__.input), 301_392)
+        self.assertEqual(solution(self.__class__.input)[1], 301_392)
 
 
 if __name__ == '__main__':
