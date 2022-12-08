@@ -54,7 +54,6 @@ def check_directions(input, i, j):
                 viewing_distances.append(view_dist)
                 dir_visible = False
                 break
-
             else:
                 dir_visible = True
                 di, dj = map(operator.add, (di, dj), dir)
