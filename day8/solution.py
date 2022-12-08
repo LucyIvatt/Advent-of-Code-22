@@ -3,7 +3,7 @@ import operator
 
 
 def input_data(filename):
-    """Returns the data imported from file -
+    """Returns the data imported from file - 2D array of int tree heights
     """
     file = open(filename, "r")
     input = file.readlines()
@@ -13,10 +13,13 @@ def input_data(filename):
 
 
 def solution(input):
+    """Iterates through all trees in the forest and calculates their scenic score and 
+    if they are visible or not. Returns the number of visible trees (p1) and highest scenic 
+    score."""
     visible_trees, max_scenic_score = 0, 0
+
     for i in range(len(input)):
         for j in range(len(input[0])):
-            print(i, j)
             visible, scenic_score = check_directions(input, i, j)
             if visible:
                 visible_trees += 1
@@ -26,6 +29,10 @@ def solution(input):
 
 
 def check_directions(input, i, j):
+    """For a given tree, checks all 4 directions and calculates the view distance.
+    Returns if a tree is visible in any of the directions and returns its scenic score (product of
+    view distances in the 4 directions).
+    """
     tree_visible = False
     directions = [(-1, 0), (0, -1), (1, 0), (0, 1)]
     viewing_distances = list()
