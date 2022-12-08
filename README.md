@@ -7,9 +7,9 @@ My solutions for advent of code for the year 2022 - all solutions written in pyt
 | Day 2: Rock Paper Scissors |⭐|⭐|
 | Day 3: Rucksack |⭐|⭐|
 | Day 4: Camp Cleanup |⭐|⭐|
-| Day 5: ?? |❌|❌|
-| Day 6: ?? |❌|❌|
-| Day 7: ?? |❌|❌|
+| Day 5: Supply Stacks |⭐|⭐|
+| Day 6: Tuning Trouble |⭐|⭐|
+| Day 7: No Space Left On Device |⭐|⭐|
 | Day 8: ?? |❌|❌|
 | Day 9: ?? |❌|❌|
 | Day 10: ?? |❌|❌|
