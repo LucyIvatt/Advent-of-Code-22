@@ -28,8 +28,7 @@ def part_one(input):
     h, t = (0, 0), (0, 0)
     t_positions = set()
 
-    i = 0
-    for instr in input[:7]:
+    for instr in input:
         for _ in range(instr[1]):
             h = update_element(h, DIRECTION[instr[0]])  # Updates H position
 
@@ -39,6 +38,7 @@ def part_one(input):
                     t = update_element(t, dir)
                     break
 
+            # if h and t not in same col and not touching, move one diagonally towards
             if h[0] != t[0] and manhattan_distance(h, t) > 2:
                 if t[0] < h[0]:
                     t = update_element(t, DIRECTION["R"])
@@ -49,29 +49,30 @@ def part_one(input):
                     t = update_element(t, DIRECTION["U"])
                 else:
                     t = update_element(t, DIRECTION["D"])
-            t_positions.add(tuple(t))
+            t_positions.add(t)
 
-            board = ""
-            for i in reversed(range(-7, 7)):
-                line = ""
-                for j in range(-10, 10):
-                    if (j, i) == h:
-                        line += "H"
-                    elif (j, i) == t:
-                        line += "T"
-                    elif (j, i) == (0, 0):
-                        line += "s"
-                    elif (j, i) in t_positions:
-                        line += "X"
-                    else:
-                        line += "."
-                board += line + "\n"
-            print(board)
+            # visually represents board
+            # board = ""
+            # for i in reversed(range(-7, 7)):
+            #     line = ""
+            #     for j in range(-10, 10):
+            #         if (j, i) == h:
+            #             line += "H"
+            #         elif (j, i) == t:
+            #             line += "T"
+            #         elif (j, i) == (0, 0):
+            #             line += "s"
+            #         elif (j, i) in t_positions:
+            #             line += "X"
+            #         else:
+            #             line += "."
+            #     board += line + "\n"
+            # print(board)
 
     return len(t_positions)
 
 
-input = input_data("day9/input.txt")
+input = input_data("day9/example.txt")
 
 print("--------------------------------------")
 print("Day 9: Rope Bridge")
