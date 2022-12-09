@@ -49,9 +49,11 @@ def part_one(input):
                     t = update_element(t, DIRECTION["U"])
                 else:
                     t = update_element(t, DIRECTION["D"])
+
             t_positions.add(t)
 
             # visually represents board
+            # print(instr[0])
             # board = ""
             # for i in reversed(range(-7, 7)):
             #     line = ""
@@ -72,7 +74,7 @@ def part_one(input):
     return len(t_positions)
 
 
-input = input_data("day9/example.txt")
+input = input_data("day9/input.txt")
 
 print("--------------------------------------")
 print("Day 9: Rope Bridge")
