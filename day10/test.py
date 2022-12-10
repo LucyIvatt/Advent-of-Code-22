@@ -14,27 +14,14 @@ class TestDay10(unittest.TestCase):
         """
         Tests Day 10 Part 1 using the example given in the scenario
         """
-        self.assertEqual(solution(self.__class__.example), 13_140)
+        self.assertEqual(solution(self.__class__.example)[0], 13_140)
 
     def test_day_10_p1_actual(self):
         """
         Tests the Day 10 Part 1 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        self.assertEqual(solution(self.__class__.input), 12_840)
-
-    def test_day_10_p2_example(self):
-        """
-        Tests Day 10 Part 2 using the example given in the scenario.
-        """
-        pass
-
-    def test_day_10_p2_actual(self):
-        """
-        Tests the Day 10 Part 2 using my generated input. Used to check any edits
-        made to the program have not broken it.
-        """
-        pass
+        self.assertEqual(solution(self.__class__.input)[0], 12_840)
 
 
 if __name__ == '__main__':
