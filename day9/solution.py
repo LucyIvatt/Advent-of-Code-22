@@ -4,7 +4,7 @@ DIRECTION = {"U": (0, 1), "D": (0, -1), "L": (-1, 0), "R": (1, 0)}
 
 
 def input_data(filename):
-    """Returns the data imported from file -
+    """Returns the data imported from file - pairs of directions and number of steps
     """
     file = open(filename, "r")
     input = [line.strip() for line in file.readlines()]
@@ -45,10 +45,11 @@ def part_one(input):
 
             if t not in t_positions:
                 t_positions.append(t)
+
     return len(t_positions)
 
 
-input = input_data("day9/example.txt")
+input = input_data("day9/input.txt")
 
 print("--------------------------------------")
 print("Day 9: Rope Bridge")
