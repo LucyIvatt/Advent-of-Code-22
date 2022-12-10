@@ -1,3 +1,5 @@
+import math
+
 DIRECTION = {"U": (0, 1), "D": (0, -1), "L": (-1, 0), "R": (1, 0)}
 
 
@@ -11,66 +13,35 @@ def input_data(filename):
     return input
 
 
-def update_element(element, direction, times=1):
-    x, y = element
-    dx, dy = direction
-    for _ in range(times):
-        x += dx
-        y += dy
-    return (x, y)
+def move_tail(head, tail):
+    """Moves the tail based on the distances to the head of the rope.
+    """
+    tx, ty = tail
+    dx, dy = head[0]-tail[0], head[1]-tail[1]
 
+    # if they are within 1 of each other or overlapping - no change
+    if abs(dx) <= 1 and abs(dy) <= 1:
+        return tail
 
-def manhattan_distance(point1, point2):
-    return sum(abs(value1 - value2) for value1, value2 in zip(point1, point2))
+    # if they are in line
+    if abs(dx) == 2 or abs(dx) + abs(dy) == 3:
+        tx += int(math.copysign(1, dx))
+
+    if abs(dy) == 2 or abs(dx) + abs(dy) == 3:
+        ty += int(math.copysign(1, dy))
+
+    return (tx, ty)
 
 
 def part_one(input):
     h, t = (0, 0), (0, 0)
     t_positions = set()
 
-    for instr in input:
-        for _ in range(instr[1]):
-            h = update_element(h, DIRECTION[instr[0]])  # Updates H position
-
-            # Checks if h within 2 in any direction, if so moves t directly towards once
-            for dir in DIRECTION.values():
-                if update_element(t, dir, 2) == h:
-                    t = update_element(t, dir)
-                    break
-
-            # if h and t not in same col and not touching, move one diagonally towards
-            if h[0] != t[0] and manhattan_distance(h, t) > 2:
-                if t[0] < h[0]:
-                    t = update_element(t, DIRECTION["R"])
-                else:
-                    t = update_element(t, DIRECTION["L"])
-
-                if t[1] < h[1]:
-                    t = update_element(t, DIRECTION["U"])
-                else:
-                    t = update_element(t, DIRECTION["D"])
-
+    for direction, num in input:
+        for _ in range(num):
+            h = tuple(map(sum, zip(h, DIRECTION[direction])))
+            t = move_tail(h, t)
             t_positions.add(t)
-
-            # visually represents board
-            # print(instr[0])
-            # board = ""
-            # for i in reversed(range(-7, 7)):
-            #     line = ""
-            #     for j in range(-10, 10):
-            #         if (j, i) == h:
-            #             line += "H"
-            #         elif (j, i) == t:
-            #             line += "T"
-            #         elif (j, i) == (0, 0):
-            #             line += "s"
-            #         elif (j, i) in t_positions:
-            #             line += "X"
-            #         else:
-            #             line += "."
-            #     board += line + "\n"
-            # print(board)
-
     return len(t_positions)
 
 
