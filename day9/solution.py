@@ -25,10 +25,14 @@ def move_tail(head, tail):
 
     # if on same row or on a diagonal
     if abs(dx) == 2 or abs(dx) + abs(dy) == 3:
+        if dx == 0:
+            print("Help")
         tx += int(math.copysign(1, dx))
 
     # if on same column or a diagonal
     if abs(dy) == 2 or abs(dx) + abs(dy) == 3:
+        if dy == 0:
+            print("Help")
         ty += int(math.copysign(1, dy))
 
     return (tx, ty)
@@ -37,7 +41,6 @@ def move_tail(head, tail):
 def part_one(input):
     h, t = (0, 0), (0, 0)
     t_positions = [(0, 0)]
-
     for direction, num in input:
         for _ in range(num):
             h = tuple(map(sum, zip(h, DIRECTION[direction[0]])))
