@@ -40,23 +40,33 @@ def input_data(filename):
     return data
 
 
-def part_one(input):
+def solution(input):
     cycle_num, x = 1, 1
     ss_sum = 0
     current_instr = None
+    crt_display = ""
+    crt_line = ["." for _ in range(40)]
     for instruction in input:
         while current_instr != None:
+            if cycle_num in range(41, 241, 40):
+                crt_display += "".join(crt_line) + "\n"
+                crt_line = ["." for _ in range(40)]
+
+            cursor_loc = (cycle_num % 40)-1
+            if x in range(cursor_loc-1, cursor_loc+2):
+                crt_line[cursor_loc] = "#"
+
             current_instr, cycle_num, x, ss_sum = run_cycle(
                 current_instr, cycle_num, x, ss_sum)
+
         if instruction == "noop":
             current_instr = Operation("noop", amount=None, max_cycle=1)
         else:
             current_instr = Operation(
                 "addx", amount=instruction[1], max_cycle=2)
 
-    while current_instr != None:
-        current_instr, cycle_num, x, ss_sum = run_cycle(
-            current_instr, cycle_num, x, ss_sum)
+    crt_display += "".join(crt_line) + "\n"
+    print(crt_display)
     return ss_sum
 
 
@@ -66,17 +76,9 @@ def run_cycle(current_instr, cycle_num, x, ss_sum):
     if current_instr.finished():
         x = current_instr.run_op(x)
         current_instr = None
+
     if cycle_num in range(20, 260, 40):
         ss_sum += cycle_num * x
-        print(cycle_num)
-        print(x)
-        print(str(ss_sum) + "\n")
-
-    # print(f"{cycle_num=}")
-    # print(f"{x=}")
-    # print(f"{current_instr=}")
-    # print("\n")
-
     return current_instr, cycle_num, x, ss_sum
 
 
@@ -85,6 +87,6 @@ input = input_data("day10/input.txt")
 
 print("--------------------------------------")
 print("Day 10: Cathode-Ray Tube")
-print("Part One Answer: " + str(part_one(input)))
+print("Part One Answer: " + str(solution(input)))
 print("Part Two Answer: ")
 print("--------------------------------------")
