@@ -23,10 +23,11 @@ def move_tail(head, tail):
     if abs(dx) <= 1 and abs(dy) <= 1:
         return tail
 
-    # if they are in line
+    # if on same row or on a diagonal
     if abs(dx) == 2 or abs(dx) + abs(dy) == 3:
         tx += int(math.copysign(1, dx))
 
+    # if on same column or a diagonal
     if abs(dy) == 2 or abs(dx) + abs(dy) == 3:
         ty += int(math.copysign(1, dy))
 
@@ -35,17 +36,19 @@ def move_tail(head, tail):
 
 def part_one(input):
     h, t = (0, 0), (0, 0)
-    t_positions = set()
+    t_positions = [(0, 0)]
 
     for direction, num in input:
         for _ in range(num):
-            h = tuple(map(sum, zip(h, DIRECTION[direction])))
+            h = tuple(map(sum, zip(h, DIRECTION[direction[0]])))
             t = move_tail(h, t)
-            t_positions.add(t)
+
+            if t not in t_positions:
+                t_positions.append(t)
     return len(t_positions)
 
 
-input = input_data("day9/input.txt")
+input = input_data("day9/example.txt")
 
 print("--------------------------------------")
 print("Day 9: Rope Bridge")
