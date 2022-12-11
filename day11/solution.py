@@ -1,7 +1,8 @@
 import operator
 import re
 from functools import reduce
-import math
+from sympy import primefactors
+import time
 
 
 OPERATIONS = {"+": operator.add, "-": operator.sub,
@@ -21,24 +22,17 @@ class Monkey:
 
         self.inspect_num = 0
 
-    def inspect(self, item, panic=False):
+    def inspect(self, item, divisor=None):
         self.inspect_num += 1
         if self.op_num == "old":
             item = self.op(item, item)
         else:
             item = self.op(item, self.op_num)
 
-        if not panic:
-            item = item // 3  # integer division
+        if divisor != None:
+            item = item % divisor
         else:
-            # Get the prime factors of the integer
-            factors = math.factors(item)
-
-            # Reduce the number of prime factors by keeping only the first two
-            reduced_factors = factors[:2]
-
-            # Rebuild the integer using the reduced set of prime factors
-            item = reduce(lambda x, y: x * y, reduced_factors)
+            item // 3
 
         if item % self.test_num == 0:
             return self.true_m, item
@@ -82,10 +76,14 @@ def part_one(monkeys):
 
 
 def part_two(monkeys):
-    for _ in range(1000):
+    divisor = 1
+    for monkey in monkeys.values():
+        divisor *= monkey.test_num
+
+    for _ in range(10000):
         for id, monkey in monkeys.items():
             for item in monkey.items:
-                new_monkey, new_item = monkey.inspect(item, panic=True)
+                new_monkey, new_item = monkey.inspect(item, divisor)
                 monkeys[new_monkey].items.append(new_item)
             monkey.items.clear()
     inspect_nums = sorted([monkey.inspect_num for monkey in monkeys.values()])
@@ -93,7 +91,7 @@ def part_two(monkeys):
     return monkey_business
 
 
-input = input_data("day11/input.txt")
+input = input_data("day11/example.txt")
 
 print("--------------------------------------")
 print("Day 11: Monkey in the Middle")
