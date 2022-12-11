@@ -24,13 +24,13 @@ def move_tail(head, tail):
         return tail
 
     # if on same row or on a diagonal
-    if abs(dx) == 2 or abs(dx) + abs(dy) == 3:
+    if abs(dx) == 2 or abs(dx) + abs(dy) >= 3:
         if dx == 0:
             print("Help")
         tx += int(math.copysign(1, dx))
 
     # if on same column or a diagonal
-    if abs(dy) == 2 or abs(dx) + abs(dy) == 3:
+    if abs(dy) == 2 or abs(dx) + abs(dy) >= 3:
         if dy == 0:
             print("Help")
         ty += int(math.copysign(1, dy))
@@ -43,10 +43,31 @@ def part_one(input):
     t_positions = []
     for direction, num in input:
         for _ in range(num):
+            # Moves the head and determines the location for t
             h = tuple(map(sum, zip(h, DIRECTION[direction[0]])))
             t = move_tail(h, t)
+
+            # Adds the tail coord if unique
             if t not in t_positions:
                 t_positions.append(t)
+    return len(t_positions)
+
+
+def part_two(input):
+    rope = [(0, 0) for _ in range(10)]
+    t_positions = []
+    for direction, num in input:
+        for _ in range(num):
+            # Moves the head of the rope
+            rope[0] = tuple(map(sum, zip(rope[0], DIRECTION[direction[0]])))
+
+            # Moves the rest of the notes in the rope
+            for i in range(1, len(rope)):
+                rope[i] = move_tail(rope[i-1], rope[i])
+
+            # Adds tail coord if at a unique position
+            if rope[-1] not in t_positions:
+                t_positions.append(rope[-1])
     return len(t_positions)
 
 
@@ -55,5 +76,5 @@ input = input_data("day9/input.txt")
 print("--------------------------------------")
 print("Day 9: Rope Bridge")
 print("Part One Answer: " + str(part_one(input)))
-print("Part Two Answer: ")
+print("Part Two Answer: " + str(part_two(input)))
 print("--------------------------------------")

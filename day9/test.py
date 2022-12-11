@@ -1,7 +1,7 @@
 import unittest
 
 # TODO: import other solution methods
-from day9.solution import input_data, part_one, move_tail
+from day9.solution import input_data, part_one, part_two, move_tail
 
 
 class TestDay9(unittest.TestCase):
@@ -45,20 +45,20 @@ class TestDay9(unittest.TestCase):
         Tests the Day 9 Part 1 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        pass
+        self.assertEqual(part_one(self.__class__.input), 6_243)
 
     def test_day_9_p2_example(self):
         """
         Tests Day 9 Part 2 using the example given in the scenario.
         """
-        pass
+        self.assertEqual(part_two(self.__class__.example), 1)
 
     def test_day_9_p2_actual(self):
         """
         Tests the Day 9 Part 2 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        pass
+        self.assertEqual(part_two(self.__class__.input), 2_630)
 
 
 if __name__ == '__main__':
