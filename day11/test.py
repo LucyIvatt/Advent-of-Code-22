@@ -1,7 +1,7 @@
 import unittest
 
 # TODO: import other solution methods
-from day11.solution import input_data, part_one
+from day11.solution import input_data, part_one, part_two
 
 
 class TestDay11(unittest.TestCase):
@@ -27,14 +27,14 @@ class TestDay11(unittest.TestCase):
         """
         Tests Day 11 Part 2 using the example given in the scenario.
         """
-        pass
+        self.assertEqual(part_two(self.example), 2_713_310_158)
 
     def test_day_11_p2_actual(self):
         """
         Tests the Day 11 Part 2 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        pass
+        self.assertEqual(part_two(self.input), 11_614_682_178)
 
 
 if __name__ == '__main__':
