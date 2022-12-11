@@ -1,8 +1,8 @@
 import operator
 import re
-from functools import reduce
-from sympy import primefactors
+from copy import deepcopy
 import time
+from math import prod
 
 
 OPERATIONS = {"+": operator.add, "-": operator.sub,
@@ -22,17 +22,17 @@ class Monkey:
 
         self.inspect_num = 0
 
-    def inspect(self, item, divisor=None):
+    def inspect(self, item, modulo=None):
         self.inspect_num += 1
         if self.op_num == "old":
             item = self.op(item, item)
         else:
             item = self.op(item, self.op_num)
 
-        if divisor != None:
-            item = item % divisor
+        if modulo is not None:
+            item %= modulo
         else:
-            item // 3
+            item //= 3
 
         if item % self.test_num == 0:
             return self.true_m, item
@@ -64,6 +64,7 @@ def input_data(filename):
 
 
 def part_one(monkeys):
+    monkeys = deepcopy(monkeys)
     for _ in range(20):
         for id, monkey in monkeys.items():
             for item in monkey.items:
@@ -76,14 +77,12 @@ def part_one(monkeys):
 
 
 def part_two(monkeys):
-    divisor = 1
-    for monkey in monkeys.values():
-        divisor *= monkey.test_num
-
-    for _ in range(10000):
+    monkeys = deepcopy(monkeys)
+    modulo = prod(monkey.test_num for monkey in monkeys.values())
+    for i in range(10_000):
         for id, monkey in monkeys.items():
             for item in monkey.items:
-                new_monkey, new_item = monkey.inspect(item, divisor)
+                new_monkey, new_item = monkey.inspect(item, modulo)
                 monkeys[new_monkey].items.append(new_item)
             monkey.items.clear()
     inspect_nums = sorted([monkey.inspect_num for monkey in monkeys.values()])
@@ -91,7 +90,7 @@ def part_two(monkeys):
     return monkey_business
 
 
-input = input_data("day11/example.txt")
+input = input_data("day11/input.txt")
 
 print("--------------------------------------")
 print("Day 11: Monkey in the Middle")
