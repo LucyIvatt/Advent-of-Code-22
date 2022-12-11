@@ -92,7 +92,7 @@ def solution(input, old_model):
     return "".join([stack.top_crate() for stack in stacks.values()])
 
 
-input = input_data("day5/input.txt")
+input = input_data("day05/input.txt")
 
 print("--------------------------------------")
 print("Day 5: Supply Stacks")

@@ -37,7 +37,7 @@ def part_two(input):
     return sum_priorities
 
 
-input = input_data("day3/input.txt")
+input = input_data("day03/input.txt")
 
 print("--------------------------------------")
 print("Day 3: Rucksack")

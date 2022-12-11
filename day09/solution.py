@@ -71,7 +71,7 @@ def part_two(input):
     return len(t_positions)
 
 
-input = input_data("day9/input.txt")
+input = input_data("day09/input.txt")
 
 print("--------------------------------------")
 print("Day 9: Rope Bridge")

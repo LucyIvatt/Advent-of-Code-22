@@ -1,14 +1,13 @@
 import unittest
 
-# TODO: import other solution methods
-from day7.solution import input_data, solution
+from day07.solution import input_data, solution
 
 
 class TestDay7(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("day7/example.txt")
-        cls.input = input_data("day7/input.txt")
+        cls.example = input_data("day07/example.txt")
+        cls.input = input_data("day07/input.txt")
 
     def test_day_7_p1_example(self):
         """

@@ -73,7 +73,7 @@ def solution(input):
     return p1_ans, p2_ans
 
 
-input = input_data("day7/input.txt")
+input = input_data("day07/input.txt")
 p1_ans, p2_ans = solution(input)
 
 

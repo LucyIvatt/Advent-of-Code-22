@@ -1,6 +1,5 @@
 import unittest
 
-# TODO: import other solution methods
 from day10.solution import input_data, solution
 
 

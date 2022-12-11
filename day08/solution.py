@@ -65,7 +65,7 @@ def check_directions(input, i, j):
     return tree_visible, np.prod(viewing_distances)
 
 
-input = input_data("day8/example.txt")
+input = input_data("day08/example.txt")
 p1, p2 = solution(input)
 
 print("--------------------------------------")

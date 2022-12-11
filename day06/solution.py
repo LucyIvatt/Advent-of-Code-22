@@ -16,7 +16,7 @@ def solution(input, marker_length):
             return i+marker_length
 
 
-input = input_data("day6/input.txt")
+input = input_data("day06/input.txt")
 
 print("--------------------------------------")
 print("Day 6: Tuning Trouble")

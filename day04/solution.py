@@ -40,7 +40,7 @@ def part_two(input):
     return count
 
 
-input = input_data("day4/input.txt")
+input = input_data("day04/input.txt")
 
 print("--------------------------------------")
 print("Day 4: Camp Cleanup")

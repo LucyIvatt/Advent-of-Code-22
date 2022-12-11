@@ -33,7 +33,7 @@ def find_highest_cals(input, num_elf):
     return sum(highest)
 
 
-input = input_data("day1/input.txt")
+input = input_data("day01/input.txt")
 
 print("--------------------------------------")
 print("Day 1: Calorie Counting")
