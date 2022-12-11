@@ -9,7 +9,7 @@ def input_data(filename):
     file = open(filename, "r")
     input = [line.strip() for line in file.readlines()]
     file.close()
-    input = [(pair[0], int(pair[2])) for pair in input]
+    input = [(x[0], int(x[1])) for x in (y.split(" ") for y in input)]
     return input
 
 
@@ -40,15 +40,13 @@ def move_tail(head, tail):
 
 def part_one(input):
     h, t = (0, 0), (0, 0)
-    t_positions = [(0, 0)]
+    t_positions = []
     for direction, num in input:
         for _ in range(num):
             h = tuple(map(sum, zip(h, DIRECTION[direction[0]])))
             t = move_tail(h, t)
-
             if t not in t_positions:
                 t_positions.append(t)
-
     return len(t_positions)
 
 
