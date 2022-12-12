@@ -1,7 +1,7 @@
 import operator
 import re
 from copy import deepcopy
-from math import prod
+from math import prod, gcd
 
 
 OPERATIONS = {"+": operator.add, "-": operator.sub,
@@ -77,16 +77,18 @@ def solution(monkeys, part_two=False):
     # Sets the number of rounds and the modulo if required.
     if not part_two:
         round_num = 20
-        modulo = None
+        lcm = None
     else:
         round_num = 10_000
-        modulo = prod(monkey.test_num for monkey in monkeys.values())
+        lcm = 1
+        for monkey in monkeys.values():
+            lcm *= (monkey.test_num) // gcd(lcm, monkey.test_num)
 
     # Plays out the number of rounds required
     for _ in range(round_num):
         for monkey in monkeys.values():
             for item in monkey.items:
-                new_monkey, new_item = monkey.inspect(item, modulo)
+                new_monkey, new_item = monkey.inspect(item, lcm)
                 monkeys[new_monkey].items.append(new_item)
             monkey.items.clear()
 
