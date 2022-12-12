@@ -3,13 +3,14 @@ from numpy import inf
 
 
 def input_data(filename):
-    """Returns the data imported from file - grid of ascii values representing heights
+    """Returns the data imported from file - grid of ascii values,
+    graph of legal moves, start node and end node.
     """
     with open(filename) as f:
         input = f.read().splitlines()
-
     s, e = None, None
     grid = []
+
     for i in range(len(input)):
         grid_line = []
         for j in range(len(input[i])):
@@ -22,6 +23,7 @@ def input_data(filename):
             else:
                 grid_line.append(ord(input[i][j]))
         grid.append(grid_line)
+
     graph = gen_graph(grid)
     return grid, graph, s, e
 
@@ -60,6 +62,8 @@ def part_one(graph, s, e):
 
 
 def part_two(grid, graph, e):
+    """Returns the shortest path between an a node and E, allowing for
+    nodes with no possible paths."""
     a_nodes = [(i, j) for i in range(len(grid))
                for j in range(len(grid[i])) if grid[i][j] == ord("a")]
     min_dist = inf
