@@ -77,18 +77,16 @@ def solution(monkeys, part_two=False):
     # Sets the number of rounds and the modulo if required.
     if not part_two:
         round_num = 20
-        lcm = None
+        modulo = None
     else:
         round_num = 10_000
-        lcm = 1
-        for monkey in monkeys.values():
-            lcm *= (monkey.test_num) // gcd(lcm, monkey.test_num)
+        modulo = prod(monkey.test_num for monkey in monkeys.values())
 
     # Plays out the number of rounds required
     for _ in range(round_num):
         for monkey in monkeys.values():
             for item in monkey.items:
-                new_monkey, new_item = monkey.inspect(item, lcm)
+                new_monkey, new_item = monkey.inspect(item, modulo)
                 monkeys[new_monkey].items.append(new_item)
             monkey.items.clear()
 
