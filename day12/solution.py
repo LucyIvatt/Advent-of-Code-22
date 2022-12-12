@@ -22,7 +22,21 @@ def input_data(filename):
             else:
                 grid_line.append(ord(input[i][j]))
         grid.append(grid_line)
-    return grid, s, e
+    graph = gen_graph(grid)
+    return grid, graph, s, e
+
+
+def gen_graph(grid):
+    """Creates graph from ascii values in grid
+    """
+    graph = Graph()
+    for i in range(len(grid)):
+        for j in range(len(grid[i])):
+            for nb in get_neighbours(i, j, grid):
+                cur, new = grid[i][j], grid[nb[0]][nb[1]]
+                if new - cur <= 1:
+                    graph.add_edge((i, j), nb, 1)
+    return graph
 
 
 def get_neighbours(i, j, grid):
@@ -38,19 +52,6 @@ def get_neighbours(i, j, grid):
     if j < len(grid[0]) - 1:
         neighbours.append((i, j + 1))
     return neighbours
-
-
-def gen_graph(grid):
-    """Creates graph from ascii values in grid
-    """
-    graph = Graph()
-    for i in range(len(grid)):
-        for j in range(len(grid[i])):
-            for nb in get_neighbours(i, j, grid):
-                cur, new = grid[i][j], grid[nb[0]][nb[1]]
-                if new - cur <= 1:
-                    graph.add_edge((i, j), nb, 1)
-    return graph
 
 
 def part_one(graph, s, e):
@@ -72,8 +73,7 @@ def part_two(grid, graph, e):
     return min_dist
 
 
-grid, s, e = input_data("day12/input.txt")
-graph = gen_graph(grid)
+grid, graph, s, e = input_data("day12/input.txt")
 
 print("--------------------------------------")
 print("Day 12: Hill Climbing Algorithm")

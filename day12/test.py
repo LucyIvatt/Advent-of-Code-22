@@ -1,6 +1,6 @@
 import unittest
 
-from day12.solution import input_data, part_one
+from day12.solution import input_data, part_one, part_two
 
 
 class TestDay12(unittest.TestCase):
@@ -13,27 +13,31 @@ class TestDay12(unittest.TestCase):
         """
         Tests Day 12 Part 1 using the example given in the scenario
         """
-        self.assertEqual(part_one(*self.__class__.example), 31)
+        _, graph, s, e = self.__class__.example
+        self.assertEqual(part_one(graph, s, e), 31)
 
     def test_day_12_p1_actual(self):
         """
         Tests the Day 12 Part 1 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        self.assertEqual(part_one(*self.__class__.input), 456)
+        _, graph, s, e = self.__class__.input
+        self.assertEqual(part_one(graph, s, e), 456)
 
     def test_day_12_p2_example(self):
         """
         Tests Day 12 Part 2 using the example given in the scenario.
         """
-        pass
+        grid, graph, _, e = self.__class__.example
+        self.assertEqual(part_two(grid, graph, e), 29)
 
     def test_day_12_p2_actual(self):
         """
         Tests the Day 12 Part 2 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        pass
+        grid, graph, _, e = self.__class__.input
+        self.assertEqual(part_two(grid, graph, e), 454)
 
 
 if __name__ == '__main__':
