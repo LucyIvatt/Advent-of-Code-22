@@ -13,9 +13,9 @@ My solutions for advent of code for the year 2022 - all solutions written in pyt
 | Day 8: Treetop Tree House |⭐|⭐|
 | Day 9: Rope Bridge |⭐|⭐|
 | Day 10: Cathode-Ray Tube |⭐|⭐|
-| Day 11: ?? |❌|❌|
-| Day 12: ?? |❌|❌|
-| Day 13: ?? |❌|❌|
+| Day 11: Monkey in the Middle |⭐|⭐|
+| Day 12: Hill Climbing Algorithm |⭐|⭐|
+| Day 13: Distress Signal |⭐|⭐|
 | Day 14: ?? |❌|❌|
 | Day 15: ?? |❌|❌|
 | Day 16: ?? |❌|❌|
