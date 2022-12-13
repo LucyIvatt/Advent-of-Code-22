@@ -4,6 +4,9 @@ from numpy import prod
 
 @total_ordering
 class Packet():
+    """Class to represent a packet of data. Can be compared to other packets
+    to determine packet order."""
+
     def __init__(self, string, divider=False):
         self.packet = eval(string)
         self.divider = divider
@@ -19,8 +22,9 @@ class Packet():
 
     @staticmethod
     def compare(x, y):
-        """1 if x < y (Correct order), 0 if x == y, -1 if x > y (incorrect order)"""
-        # When both values are integers
+        """Compares two packets recursively. Returns 1 if in correct order, 0 if equal, 
+            -1 if incorrect order."""
+        # If both values are integers
         if type(x) == int and type(y) == int:
             if x < y:
                 return 1
@@ -29,25 +33,24 @@ class Packet():
             else:
                 return -1
 
-        # When one value is a list and the other is an integer - convert integer to list
+        # If one one is list and one is integer, converts int to a list
         if type(x) == list and type(y) == int:
             y = [y]
         elif type(x) == int and type(y) == list:
             x = [x]
 
-        # When both values are lists - need to recursively compare each element
+        # If both values are lists, recursively compare elements
         if type(x) == list and type(y) == list:
             i = 0
             while i < len(x) and i < len(y):
-                # If there are still comparable elements, recursively compare them
                 result = Packet.compare(x[i], y[i])
-
                 if result == 1:
                     return 1
                 if result == -1:
                     return -1
                 i += 1
 
+            # If ran out of elements and no order determined, compare lengths
             if i == len(x) and i < len(y):
                 return 1
             elif i == len(x) and i == len(y):
@@ -75,6 +78,8 @@ def part_one(input):
 
 
 def part_two(input):
+    """Returns the solution to part two - product of divider packet locations
+    after sorting all packets into correct order"""
     packets = [Packet(x, divider=True) for x in ["[[2]]", "[[6]]"]]
     for block in input:
         packets.extend([Packet(x) for x in block.split("\n")])
@@ -83,7 +88,6 @@ def part_two(input):
 
 
 input = input_data("day13/input.txt")
-
 
 print("--------------------------------------")
 print("Day 13: Distress Signal")
