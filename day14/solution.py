@@ -1,4 +1,5 @@
-import time
+import copy
+
 DIR = {"up": (0, -1), "down": (0, 1), "left": (-1, 0), "right": (1, 0),
        "up-left": (-1, -1), "up-right": (1, -1), "down-left": (-1, 1), "down-right": (1, 1)}
 
@@ -15,24 +16,30 @@ def input_data(filename):
     return [[corner.split(",") for corner in line.split(" -> ")] for line in input]
 
 
-def simulate_sand(scan, sand):
+def simulate_sand(scan, sand, p2=False):
     """Simulates the sand falling down the scan. Returns a boolean if the sand is falling into the void.
     """
     sx, sy = sand
-    while 0 <= sx < len(scan[0]) and 0 <= sy < len(scan):
+    if not p2:
+        conditional = 0 <= sx < len(scan[0]) and 0 <= sy < len(scan)
+    else:
+        conditional = scan[sand[0], sand[1]] == "+"
+    while conditional:
         try:
-            if check_dir(scan, sx, sy, "down"):
+            if check_dir(scan, sx, sy, "down", p2):
                 dx, dy = DIR["down"]
                 sx, sy = sx+dx, sy+dy
-            elif check_dir(scan, sx, sy, "down-left"):
+            elif check_dir(scan, sx, sy, "down-left", p2):
                 dx, dy = DIR["down-left"]
                 sx, sy = sx+dx, sy+dy
-            elif check_dir(scan, sx, sy, "down-right"):
+            elif check_dir(scan, sx, sy, "down-right", p2):
                 dx, dy = DIR["down-right"]
                 sx, sy = sx+dx, sy+dy
             else:
                 if 0 <= sx < len(scan[0]) and 0 <= sy < len(scan):
                     scan[sy][sx] = "o"
+                    if (sx, sy) == sand:
+                        return scan, True
                     return scan, False
                 else:
                     return scan, True
@@ -41,7 +48,7 @@ def simulate_sand(scan, sand):
     return scan, True
 
 
-def check_dir(scan, sx, sy, dir):
+def check_dir(scan, sx, sy, dir, p2=False):
     """Checks if the sand can move in a given direction. Returns a boolean if the sand can move in the given direction.
     """
     dx, dy = DIR[dir]
@@ -55,14 +62,21 @@ def check_dir(scan, sx, sy, dir):
         return False
 
 
-def draw_scan(input):
+def draw_scan(input, p2=False):
     """Builds a grid of the scan from the input data. Returns the grid.
     """
     # Calculates the bounds of the grid
-    x_coords = [int(corner[0]) for line in input for corner in line] + [500]
     y_coords = [int(corner[1]) for line in input for corner in line] + [0]
-    x_bounds = (min(x_coords), max(x_coords))
-    y_bounds = (min(y_coords), max(y_coords))
+
+    if p2:
+        y_bounds = (min(y_coords), max(y_coords)+2)
+        y_height = y_bounds[1] - y_bounds[0] + 1
+        x_bounds = (500 - y_height, 500 + y_height)
+    else:
+        x_coords = [int(corner[0])
+                    for line in input for corner in line] + [500]
+        x_bounds = (min(x_coords), max(x_coords))
+        y_bounds = (min(y_coords), max(y_coords)+2)
 
     # Builds the grid
     scan = [["." for _ in range(x_bounds[0], x_bounds[1]+1)]
@@ -92,32 +106,43 @@ def draw_scan(input):
                 # Adds the rocks to the grid
                 for x in range(c1_x, c2_x+1):
                     scan[c1_y][x] = "#"
+    if p2:
+        for x in range(len(scan[-1])):
+            scan[-1][x] = "#"
 
     # Adds the sand entrance
     scan[0][500-x_bounds[0]] = "+"
-    return scan, x_bounds, y_bounds
+    return scan, x_bounds
 
 
-def part_one(grid, x_bounds):
+def part_one(input):
+    grid, x_bounds = draw_scan(input)
     resting_sand = 0
     while True:
-        # Simulates the sand falling
-        grid, void = simulate_sand(grid, (500-x_bounds[0], 0))
-        if void:
+        grid, end = simulate_sand(grid, (500-x_bounds[0], 0))
+        if end:
             break
         else:
             resting_sand += 1
-    for line in grid:
-        print(*line, sep="")
+    return resting_sand
+
+
+def part_two(input):
+    grid, x_bounds = draw_scan(input, p2=True)
+    resting_sand = 0
+    while True:
+        grid, end = simulate_sand(grid, (500-x_bounds[0], 0))
+        resting_sand += 1
+        if end:
+            break
+
     return resting_sand
 
 
 input = input_data("day14/input.txt")
-scan, x_bounds, y_bounds = draw_scan(input)
-p1 = part_one(scan, x_bounds)
 
 print("--------------------------------------")
 print("Day 14: Regolith Reservoir")
-print("Part One Answer: " + str(p1))
-print("Part Two Answer: ")
+print("Part One Answer: " + str(part_one(input)))
+print("Part Two Answer: " + str(part_two(input)))
 print("--------------------------------------")
