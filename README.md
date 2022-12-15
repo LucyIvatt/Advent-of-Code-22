@@ -16,8 +16,8 @@ My solutions for advent of code for the year 2022 - all solutions written in pyt
 | Day 11: Monkey in the Middle |⭐|⭐|
 | Day 12: Hill Climbing Algorithm |⭐|⭐|
 | Day 13: Distress Signal |⭐|⭐|
-| Day 14: Regolith Reservoir |❌|❌|
-| Day 15: ?? |❌|❌|
+| Day 14: Regolith Reservoir |⭐|⭐|
+| Day 15: Beacon Exclusion Zone |❌|❌|
 | Day 16: ?? |❌|❌|
 | Day 17: ?? |❌|❌|
 | Day 18: ?? |❌|❌|
