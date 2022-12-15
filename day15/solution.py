@@ -1,4 +1,5 @@
 import re
+from collections import defaultdict
 
 
 def manhattan_distance(point1, point2):
@@ -71,20 +72,43 @@ def clear_area(grid, sensor, distance, min_x, min_y):
     return grid
 
 
+def clear_area_2(sensor, distance, Y_blocks):
+    """Clears the area around the sensor"""
+    x, y = sensor
+    i = 0
+    y_coords = [y]
+    while x-distance+i <= x:
+        for cy in y_coords:
+            Y_blocks[cy].append((x-distance+i, x+distance+1-i))
+
+        if len(y_coords) == 1:
+            y_coords = [y+1, y-1]
+        else:
+            y_coords = [y_coords[0]+1, y_coords[1]-1]
+        i += 1
+    return Y_blocks
+
+
 def part_one(input):
+    # beacon_locations, sens_dists, x_bounds, y_bounds = input
+    # grid = build_grid(*input)
+    # for sensor, distance in sens_dists.items():
+    #     grid = clear_area(grid, sensor, distance, x_bounds[0], y_bounds[0])
+
+    # print("\n\n")
+
+    # _, y = convert_coord(0, 10, x_bounds[0], y_bounds[0])
+    # return grid[y].count("#")
+
+    Y_blocks = defaultdict(list)
     beacon_locations, sens_dists, x_bounds, y_bounds = input
-    grid = build_grid(*input)
     for sensor, distance in sens_dists.items():
-        grid = clear_area(grid, sensor, distance, x_bounds[0], y_bounds[0])
+        Y_blocks = clear_area_2(sensor, distance, Y_blocks)
 
-    print("\n\n")
-
-    _, y = convert_coord(0, 10, x_bounds[0], y_bounds[0])
-    return grid[y].count("#")
+    print(Y_blocks[10])
 
 
-input = input_data("day15/input.txt")
-
+input = input_data("day15/example.txt")
 
 print("--------------------------------------")
 print("Day 15: Beacon Exclusion Zone")
