@@ -1,5 +1,5 @@
 import re
-from collections import defaultdict
+SEARCH_POINT = 2_000_000
 
 
 def manhattan_distance(point1, point2):
@@ -72,43 +72,49 @@ def clear_area(grid, sensor, distance, min_x, min_y):
     return grid
 
 
-def clear_area_2(sensor, distance, Y_blocks):
+def clear_area_2(sensor, distance, Y_indices):
     """Clears the area around the sensor"""
     x, y = sensor
     i = 0
     y_coords = [y]
+
+    if SEARCH_POINT not in range(y-distance, y+distance+1):
+        return Y_indices
+
     while x-distance+i <= x:
         for cy in y_coords:
-            Y_blocks[cy].append((x-distance+i, x+distance+1-i))
-
+            if cy == SEARCH_POINT:
+                for x in range(x-distance+i, x+distance-i):
+                    Y_indices.add(x)
         if len(y_coords) == 1:
             y_coords = [y+1, y-1]
         else:
             y_coords = [y_coords[0]+1, y_coords[1]-1]
         i += 1
-    return Y_blocks
+    return Y_indices
 
 
 def part_one(input):
-    # beacon_locations, sens_dists, x_bounds, y_bounds = input
-    # grid = build_grid(*input)
-    # for sensor, distance in sens_dists.items():
-    #     grid = clear_area(grid, sensor, distance, x_bounds[0], y_bounds[0])
-
-    # print("\n\n")
-
-    # _, y = convert_coord(0, 10, x_bounds[0], y_bounds[0])
-    # return grid[y].count("#")
-
-    Y_blocks = defaultdict(list)
+    Y_indices = set()
     beacon_locations, sens_dists, x_bounds, y_bounds = input
     for sensor, distance in sens_dists.items():
-        Y_blocks = clear_area_2(sensor, distance, Y_blocks)
+        print("Clearing area of sensor: " + str(sensor) +
+              " with distance: " + str(distance))
+        Y_indices = clear_area_2(sensor, distance, Y_indices)
 
-    print(Y_blocks[10])
+    return len(Y_indices)
 
 
-input = input_data("day15/example.txt")
+def get_blocked_lines(line_segments):
+    # given a list of x coordinate lines, return the length of the overall lines if they were all connected
+    blocked_coords = set()
+    for pair in line_segments:
+        for i in range(pair[0], pair[1]):
+            blocked_coords.add(i)
+    return len(blocked_coords)
+
+
+input = input_data("day15/input.txt")
 
 print("--------------------------------------")
 print("Day 15: Beacon Exclusion Zone")
