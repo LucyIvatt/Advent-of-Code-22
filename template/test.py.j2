@@ -7,8 +7,8 @@ from day{{ day_num }}.solution import input_data
 class TestDay{{ day_num }}(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("day{{ day_num }}/example.txt")
-        cls.input = input_data("day{{ day_num }}/input.txt")
+        cls.example = input_data("{{ year }}/{{ day_num }} {{ task_name }}/example.txt")
+        cls.input = input_data("{{ year }}/{{ day_num }} {{ task_name }}/input.txt")
 
     def test_day_{{ day_num }}_p1_example(self):
         """
