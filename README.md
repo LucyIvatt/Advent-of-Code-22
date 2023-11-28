@@ -1,6 +1,6 @@
 # Advent of Code
 
-My solutions for advent of code between 2021-2022 - all solutions written in python.
+My solutions for advent of code between 2021-2023 using python.
 
 |        | 2021 | 2022 | 2023 |
 | ------ | :--: | :--: | :--: |
