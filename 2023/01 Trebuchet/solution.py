@@ -1,8 +1,8 @@
 import re
 
-def part_one_original(puzzle_input):
-    digits = ["".join(filter(str.isdigit, string)) for string in puzzle_input]
-    return sum((int(f'{digit[0]}{digit[-1]}') for digit in digits))
+# def part_one_original(puzzle_input):
+#     digits = ["".join(filter(str.isdigit, string)) for string in puzzle_input]
+#     return sum((int(f'{digit[0]}{digit[-1]}') for digit in digits))
 
 NUMBER_DICT = {'one':   1, 
                'two':   2, 
