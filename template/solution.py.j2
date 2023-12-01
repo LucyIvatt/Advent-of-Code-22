@@ -2,17 +2,17 @@ def input_data(filename):
     """Returns the data imported from file - 
     """
     file = open(filename, "r")
-    input = file.readlines()
+    puzzle_input = file.readlines()
     file.close()
 
     # TODO: Choose data input format
 
-    return input
+    return puzzle_input
 
 # TODO: Enter solutions
 
 
-input = input_data("{{ year }}/{{ day_num }} {{ task_name }}/input.txt")
+puzzle_input = input_data("{{ year }}/{{ day_num }} {{ task_name }}/input.txt")
 
 print("--------------------------------------")
 print("Day {{ day_num }}: {{ task_name }}")

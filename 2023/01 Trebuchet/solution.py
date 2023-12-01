@@ -32,13 +32,14 @@ def find_numbers(string):
     for i in range(len(string)):
         if string[i].isdigit():
             number_locations[i]=string[i]
-    
+    print("Number Loctions (location:value) =", number_locations)
     return [value for key, value in sorted(number_locations.items())]
 
 def part_two(puzzle_input):
     ans = 0
     for string in puzzle_input:
         ordered_numbers = find_numbers(string)
+        print("Ordred Numbers: ", ordered_numbers)
         ans += int(f'{ordered_numbers[0]}{ordered_numbers[-1]}')
     return ans
 
