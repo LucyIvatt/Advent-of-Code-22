@@ -20,39 +20,32 @@ def part_one(puzzle_input):
     digits = ["".join(filter(str.isdigit, string)) for string in puzzle_input]
     return sum((int(f'{digit[0]}{digit[-1]}') for digit in digits))
 
-def find_number_locations(puzzle_input):
-    modified_input = []
+def find_numbers(string):
+    number_locations = {}
 
-    for string in puzzle_input:
-        number_locations = {}
-
-        # Saves location index of worded numbers
-        for word, number in NUMBER_DICT.items():
-            ind = string.find(word)
-            if ind != -1: number_locations[ind]= str(number)
-        
-        # Saves location of digits
-        for i in range(len(string)):
-            if string[i].isdigit():
-                number_locations[i]=string[i]
-
-        modified_input.append(number_locations)
-    return modified_input
+    # Saves location index of worded numbers
+    for word, number in NUMBER_DICT.items():
+        ind = string.find(word)
+        if ind != -1: number_locations[ind]= str(number)
+    
+    # Saves location of digits
+    for i in range(len(string)):
+        if string[i].isdigit():
+            number_locations[i]=string[i]
+    
+    return [value for key, value in sorted(number_locations.items())]
 
 def part_two(puzzle_input):
-    modified_input = find_number_locations(puzzle_input)
-
     ans = 0
-    for number_locations in modified_input:
-        ordered_numbers = [value for key, value in sorted(number_locations.items())]
-        calibration_value = str(ordered_numbers[0]) + str(ordered_numbers[-1])
-        ans += int(calibration_value)
+    for string in puzzle_input:
+        ordered_numbers = find_numbers(string)
+        ans += int(f'{ordered_numbers[0]}{ordered_numbers[-1]}')
     return ans
 
-puzzle_input = input_data("2023/01 Trebuchet/input.txt")
+puzzle_input = input_data("2023/01 Trebuchet/example2.txt")
 
 print("--------------------------------------")
 print("Day 01: Trebuchet")
-print(f"Part One Answer: {part_one(puzzle_input)}")
+# print(f"Part One Answer: {part_one(puzzle_input)}")
 print(f"Part Two Answer: {part_two(puzzle_input)}")
 print("--------------------------------------")

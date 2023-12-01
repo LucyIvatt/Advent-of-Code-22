@@ -1,6 +1,6 @@
 import unittest
 
-from solution import input_data, part_one, part_two
+from solution import input_data, part_one, part_two, find_numbers
 
 
 class TestDay01(unittest.TestCase):
@@ -35,6 +35,12 @@ class TestDay01(unittest.TestCase):
         made to the program have not broken it.
         """
         pass
+    
+    def test_find_number_locations(self):
+        self.assertEqual(find_numbers('two1nine'), ['2', '1', '9'])
+        self.assertEqual(find_numbers('eightthree3ninekzhtlqsevenssprmrqhhgncrs'), ['8', '3', '3', '9', '7'])
+        self.assertEqual(find_numbers('sevennine3'), ['7', '9', '3'])
+
 
 if __name__ == '__main__':
     unittest.main()
