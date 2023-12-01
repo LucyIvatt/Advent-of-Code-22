@@ -1,3 +1,5 @@
+import re
+
 NUMBER_DICT = {'one':   1, 
                'two':   2, 
                'three': 3, 
@@ -25,28 +27,25 @@ def find_numbers(string):
 
     # Saves location index of worded numbers
     for word, number in NUMBER_DICT.items():
-        ind = string.find(word)
-        if ind != -1: number_locations[ind]= str(number)
-    
+        for match in re.finditer(word, string):
+            number_locations[match.start()]= str(number)
     # Saves location of digits
     for i in range(len(string)):
         if string[i].isdigit():
             number_locations[i]=string[i]
-    print("Number Loctions (location:value) =", number_locations)
     return [value for key, value in sorted(number_locations.items())]
 
 def part_two(puzzle_input):
     ans = 0
     for string in puzzle_input:
         ordered_numbers = find_numbers(string)
-        print("Ordred Numbers: ", ordered_numbers)
         ans += int(f'{ordered_numbers[0]}{ordered_numbers[-1]}')
     return ans
 
-puzzle_input = input_data("2023/01 Trebuchet/example2.txt")
+puzzle_input = input_data("2023/01 Trebuchet/input.txt")
 
 print("--------------------------------------")
 print("Day 01: Trebuchet")
-# print(f"Part One Answer: {part_one(puzzle_input)}")
+print(f"Part One Answer: {part_one(puzzle_input)}")
 print(f"Part Two Answer: {part_two(puzzle_input)}")
 print("--------------------------------------")

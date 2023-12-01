@@ -2,7 +2,6 @@ import unittest
 
 from solution import input_data, part_one, part_two, find_numbers
 
-
 class TestDay01(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -34,7 +33,7 @@ class TestDay01(unittest.TestCase):
         Tests the Day 01 Part 2 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        pass
+        self.assertEqual(part_two(self.__class__.puzzle_input), 54649)
     
     def test_find_number_locations(self):
         self.assertEqual(find_numbers('two1nine'), ['2', '1', '9'])
