@@ -1,6 +1,6 @@
 import re
 
-from utils.file_utils import input_data
+from aoc_utils import input_data
 
 def part_one_original(puzzle_input):
     digits = ["".join(filter(str.isdigit, string)) for string in puzzle_input]
