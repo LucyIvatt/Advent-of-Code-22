@@ -1,16 +1,10 @@
 import re
 
-def input_data(filename):
-    """Returns the data imported from file - 
-    """
-    file = open(filename, "r")
-    puzzle_input = file.readlines()
-    file.close()
-    return puzzle_input
+from utils.file_utils import input_data
 
-# def part_one_original(puzzle_input):
-#     digits = ["".join(filter(str.isdigit, string)) for string in puzzle_input]
-#     return sum((int(f'{digit[0]}{digit[-1]}') for digit in digits))
+def part_one_original(puzzle_input):
+    digits = ["".join(filter(str.isdigit, string)) for string in puzzle_input]
+    return sum((int(f'{digit[0]}{digit[-1]}') for digit in digits))
 
 NUMBER_DICT = {'one':   1, 
                'two':   2, 
@@ -40,7 +34,7 @@ def find_numbers(string, words_included=False):
     # Sorts the numbers values by their indexes
     return [value for key, value in sorted(number_locations.items())]
 
-def solution(puzzle_input, words_included=False):
+def answer(puzzle_input, words_included=False):
     number_lists = [find_numbers(string, words_included) for string in puzzle_input]
     return sum((int(f'{numbers[0]}{numbers[-1]}')) for numbers in number_lists)
 
@@ -48,6 +42,6 @@ puzzle_input = input_data("year_2023/day_01_trebuchet/input.txt")
 
 print("--------------------------------------")
 print("Day 01: Trebuchet")
-print(f"Part One Answer: {solution(puzzle_input)}")
-print(f"Part Two Answer: {solution(puzzle_input, True)}")
+print(f"Part One Answer: {answer(puzzle_input)}")
+print(f"Part Two Answer: {answer(puzzle_input, True)}")
 print("--------------------------------------")

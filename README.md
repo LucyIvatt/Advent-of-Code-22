@@ -29,3 +29,9 @@ My solutions for advent of code between 2021-2023 using python.
 | Day 23 | ❌❌ | ❌❌ | ➖➖ |
 | Day 24 | ❌❌ | ❌❌ | ➖➖ |
 | Day 25 | ❌❌ | ❌❌ | ➖➖ |
+
+## Code Runner Executor
+
+```
+"python": "cd $dir && bash -c 'MODULE=\"$fileNameWithoutExt\"; while [ -f \"../__init__.py\" ]; do MODULE=\"${PWD##*/}.$MODULE\"; cd ..; done; python -m \"$MODULE\"'",
+```

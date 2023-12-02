@@ -1,14 +1,14 @@
 import unittest
 
 # TODO: import other solution methods
-from .solution import input_data
+from year_{{ year }}.day_{{ day_num }}_{{ task_name }}.solution import input_data
 
 
 class TestDay{{ day_num }}(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("{{ year }}/{{ day_num }} {{ task_name }}/example.txt")
-        cls.puzzle_input = input_data("{{ year }}/{{ day_num }} {{ task_name }}/input.txt")
+        cls.example = input_data("year_{{ year }}/day_{{ day_num }}_{{ task_name }}/example.txt")
+        cls.puzzle_input = input_data("year_{{ year }}/day_{{ day_num }}_{{ task_name }}/input.txt")
 
     def test_p1_example(self):
         """
