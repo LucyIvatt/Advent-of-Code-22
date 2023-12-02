@@ -1,7 +1,7 @@
 import unittest
 
 from year_2023.day_02_cube_conundrum.solution import part_one, part_two
-from aoc_utils import input_data
+from helpers.aoc_utils import input_data
 
 
 class TestDay02(unittest.TestCase):

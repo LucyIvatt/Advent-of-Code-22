@@ -1,7 +1,7 @@
 from functools import reduce
 from collections import defaultdict 
 import operator
-from aoc_utils import input_data
+from helpers.aoc_utils import input_data
 
 CONSTRAINTS = {"red": 12, "green": 13, "blue": 14}
 

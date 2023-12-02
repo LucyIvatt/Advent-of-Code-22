@@ -1,7 +1,7 @@
 import unittest
 
 from year_2023.day_01_trebuchet.solution import answer, find_numbers
-from aoc_utils import input_data
+from helpers.aoc_utils import input_data
 
 class TestDay01(unittest.TestCase):
     @classmethod
