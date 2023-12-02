@@ -1,14 +1,7 @@
 from functools import reduce
 from collections import defaultdict 
 import operator
-
-def input_data(filename):
-    """Returns the data imported from file - 
-    """
-    file = open(filename, "r")
-    puzzle_input = file.readlines()
-    file.close()
-    return puzzle_input
+from aoc_utils import input_data
 
 CONSTRAINTS = {"red": 12, "green": 13, "blue": 14}
 
