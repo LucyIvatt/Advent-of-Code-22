@@ -134,3 +134,6 @@ dmypy.json
 
 # ignore input files
 *.txt
+
+# ignore mac files
+.DS_Store
