@@ -5,7 +5,7 @@ My solutions for advent of code between 2021-2023 using python.
 |        | 2021 | 2022 | 2023 |
 | ------ | :--: | :--: | :--: |
 | Day 1  | ⭐⭐ | ⭐⭐ | ⭐⭐ |
-| Day 2  | ⭐⭐ | ⭐⭐ | ➖➖ |
+| Day 2  | ⭐⭐ | ⭐⭐ | ⭐⭐ |
 | Day 3  | ⭐⭐ | ⭐⭐ | ➖➖ |
 | Day 4  | ⭐⭐ | ⭐⭐ | ➖➖ |
 | Day 5  | ⭐⭐ | ⭐⭐ | ➖➖ |
