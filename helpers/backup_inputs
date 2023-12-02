@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Load environment variables from .env file
+source .env
+
+# Function to display script usage information
+display_help() {
+    echo "Usage: $0"
+    echo "  This script copies and replaces input and example input files for advent of code." 
+    echo "  These backups are held in a private repository."
+    echo "  Source and destination repository paths are stored in .env"
+}
+
+# Check if the user requested help
+if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
+    display_help
+    exit 0
+fi
+
+# Copy and replace text files
+find "$SOURCE_FOLDER" -type f -name "*.txt" -exec sh -c '
+    destination_path="$2/$(echo "$1" | sed s:^"$3"::)"
+    mkdir -p "$(dirname "$destination_path")"
+    cp "$1" "$destination_path"
+' _ {} "$DESTINATION_FOLDER" "$SOURCE_FOLDER" \;
