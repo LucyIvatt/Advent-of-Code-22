@@ -1,5 +1,17 @@
 #!/bin/bash
-set -euxo pipefail
+
+Help() {
+    echo "Usage: $0 <day_num> <task_name> <year>"
+    echo "  day_num     Day number (e.g., 01, 02, ..., 25)"
+    echo "  task_name   Task name (e.g., cube_conundrum, camp_cleanup etc.)"
+    echo "  year        Year (e.g., 2022)"
+}
+
+# Check if the number of arguments is correct
+if [ "$#" -ne 3 ]; then
+    Help
+    exit 1
+fi
 
 day_num="$1"
 task_name="$2"
