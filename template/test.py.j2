@@ -1,7 +1,7 @@
 import unittest
 
 # TODO: import other solution methods
-from solution import input_data
+from .solution import input_data
 
 
 class TestDay{{ day_num }}(unittest.TestCase):
@@ -10,26 +10,26 @@ class TestDay{{ day_num }}(unittest.TestCase):
         cls.example = input_data("{{ year }}/{{ day_num }} {{ task_name }}/example.txt")
         cls.puzzle_input = input_data("{{ year }}/{{ day_num }} {{ task_name }}/input.txt")
 
-    def test_day_{{ day_num }}_p1_example(self):
+    def test_p1_example(self):
         """
         Tests Day {{ day_num }} Part 1 using the example given in the scenario
         """
         pass
 
-    def test_day_{{ day_num }}_p1_actual(self):
+    def test_p1_actual(self):
         """
         Tests the Day {{ day_num }} Part 1 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
         pass
 
-    def test_day_{{ day_num }}_p2_example(self):
+    def test_p2_example(self):
         """
         Tests Day {{ day_num }} Part 2 using the example given in the scenario.
         """
         pass
 
-    def test_day_{{ day_num }}_p2_actual(self):
+    def test_p2_actual(self):
         """
         Tests the Day {{ day_num }} Part 2 using my generated input. Used to check any edits
         made to the program have not broken it.

@@ -1,6 +1,6 @@
 import unittest
 
-from solution import input_data, solution, find_numbers
+from .solution import input_data, solution, find_numbers
 
 class TestDay01(unittest.TestCase):
     @classmethod
@@ -9,26 +9,26 @@ class TestDay01(unittest.TestCase):
         cls.example2 = input_data("2023/01 Trebuchet/example2.txt")
         cls.puzzle_input = input_data("2023/01 Trebuchet/input.txt")
 
-    def test_day_01_p1_example(self):
+    def test_p1_example(self):
         """
         Tests Day 01 Part 1 using the example given in the scenario
         """
         self.assertEqual(solution(self.__class__.example), 142)
 
-    def test_day_01_p1_actual(self):
+    def test_p1_actual(self):
         """
         Tests the Day 01 Part 1 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
         self.assertEqual(solution(self.__class__.puzzle_input), 54081)
 
-    def test_day_01_p2_example(self):
+    def test_p2_example(self):
         """
         Tests Day 01 Part 2 using the example given in the scenario.
         """
         self.assertEqual(solution(self.__class__.example2, True), 281)
 
-    def test_day_01_p2_actual(self):
+    def test_p2_actual(self):
         """
         Tests the Day 01 Part 2 using my generated input. Used to check any edits
         made to the program have not broken it.

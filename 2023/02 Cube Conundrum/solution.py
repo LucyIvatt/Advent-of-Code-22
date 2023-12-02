@@ -58,7 +58,7 @@ def part_two(puzzle_input):
     
     return power_sum
 
-puzzle_input = input_data("input.txt")
+puzzle_input = input_data("2023/02 Cube Conundrum/input.txt")
 
 print("--------------------------------------")
 print("Day 02: Cube Conundrum")
