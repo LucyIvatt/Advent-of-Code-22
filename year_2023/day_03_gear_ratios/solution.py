@@ -10,7 +10,7 @@ def process_matches(puzzle_input, p2=False):
     for i, line in enumerate(puzzle_input):
         for match in re.finditer(DIGIT_REGEX, line):
             number_positions = [(i, y) for y in range(match.start(), match.end())]
-            adj_coords = get_adjacent_coords(number_positions, len(line), len(puzzle_input))
+            adj_coords = get_adjacent_coords(coords=number_positions, x_limit=len(line), y_limit=len(puzzle_input), diagonal=True)
 
             if not p2 and any(puzzle_input[line][char] != '.' for line, char in adj_coords):
                 result += int(match.group())
