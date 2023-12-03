@@ -1,10 +1,9 @@
 def input_data(filename):
     """Returns the data imported from file - 
     """
-    file = open(filename, "r")
-    puzzle_input = file.readlines()
-    file.close()
-    return puzzle_input
+    with open(filename, "r") as file:
+        puzzle_input = [line.strip() for line in file.readlines()]
+        return puzzle_input
 
 def get_adjacent_and_diagonal_coords(coords, x_limit, y_limit):
     directions = [(dx, dy) for dx in range(-1, 2) for dy in range(-1, 2) if (dx, dy) != (0, 0)]
