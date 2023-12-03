@@ -1,3 +1,5 @@
+import time
+
 def input_data(filename):
     """Returns the data imported from file - 
     """
@@ -24,6 +26,12 @@ def get_adjacent_coords(coords, x_limit, y_limit, diagonal=False):
     
     
     return set([coord for coord in adjecent_coords if coord not in coords])
+
+def time_function(func, *args):
+    start_time = time.time()
+    result = func(*args)
+    elapsed_time = time.time() - start_time
+    return result, elapsed_time
 
 
 

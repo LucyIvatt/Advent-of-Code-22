@@ -1,6 +1,6 @@
 import re
 from collections import defaultdict 
-from helpers.aoc_utils import input_data, get_adjacent_coords
+from helpers.aoc_utils import input_data, get_adjacent_coords, time_function
 
 DIGIT_REGEX = r'\b\d+\b'
 
@@ -32,8 +32,11 @@ def part_two(puzzle_input):
 
 puzzle_input = input_data("year_2023/day_03_gear_ratios/input.txt")
 
+p1, p1_time = time_function(part_one, puzzle_input)
+p2, p2_time = time_function(part_two, puzzle_input)
+
 print("--------------------------------------")
 print("Day 03: gear_ratios")
-print(f"Part One Answer: {part_one(puzzle_input)}")
-print(f"Part Two Answer: {part_two(puzzle_input)}")
+print(f"Part One Answer: {p1} - [{p1_time:.4f} seconds]")
+print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
 print("--------------------------------------")
