@@ -27,7 +27,7 @@ def part_one(puzzle_input):
 
 def part_two(puzzle_input):
     '''Adds gear symbols to a dictionary based on their location, with values being the part numbers that are adjacent.
-        Returns sum of the part numbers for gears with more than 1 part.'''
+        Returns sum of the gear ratios (product of part numbers) for gears with more than 1 part.'''
     return sum(numbers[0] * numbers[1] for numbers in process_matches(puzzle_input, p2=True).values() if len(numbers) > 1)
 
 puzzle_input = input_data("year_2023/day_03_gear_ratios/input.txt")
