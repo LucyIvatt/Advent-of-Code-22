@@ -1,41 +1,33 @@
 from collections import Counter, defaultdict
-
 from helpers.aoc_utils import input_data, time_function
 
-puzzle_input = input_data("year_2023/day_04_scratchcards/input.txt")
+puzzle_input = input_data("year_2023/day_04_scratchcards/example.txt")
+
+from collections import Counter
+
+def find_matches(card):
+    winning_numbers = [int(num) for num in card[0].split(":")[1].split()]
+    losing_numbers = [int(num) for num in card[1].split()]
+    return Counter(winning_numbers) & Counter(losing_numbers)
+
+def calc_points(matches):
+    return pow(2, len(matches) - 1) if len(matches) - 1 >= 0 else 0
 
 def part_one(puzzle_input):
-    points = 0
-    for line in puzzle_input:
-        card = line.strip().split("|")
-        winning_numbers = [int(num) for num in card[0].split(":")[1].split()]
-        losing_numbers = [int(num) for num in card[1].split()]
+    return sum(calc_points(find_matches(line.strip().split("|"))) for line in puzzle_input)
 
-        matches = Counter(winning_numbers) & Counter(losing_numbers)
-
-        if len(matches)-1 >= 0:
-            points += pow(2, len(matches)-1)
-
-    return points
-    
 
 def part_two(puzzle_input):
-    card_copies = defaultdict(int)
+    card_copies = {i:1 for i in range(1, len(puzzle_input)+1)}
 
     for i, line in enumerate(puzzle_input):
-        card = line.strip().split("|")
-
-        card_number = card[0].split(":")[0]
-        card_copies[card_number] += 1
-        winning_numbers = [int(num) for num in card[0].split(":")[1].split()]
-        losing_numbers = [int(num) for num in card[1].split()]
-
-        matches = Counter(winning_numbers) & Counter(losing_numbers)
+        card = line.strip().split("|") 
+        matches = find_matches(card)
 
         for j in range(i+1, min(i+len(matches)+1, len(puzzle_input))):
-            new_card = puzzle_input[j].strip().split("|")
-            new_card_number = new_card[0].split(":")[0]
-            card_copies[new_card_number] += card_copies[card_number]
+            card_copies[j+1] += card_copies[i+1]
+    
+    print(sorted(card_copies.items()))
     
     return sum(card_copies.values())
 
