@@ -1,16 +1,46 @@
 from helpers.aoc_utils import input_data, time_function
+from itertools import groupby
 
-puzzle_input = input_data(
-    "year_2023/day_05_if_you_give_a_seed_a_fertilizer/input.txt")
+
+class Bound():
+    def __init__(self, bound_string):
+        self.dest, self.source, self.range = map(
+            int, bound_string.split())
+
+    def value_in_range(self, value):
+        return (value >= self.source) and (value <= (self.source + self.range))
+
+    def map(self, value):
+        return value + (self.dest - self.source)
+
+    def __repr__(self):
+        return f"Bound({self.dest=}, {self.source=}, {self.range=})"
 
 
 def part_one(puzzle_input):
-    pass
+    seeds = {int(num): int(num)
+             for num in puzzle_input[0].split(":")[1].split()}
+
+    mappings = [list(group) for key, group in groupby(
+        puzzle_input[1:], key=lambda x: x == "") if not key]
+
+    for group in mappings:
+        bands = [Bound(bound) for bound in group[1:]]
+        for orig, seed in seeds.items():
+            for band in bands:
+                if band.value_in_range(seed):
+                    seeds[orig] = band.map(seed)
+                    break
+
+    return min(seeds.values())
 
 
 def part_two(puzzle_input):
     pass
 
+
+puzzle_input = input_data(
+    "year_2023/day_05_if_you_give_a_seed_a_fertilizer/input.txt")
 
 p1, p1_time = time_function(part_one, puzzle_input)
 p2, p2_time = time_function(part_two, puzzle_input)
