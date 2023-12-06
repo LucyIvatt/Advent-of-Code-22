@@ -20,14 +20,14 @@ class TestDay06(unittest.TestCase):
         Tests the Day 06 Part 1 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        # self.assertEqual(part_one(self.__class__.puzzle_input), 0)
+        self.assertEqual(part_one(self.__class__.puzzle_input), 252_000)
         pass
 
     def test_p2_example(self):
         """
         Tests Day 06 Part 2 using the example given in the scenario.
         """
-        # self.assertEqual(part_two(self.__class__.example), 0)
+        self.assertEqual(part_two(self.__class__.example), 71_503)
         pass
 
     def test_p2_actual(self):
@@ -35,7 +35,7 @@ class TestDay06(unittest.TestCase):
         Tests the Day 06 Part 2 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        # self.assertEqual(part_two(self.__class__.puzzle_input), 0)
+        self.assertEqual(part_two(self.__class__.puzzle_input), 36_992_486)
         pass
 
 

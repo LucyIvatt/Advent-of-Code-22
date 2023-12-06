@@ -5,38 +5,27 @@ from math import prod
 puzzle_input = input_data("year_2023/day_06_wait_for_it/input.txt")
 
 
-def calc_distance(time, hold_time):
-    return hold_time * (time-hold_time)
+def ways_to_win(times, distances):
+    return prod([sum(1 for hold_time in range(time) if hold_time * (time - hold_time) > distance)
+                 for time, distance in zip(times, distances)])
 
 
+def extract_num_list(input_str):
+    return [int(num) for num in input_str.split(":")[1].split()]
+
+
+def extract_num(input_str):
+    return int(''.join(char for char in input_str if char.isdigit()))
 
 
 def part_one(puzzle_input):
-    times = [int(num) for num in puzzle_input[0].split(":")[1].split()]
-    distances = [int(num) for num in puzzle_input[1].split(":")[1].split()]
-    ways_to_win = defaultdict(int)
-
-    for race in range(len(times)):
-        for hold_time in range(int(times[race])):
-            distance = calc_distance(times[race], hold_time)
-            if distance > distances[race]:
-                ways_to_win[race] += 1
-
-    return prod(ways_to_win.values())
+    times, distances = map(extract_num_list, puzzle_input[:2])
+    return ways_to_win(times, distances)
 
 
 def part_two(puzzle_input):
-    time = int(''.join(char for char in puzzle_input[0] if char.isdigit()))
-    winning_distance = int(''.join(
-        char for char in puzzle_input[1] if char.isdigit()))
-    ways_to_win = 0
-
-    for hold_time in range(int(time)):
-        distance = calc_distance(time, hold_time)
-        if distance > winning_distance:
-            ways_to_win += 1
-
-    return ways_to_win
+    time, distance = map(extract_num, puzzle_input[:2])
+    return ways_to_win([time], [distance])
 
 
 p1, p1_time = time_function(part_one, puzzle_input)
