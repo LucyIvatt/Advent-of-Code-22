@@ -2,6 +2,7 @@ import unittest
 
 from year_2023.day_06_wait_for_it.solution import input_data, part_one, part_two
 
+
 class TestDay06(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -12,8 +13,7 @@ class TestDay06(unittest.TestCase):
         """
         Tests Day 06 Part 1 using the example given in the scenario
         """
-        # self.assertEqual(part_one(self.__class__.example), 0)
-        pass
+        self.assertEqual(part_one(self.__class__.example), 288)
 
     def test_p1_actual(self):
         """
@@ -37,6 +37,7 @@ class TestDay06(unittest.TestCase):
         """
         # self.assertEqual(part_two(self.__class__.puzzle_input), 0)
         pass
+
 
 if __name__ == '__main__':
     unittest.main()
