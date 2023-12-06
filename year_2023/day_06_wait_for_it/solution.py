@@ -9,6 +9,8 @@ def calc_distance(time, hold_time):
     return hold_time * (time-hold_time)
 
 
+
+
 def part_one(puzzle_input):
     times = [int(num) for num in puzzle_input[0].split(":")[1].split()]
     distances = [int(num) for num in puzzle_input[1].split(":")[1].split()]
@@ -24,7 +26,17 @@ def part_one(puzzle_input):
 
 
 def part_two(puzzle_input):
-    pass
+    time = int(''.join(char for char in puzzle_input[0] if char.isdigit()))
+    winning_distance = int(''.join(
+        char for char in puzzle_input[1] if char.isdigit()))
+    ways_to_win = 0
+
+    for hold_time in range(int(time)):
+        distance = calc_distance(time, hold_time)
+        if distance > winning_distance:
+            ways_to_win += 1
+
+    return ways_to_win
 
 
 p1, p1_time = time_function(part_one, puzzle_input)
