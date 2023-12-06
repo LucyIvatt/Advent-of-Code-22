@@ -8,7 +8,7 @@ My solutions for advent of code between 2021-2023 using python.
 | Day 2  | ⭐⭐ | ⭐⭐ | ⭐⭐ |
 | Day 3  | ⭐⭐ | ⭐⭐ | ⭐⭐ |
 | Day 4  | ⭐⭐ | ⭐⭐ | ⭐⭐ |
-| Day 5  | ⭐⭐ | ⭐⭐ | ➖➖ |
+| Day 5  | ⭐⭐ | ⭐⭐ | ⭐❌ |
 | Day 6  | ⭐⭐ | ⭐⭐ | ➖➖ |
 | Day 7  | ⭐⭐ | ⭐⭐ | ➖➖ |
 | Day 8  | ⭐⭐ | ⭐⭐ | ➖➖ |

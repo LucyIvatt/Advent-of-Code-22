@@ -22,8 +22,7 @@ class TestDay05(unittest.TestCase):
         Tests the Day 05 Part 1 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        # self.assertEqual(part_one(self.__class__.puzzle_input), 0)
-        pass
+        self.assertEqual(part_one(self.__class__.puzzle_input), 535_088_217)
 
     def test_p2_example(self):
         """
