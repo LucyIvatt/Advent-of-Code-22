@@ -1,6 +1,6 @@
 import unittest
 
-from year_2023.day_07_camel_cards.solution import input_data, HandType, Hand, part_one
+from year_2023.day_07_camel_cards.solution import input_data, HandType, Hand, solution
 
 
 class TestDay07(unittest.TestCase):
@@ -26,20 +26,20 @@ class TestDay07(unittest.TestCase):
         """t
         Tests Day 07 Part 1 using the example given in the scenario
         """
-        self.assertEqual(part_one(self.__class__.example), 6_440)
+        self.assertEqual(solution(self.__class__.example), 6_440)
 
     def test_p1_actual(self):
         """
         Tests the Day 07 Part 1 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        self.assertEqual(part_one(self.__class__.puzzle_input), 251_058_093)
+        self.assertEqual(solution(self.__class__.puzzle_input), 251_058_093)
 
     def test_p2_example(self):
         """
         Tests Day 07 Part 2 using the example given in the scenario.
         """
-        # self.assertEqual(part_two(self.__class__.example), 0)
+        self.assertEqual(solution(self.__class__.example, True), 5_905)
         pass
 
     def test_p2_actual(self):
@@ -47,7 +47,7 @@ class TestDay07(unittest.TestCase):
         Tests the Day 07 Part 2 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        # self.assertEqual(part_two(self.__class__.puzzle_input), 0)
+        self.assertEqual(solution(self.__class__.puzzle_input, True), 0)
         pass
 
 
