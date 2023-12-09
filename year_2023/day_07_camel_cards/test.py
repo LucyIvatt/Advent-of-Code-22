@@ -1,6 +1,6 @@
 import unittest
 
-from year_2023.day_07_camel_cards.solution import input_data, HandType, Card
+from year_2023.day_07_camel_cards.solution import input_data, HandType, Hand, part_one
 
 
 class TestDay07(unittest.TestCase):
@@ -10,32 +10,30 @@ class TestDay07(unittest.TestCase):
         cls.puzzle_input = input_data("year_2023/day_07_camel_cards/input.txt")
 
     def test_classify_hand(self):
-        test_cases = {"AAAAA": HandType.FIVE_OF_KIND,
-                      "AA8AA": HandType.FOUR_OF_KIND,
-                      "23332": HandType.FULL_HOUSE,
-                      "TTT98": HandType.THREE_OF_KIND,
-                      "23432": HandType.TWO_PAIR,
-                      "A23A4": HandType.ONE_PAIR,
-                      "23456": HandType.HIGH_CARD}
+        test_cases = {"AAAAA 1": HandType.FIVE_OF_KIND,
+                      "AA8AA 1": HandType.FOUR_OF_KIND,
+                      "23332 1": HandType.FULL_HOUSE,
+                      "TTT98 1": HandType.THREE_OF_KIND,
+                      "23432 1": HandType.TWO_PAIR,
+                      "A23A4 1": HandType.ONE_PAIR,
+                      "23456 1": HandType.HIGH_CARD}
 
         for hand, classification in test_cases.items():
-            card = Card(hand)
+            card = Hand(hand)
             self.assertEqual(card.hand_type, classification)
 
     def test_p1_example(self):
         """t
         Tests Day 07 Part 1 using the example given in the scenario
         """
-        # self.assertEqual(part_one(self.__class__.example), 0)
-        pass
+        self.assertEqual(part_one(self.__class__.example), 6_440)
 
     def test_p1_actual(self):
         """
         Tests the Day 07 Part 1 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        # self.assertEqual(part_one(self.__class__.puzzle_input), 0)
-        pass
+        self.assertEqual(part_one(self.__class__.puzzle_input), 251_058_093)
 
     def test_p2_example(self):
         """

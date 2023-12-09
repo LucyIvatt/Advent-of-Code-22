@@ -13,13 +13,14 @@ class HandType(Enum):
     FIVE_OF_KIND = 6
 
 
-class Card:
-    def __init__(self, hand):
-        self.hand = list(hand)
+class Hand:
+    def __init__(self, input_string):
+        self.hand = list(input_string.split()[0])
+        self.bid = int(input_string.split()[1])
         self.hand_type = self.classify_hand()
 
     def __repr__(self):
-        return f"Card({self.hand=}, {self.hand_type})"
+        return f"Card({self.hand=}, {self.hand_type=}, {self.bid=})"
 
     def classify_hand(self):
         card_counts = Counter(self.hand)
@@ -40,21 +41,36 @@ class Card:
             case [1, 1, 1, 1, 1]:
                 return HandType.HIGH_CARD
 
+    def __lt__(self, other):
+        if self.hand_type.value < other.hand_type.value:
+            return True
+        elif self.hand_type.value > other.hand_type.value:
+            return False
+        elif self.hand_type == other.hand_type:
+            for ci in range(len(self.hand)):
+                if value_order.index(self.hand[ci]) < value_order.index(other.hand[ci]):
+                    return True
+                elif value_order.index(self.hand[ci]) > value_order.index(other.hand[ci]):
+                    return False
+                else:
+                    continue
 
-value_order = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
+
+value_order = ['2', '3', '4', '5', '6', '7',
+               '8', '9', 'T', 'J', 'Q', 'K', 'A', 'J']
 
 
 def part_one(puzzle_input):
-    for hand in puzzle_input:
-        test = Card(hand.split()[0])
-        print(test)
+    hands = [Hand(hand) for hand in puzzle_input]
+    sorted_hands = sorted(hands)
+    return sum(hand.bid * (sorted_hands.index(hand) + 1) for hand in sorted_hands)
 
 
 def part_two(puzzle_input):
     pass
 
 
-puzzle_input = input_data("year_2023/day_07_camel_cards/example.txt")
+puzzle_input = input_data("year_2023/day_07_camel_cards/input.txt")
 
 p1, p1_time = time_function(part_one, puzzle_input)
 p2, p2_time = time_function(part_two, puzzle_input)
