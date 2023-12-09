@@ -2,6 +2,8 @@ from helpers.aoc_utils import input_data, time_function
 from enum import Enum
 from collections import Counter
 
+CARD_ORDER, CARD_ORDER_JOKERS = '23456789TJQKA', 'J23456789TQKA'
+
 
 class HandType(Enum):
     HIGH_CARD = 0
@@ -14,27 +16,31 @@ class HandType(Enum):
 
 
 class Hand:
+
     def __init__(self, input_string, jokers=False):
-        self.hand = input_string.split()[0]
-        self.bid = int(input_string.split()[1])
+        self.hand, self.bid = input_string.split()
+        self.bid = int(self.bid)
+
         self.jokers = jokers
+        self.card_values = CARD_ORDER_JOKERS if self.jokers else CARD_ORDER
+
         self.hand_type = self.classify_hand()
 
     def __repr__(self):
-        return f"Card({self.hand=}, {self.hand_type=}, {self.bid=})"
+        return f"Hand({self.hand=}, {self.hand_type=}, {self.bid=})"
 
     def classify_hand(self):
+        card_counts = Counter(
+            [card for card in self.hand if card != "J"]) if self.jokers else Counter(self.hand)
+        values = sorted(list(card_counts.values()))
+
         if self.jokers:
             num_jokers = self.hand.count("J")
+
             if num_jokers == 5:
                 return HandType.FIVE_OF_KIND
-            card_counts = Counter([card for card in self.hand if card != "J"])
-            values = sorted(list(card_counts.values()))
-            values[-1] += num_jokers
-
-        else:
-            card_counts = Counter(self.hand)
-            values = sorted(list(card_counts.values()))
+            else:
+                values[-1] += num_jokers
 
         match values:
             case [5]:
@@ -53,26 +59,14 @@ class Hand:
                 return HandType.HIGH_CARD
 
     def __lt__(self, other):
-        if self.hand_type.value < other.hand_type.value:
-            return True
-        elif self.hand_type.value > other.hand_type.value:
-            return False
-        elif self.hand_type == other.hand_type:
-            for ci in range(len(self.hand)):
-                comparison_list = value_order_jokers if self.jokers else value_order
-                if comparison_list.index(self.hand[ci]) < comparison_list.index(other.hand[ci]):
-                    return True
-                elif comparison_list.index(self.hand[ci]) > comparison_list.index(other.hand[ci]):
-                    return False
-                else:
-                    continue
+        # Compares based on hand type first
+        if self.hand_type != other.hand_type:
+            return self.hand_type.value < other.hand_type.value
 
-
-value_order = ['2', '3', '4', '5', '6', '7',
-               '8', '9', 'T', 'J', 'Q', 'K', 'A']
-
-value_order_jokers = ['J', '2', '3', '4', '5', '6', '7',
-                      '8', '9', 'T', 'Q', 'K', 'A']
+        # Otherwise uses card values
+        for self_card, other_card in zip(self.hand, other.hand):
+            if self_card != other_card:
+                return self.card_values.index(self_card) < self.card_values.index(other_card)
 
 
 def solution(puzzle_input, jokers=False):

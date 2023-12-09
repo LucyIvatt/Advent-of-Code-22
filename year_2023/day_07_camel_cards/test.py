@@ -47,7 +47,8 @@ class TestDay07(unittest.TestCase):
         Tests the Day 07 Part 2 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        self.assertEqual(solution(self.__class__.puzzle_input, True), 0)
+        self.assertEqual(
+            solution(self.__class__.puzzle_input, True), 249_781_879)
         pass
 
 
