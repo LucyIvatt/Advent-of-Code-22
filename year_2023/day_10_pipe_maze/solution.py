@@ -33,27 +33,22 @@ def get_start(maze):
     for direction, coord in adj_coords.items():
         symbol = maze[coord[0]][coord[1]]
         if symbol != "." and direction in SYMBOL_DIRS[symbol].keys():
-            return coord, SYMBOL_DIRS[symbol][direction], direction, symbol
+            return coord, direction, symbol
 
 
-def part_one(puzzle_input, start_dir):
+def part_one(puzzle_input):
     maze = [[char for char in row] for row in puzzle_input]
-    current_pos, prev_dir, next_dir, symbol = get_start(maze)
+    current_pos, next_dir, symbol = get_start(maze)
 
     node_list = ["S", symbol]
 
-    while True:
+    while node_list[-1] != "S":
         next_dir = SYMBOL_DIRS[symbol][next_dir]
 
         current_pos = (current_pos[0] + next_dir.value[0],
                        current_pos[1] + next_dir.value[1])
 
         symbol = maze[current_pos[0]][current_pos[1]]
-
-        if symbol == "S":
-            node_list.append("S")
-            break
-
         node_list.append(symbol)
 
     return math.floor(len(node_list) / 2)
@@ -65,7 +60,7 @@ def part_two(puzzle_input):
 
 puzzle_input = input_data("year_2023/day_10_pipe_maze/input.txt")
 
-p1, p1_time = time_function(part_one, puzzle_input, Direction.EAST)
+p1, p1_time = time_function(part_one, puzzle_input)
 p2, p2_time = time_function(part_two, puzzle_input)
 
 print("--------------------------------------")
