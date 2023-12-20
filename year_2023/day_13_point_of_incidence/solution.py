@@ -82,13 +82,19 @@ def part_two(puzzle_input):
     return total_sum
 
 
-puzzle_input = input_data("year_2023/day_13_point_of_incidence/example.txt")
+def main():
+    puzzle_input = input_data(
+        "year_2023/day_13_point_of_incidence/input.txt")
 
-p1, p1_time = time_function(part_one, puzzle_input)
-p2, p2_time = time_function(part_two, puzzle_input)
+    p1, p1_time = time_function(part_one, puzzle_input)
+    p2, p2_time = time_function(part_two, puzzle_input)
 
-print("--------------------------------------")
-print("Day 13: point_of_incidence")
-print(f"Part One Answer: {p1} - [{p1_time:.4f} seconds]")
-print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 13: point_of_incidence")
+    print(f"Part One Answer: {p1} - [{p1_time:.4f} seconds]")
+    print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
+    print("--------------------------------------")
+
+
+if __name__ == "__main__":
+    main()
