@@ -1,7 +1,7 @@
 from helpers.aoc_utils import input_data, time_function, find_element_location_2d_list
 from enum import Enum
 import math
-import time
+import numpy as np
 
 
 class Direction(Enum):
@@ -55,7 +55,42 @@ def part_one(puzzle_input):
 
 
 def part_two(puzzle_input):
-    pass
+    maze = [[char for char in row] for row in puzzle_input]
+    current_pos, next_dir, symbol = get_start(maze)
+
+    node_list = ["S", symbol]
+    coords = [current_pos]
+
+    while node_list[-1] != "S":
+        next_dir = SYMBOL_DIRS[symbol][next_dir]
+        current_pos = (current_pos[0] + next_dir.value[0],
+                       current_pos[1] + next_dir.value[1])
+        symbol = maze[current_pos[0]][current_pos[1]]
+        node_list.append(symbol)
+        coords.append(current_pos)
+
+    width = len(maze[0])
+    height = len(maze)
+
+    inside_count = 0
+    for y, line in enumerate(maze):
+        for x, c in enumerate(line):
+            if (x, y) in coords:
+                continue
+
+            crosses = 0
+            x2, y2 = x, y
+
+            while x2 < width and y2 < height:
+                c2 = maze[y2][x2]
+                if (x2, y2) in coords and c2 != "L" and c2 != "7":
+                    crosses += 1
+                x2 += 1
+                y2 += 1
+
+            if crosses % 2 == 1:
+                inside_count += 1
+    return inside_count
 
 
 puzzle_input = input_data("year_2023/day_10_pipe_maze/input.txt")

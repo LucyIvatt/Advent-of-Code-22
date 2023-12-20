@@ -43,8 +43,7 @@ class TestDay10(unittest.TestCase):
         Tests the Day 10 Part 2 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        # self.assertEqual(part_two(self.__class__.puzzle_input), 0)
-        pass
+        self.assertEqual(part_two(self.__class__.puzzle_input), 0)
 
 
 if __name__ == '__main__':
