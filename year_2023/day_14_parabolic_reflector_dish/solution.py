@@ -1,10 +1,6 @@
 from helpers.aoc_utils import input_data, time_function, Direction
 
 
-def save_state(grid):
-    return hash(tuple(map(tuple, grid)))
-
-
 def tilt_puzzle(puzzle_input, di):
     r_start = 1 if di == Direction.NORTH else 0
     r_end = (len(puzzle_input) -
@@ -41,31 +37,34 @@ def part_one(puzzle_input):
     return calculate_load(tilted)
 
 
+def save_state(grid):
+    return hash(tuple(map(tuple, grid)))
+
+
 def part_two(puzzle_input):
     puzzle_input = [list(string) for string in puzzle_input]
     cycle = [Direction.NORTH, Direction.WEST, Direction.SOUTH, Direction.EAST]
-    cycle_num = 1_000_000_000
+    TOTAL_CYCLES = 1_000_000_000
     states = {}
 
-    c = 0
-    while c < cycle_num:
+    i = 0
+    while i < TOTAL_CYCLES:
         for direction in cycle:
             puzzle_input = tilt_puzzle(puzzle_input, direction)
-
         state = save_state(puzzle_input)
 
-        #fmt: off
-        if state in states and c < 500:
-            loop_length = c - states[state]
-            print(f"loop! c={c} is also {states[state]}, so loop length is {loop_length}")
-            print(f"you can fit {cycle_num // loop_length} full loops in, which puts you at {(cycle_num // loop_length) * loop_length}")
-            distance_to_goal = cycle_num - c
-            loop_length = c - states[state]
-            c = cycle_num - distance_to_goal % loop_length
-        #fmt: on
+        if state in states and i < 500:
+            loop_length = i - states[state]
+            remaining_cycles = TOTAL_CYCLES - i
+            i = TOTAL_CYCLES - (remaining_cycles % loop_length)
 
-        states[save_state(puzzle_input)] = c
-        c += 1
+            #fmt: off
+            print(f"Loop Found: The state of cycle no. {states[state]} is the same as the state of cycle no. {i}. The loop length is {loop_length}.")
+            print(f"{TOTAL_CYCLES // loop_length} loops can be fit in, skipping {(TOTAL_CYCLES // loop_length) * loop_length} cycles.")
+            #fmt: on
+
+        states[save_state(puzzle_input)] = i
+        i += 1
 
     return calculate_load(puzzle_input)
 
