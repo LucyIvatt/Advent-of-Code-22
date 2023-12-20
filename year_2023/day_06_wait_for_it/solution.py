@@ -28,11 +28,16 @@ def part_two(puzzle_input):
     return ways_to_win([time], [distance])
 
 
-p1, p1_time = time_function(part_one, puzzle_input)
-p2, p2_time = time_function(part_two, puzzle_input)
+def main():
+    p1, p1_time = time_function(part_one, puzzle_input)
+    p2, p2_time = time_function(part_two, puzzle_input)
 
-print("--------------------------------------")
-print("Day 06: wait_for_it")
-print(f"Part One Answer: {p1} - [{p1_time:.4f} seconds]")
-print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 06: wait_for_it")
+    print(f"Part One Answer: {p1} - [{p1_time:.4f} seconds]")
+    print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
+    print("--------------------------------------")
+
+
+if __name__ == "__main__":
+    main()

@@ -42,13 +42,18 @@ def part_two(puzzle_input):
     return math.lcm(*steps)
 
 
-puzzle_input = input_data("year_2023/day_08_haunted_wasteland/input.txt")
+def main():
+    puzzle_input = input_data("year_2023/day_08_haunted_wasteland/input.txt")
 
-p1, p1_time = time_function(part_one, puzzle_input)
-p2, p2_time = time_function(part_two, puzzle_input)
+    p1, p1_time = time_function(part_one, puzzle_input)
+    p2, p2_time = time_function(part_two, puzzle_input)
 
-print("--------------------------------------")
-print("Day 08: haunted_wasteland")
-print(f"Part One Answer: {p1} - [{p1_time:.4f} seconds]")
-print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 08: haunted_wasteland")
+    print(f"Part One Answer: {p1} - [{p1_time:.4f} seconds]")
+    print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
+    print("--------------------------------------")
+
+
+if __name__ == "__main__":
+    main()

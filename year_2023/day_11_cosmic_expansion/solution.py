@@ -34,13 +34,18 @@ def solution(puzzle_input, expansion_size):
     return shortest_paths
 
 
-puzzle_input = input_data("year_2023/day_11_cosmic_expansion/input.txt")
+def main():
+    puzzle_input = input_data("year_2023/day_11_cosmic_expansion/input.txt")
 
-p1, p1_time = time_function(solution, puzzle_input, 2)
-p2, p2_time = time_function(solution, puzzle_input, 1_000_000)
+    p1, p1_time = time_function(solution, puzzle_input, 2)
+    p2, p2_time = time_function(solution, puzzle_input, 1_000_000)
 
-print("--------------------------------------")
-print("Day 11: cosmic_expansion")
-print(f"Part One Answer: {p1} - [{p1_time:.4f} seconds]")
-print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 11: cosmic_expansion")
+    print(f"Part One Answer: {p1} - [{p1_time:.4f} seconds]")
+    print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
+    print("--------------------------------------")
+
+
+if __name__ == "__main__":
+    main()

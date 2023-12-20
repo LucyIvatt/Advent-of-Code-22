@@ -84,17 +84,21 @@ def part_two(puzzle_input):
     return inside_count
 
 
-puzzle_input = input_data("year_2023/day_10_pipe_maze/input.txt")
+def main():
+    puzzle_input = input_data("year_2023/day_10_pipe_maze/input.txt")
 
-p1, p1_time = time_function(part_one, puzzle_input)
-# p2, p2_time = time_function(part_two, puzzle_input)
+    p1, p1_time = time_function(part_one, puzzle_input)
+    # p2, p2_time = time_function(part_two, puzzle_input)
 
-print("--------------------------------------")
-print("Day 10: pipe_maze")
-print(f"Part One Answer: {p1} - [{p1_time:.4f} seconds]")
-# print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 10: pipe_maze")
+    print(f"Part One Answer: {p1} - [{p1_time:.4f} seconds]")
+    # print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
+    print("--------------------------------------")
 
+
+if __name__ == "__main__":
+    main()
 
 # def find_connections(coord, maze, ignore_dir):
 #     diff = [(-1, 0), (0, +1), (+1, 0), (0, -1)]

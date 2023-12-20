@@ -75,13 +75,18 @@ def solution(puzzle_input, jokers=False):
     return sum(hand.bid * (sorted_hands.index(hand) + 1) for hand in sorted_hands)
 
 
-puzzle_input = input_data("year_2023/day_07_camel_cards/input.txt")
+def main():
+    puzzle_input = input_data("year_2023/day_07_camel_cards/input.txt")
 
-p1, p1_time = time_function(solution, puzzle_input)
-p2, p2_time = time_function(solution, puzzle_input, True)
+    p1, p1_time = time_function(solution, puzzle_input)
+    p2, p2_time = time_function(solution, puzzle_input, True)
 
-print("--------------------------------------")
-print("Day 07: camel_cards")
-print(f"Part One Answer: {p1} - [{p1_time:.4f} seconds]")
-print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 07: camel_cards")
+    print(f"Part One Answer: {p1} - [{p1_time:.4f} seconds]")
+    print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
+    print("--------------------------------------")
+
+
+if __name__ == "__main__":
+    main()

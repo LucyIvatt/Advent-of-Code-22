@@ -11,7 +11,7 @@ class TestDay13(unittest.TestCase):
         cls.puzzle_input = input_data(
             "year_2023/day_13_point_of_incidence/input.txt")
 
-    def test_p1_example(self): 
+    def test_p1_example(self):
         """
         Tests Day 13 Part 1 using the example given in the scenario
         """
