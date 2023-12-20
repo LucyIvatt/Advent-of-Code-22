@@ -1,29 +1,31 @@
-from helpers.aoc_utils import input_data, time_function
+from helpers.aoc_utils import input_data, time_function, transpose_list
 from itertools import groupby
 
 
-def find_mirrors(pattern):
-    # Horizontal
-    for row in range(1, len(pattern)):
-        dy = row if row <= (len(pattern) / 2) else len(pattern) - row
+def scan_direction(pattern, horizontal=True):
+    pattern = pattern if horizontal else transpose_list(pattern)
 
-        if all(pattern[top] == pattern[bottom] for top, bottom in zip(range(row-dy, row), reversed(range(row, row+dy)))):
-            return 100 * row
-
-    # Vertical
-    trans_pattern = [list(map(str, column)) for column in zip(*pattern)]
-
-    for col in range(1, len(pattern[0])):
-        dx = col if col <= (len(pattern[0]) / 2) else len(pattern[0]) - col
-        if all(trans_pattern[top] == trans_pattern[bottom] for top, bottom in zip(range(col-dx, col), reversed(range(col, col+dx)))):
-            return col
+    for i in range(1, len(pattern)):
+        dx = i if i <= (len(pattern) / 2) else (len(pattern) - i)
+        if all(pattern[top] == pattern[bottom] for top, bottom in zip(range(i-dx, i), reversed(range(i, i+dx)))):
+            return True, i
+    return False, None
 
 
 def part_one(puzzle_input):
     patterns = [list(group) for key, group in groupby(
         puzzle_input, key=lambda x: x == "") if not key]
 
-    return sum(find_mirrors(pattern) for pattern in patterns)
+    total_sum = 0
+
+    for pattern in patterns:
+        h_found, h_location = scan_direction(pattern, horizontal=True)
+        if h_found:
+            total_sum += 100 * h_location
+        else:
+            total_sum += scan_direction(pattern, horizontal=False)[1]
+
+    return total_sum
 
 
 def part_two(puzzle_input):
