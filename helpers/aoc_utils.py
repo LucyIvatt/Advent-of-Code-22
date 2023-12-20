@@ -1,4 +1,5 @@
 import time
+from enum import Enum
 
 
 def input_data(filename):
@@ -54,3 +55,10 @@ def manhattan_distance(point1, point2):
 
 def transpose_list(lst):
     return [list(map(str, column)) for column in zip(*lst)]
+
+
+class Direction(Enum):
+    NORTH = (-1, 0)
+    EAST = (0, +1)
+    SOUTH = (+1, 0)
+    WEST = (0, -1)

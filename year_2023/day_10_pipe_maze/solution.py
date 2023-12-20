@@ -1,14 +1,5 @@
-from helpers.aoc_utils import input_data, time_function, find_element_location_2d_list
-from enum import Enum
+from helpers.aoc_utils import input_data, time_function, find_element_location_2d_list, Direction
 import math
-import numpy as np
-
-
-class Direction(Enum):
-    NORTH = (-1, 0)
-    EAST = (0, +1)
-    SOUTH = (+1, 0)
-    WEST = (0, -1)
 
 
 # Directions in to direction out
@@ -96,12 +87,12 @@ def part_two(puzzle_input):
 puzzle_input = input_data("year_2023/day_10_pipe_maze/input.txt")
 
 p1, p1_time = time_function(part_one, puzzle_input)
-p2, p2_time = time_function(part_two, puzzle_input)
+# p2, p2_time = time_function(part_two, puzzle_input)
 
 print("--------------------------------------")
 print("Day 10: pipe_maze")
 print(f"Part One Answer: {p1} - [{p1_time:.4f} seconds]")
-print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
+# print(f"Part Two Answer: {p2} - [{p2_time:.4f} seconds]")
 print("--------------------------------------")
 
 
