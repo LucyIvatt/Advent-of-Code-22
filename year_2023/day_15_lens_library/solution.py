@@ -1,27 +1,47 @@
 from helpers.aoc_utils import input_data, time_function
+import re
+from collections import defaultdict
 
-# Determine the ASCII code for the current character of the string.
-# Increase the current value by the ASCII code you just determined.
-# Set the current value to itself multiplied by 17.
-# Set the current value to the remainder of dividing itself by 256.
+PATTERN = re.compile(r'(.+)([=-])(\d*)')
 
 
-def hash_algorithm(input_str):
-    hash_code = 0
-    for char in input_str:
-        hash_code += ord(char)
-        hash_code *= 17
-        hash_code %= 256
-    return hash_code
+class Lens():
+    def __init__(self, lens):
+        self.input = lens
+
+        match = PATTERN.match(lens)
+        self.label, self.op, self.num = match.groups()
+
+    def __hash__(self):
+        hash_code = 0
+        for char in self.input:
+            hash_code += ord(char)
+            hash_code *= 17
+            hash_code %= 256
+        return hash_code
+
+
+def parse_step(input_str):
+    match = PATTERN.match(input_str)
+    A, B, C = match.groups()
+    return A, B, C
 
 
 def part_one(puzzle_input):
-    sequence = [x for x in puzzle_input[0].split(",")]
-    return sum(hash_algorithm(step) for step in sequence)
+    sequence = [Lens(x) for x in puzzle_input[0].split(",")]
+    return sum(hash(step) for step in sequence)
 
 
 def part_two(puzzle_input):
-    pass
+    sequence = [Lens(x) for x in puzzle_input[0].split(",")]
+    boxes = defaultdict(dict)
+
+    # for step in sequence:
+    #     hash_code = hash_algorithm(step)
+    #     label, operation, num = parse_step(step)
+
+    #     if operation == "=":
+    #         boxes[hash_code]["value"] = int(num)
 
 
 def main():
