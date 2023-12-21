@@ -1,3 +1,4 @@
+from functools import reduce
 from helpers.aoc_utils import input_data, time_function
 import re
 from collections import defaultdict
@@ -5,43 +6,54 @@ from collections import defaultdict
 PATTERN = re.compile(r'(.+)([=-])(\d*)')
 
 
+def hash_alg(string):
+    return reduce(lambda h, char: (h + ord(char)) * 17 % 256, string, 0)
+
+
 class Lens():
-    def __init__(self, lens):
-        self.input = lens
+    def __init__(self, label, value, box):
+        self.label = label
+        self.focal = value
+        self.box = box
 
-        match = PATTERN.match(lens)
-        self.label, self.op, self.num = match.groups()
+    def __repr__(self):
+        return f"Lens({self.focal})"
 
-    def __hash__(self):
-        hash_code = 0
-        for char in self.input:
-            hash_code += ord(char)
-            hash_code *= 17
-            hash_code %= 256
-        return hash_code
-
-
-def parse_step(input_str):
-    match = PATTERN.match(input_str)
-    A, B, C = match.groups()
-    return A, B, C
+    def focusing_power(self, pos):
+        print(f"{1 + self.box=}")
+        print(f"{pos=}")
+        print(f"{self.focal=}")
+        return (1 + self.box) * pos * self.focal
 
 
 def part_one(puzzle_input):
-    sequence = [Lens(x) for x in puzzle_input[0].split(",")]
-    return sum(hash(step) for step in sequence)
+    return sum(hash_alg(step) for step in puzzle_input[0].split(","))
 
 
 def part_two(puzzle_input):
-    sequence = [Lens(x) for x in puzzle_input[0].split(",")]
+    steps = [step for step in puzzle_input[0].split(",")]
     boxes = defaultdict(dict)
 
-    # for step in sequence:
-    #     hash_code = hash_algorithm(step)
-    #     label, operation, num = parse_step(step)
+    for step in steps:
+        match = PATTERN.match(step)
+        label, op, num = match.groups()
+        hc = hash_alg(label)
 
-    #     if operation == "=":
-    #         boxes[hash_code]["value"] = int(num)
+        if op == "=":
+            if label in boxes[hc].keys():
+                boxes[hc][label].focal = int(num)
+            else:
+                boxes[hc][label] = Lens(label, int(num), hc)
+        elif op == "-":
+            if label in boxes[hc].keys():
+                boxes[hc].pop(label)
+
+    total_focus_power = 0
+    for box in boxes.values():
+        for pos, (label, lens) in enumerate(box.items()):
+            total_focus_power += lens.focusing_power(pos+1)
+
+    return total_focus_power
 
 
 def main():
