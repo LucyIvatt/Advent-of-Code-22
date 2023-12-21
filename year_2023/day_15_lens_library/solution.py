@@ -13,17 +13,11 @@ def hash_alg(string):
 class Lens():
     def __init__(self, label, value, box):
         self.label = label
-        self.focal = value
+        self.focal_length = value
         self.box = box
 
-    def __repr__(self):
-        return f"Lens({self.focal})"
-
     def focusing_power(self, pos):
-        print(f"{1 + self.box=}")
-        print(f"{pos=}")
-        print(f"{self.focal=}")
-        return (1 + self.box) * pos * self.focal
+        return (1 + self.box) * pos * self.focal_length
 
 
 def part_one(puzzle_input):
@@ -31,29 +25,18 @@ def part_one(puzzle_input):
 
 
 def part_two(puzzle_input):
-    steps = [step for step in puzzle_input[0].split(",")]
     boxes = defaultdict(dict)
 
-    for step in steps:
-        match = PATTERN.match(step)
-        label, op, num = match.groups()
+    for step in puzzle_input[0].split(","):
+        label, op, num = PATTERN.match(step).groups()
         hc = hash_alg(label)
 
         if op == "=":
-            if label in boxes[hc].keys():
-                boxes[hc][label].focal = int(num)
-            else:
-                boxes[hc][label] = Lens(label, int(num), hc)
+            boxes[hc][label] = Lens(label, int(num), hc)
         elif op == "-":
-            if label in boxes[hc].keys():
-                boxes[hc].pop(label)
+            boxes[hc].pop(label, None)
 
-    total_focus_power = 0
-    for box in boxes.values():
-        for pos, (label, lens) in enumerate(box.items()):
-            total_focus_power += lens.focusing_power(pos+1)
-
-    return total_focus_power
+    return sum(lens.focusing_power(pos + 1) for box in boxes.values() for pos, (_, lens) in enumerate(box.items()))
 
 
 def main():
