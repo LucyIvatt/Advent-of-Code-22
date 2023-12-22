@@ -29,16 +29,14 @@ class TestDay16(unittest.TestCase):
         """
         Tests Day 16 Part 2 using the example given in the scenario.
         """
-        # self.assertEqual(part_two(self.__class__.example), 0)
-        pass
+        self.assertEqual(part_two(self.__class__.example), 51)
 
     def test_p2_actual(self):
         """
         Tests the Day 16 Part 2 using my generated input. Used to check any edits
         made to the program have not broken it.
         """
-        # self.assertEqual(part_two(self.__class__.puzzle_input), 0)
-        pass
+        self.assertEqual(part_two(self.__class__.puzzle_input), 7_594)
 
 
 if __name__ == '__main__':

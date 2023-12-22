@@ -1,7 +1,4 @@
 from helpers.aoc_utils import input_data, time_function, Direction
-import time
-import os
-from collections import defaultdict
 
 REFLECT_DIRS = {("|", Direction.EAST): [Direction.NORTH, Direction.SOUTH],
                 ("|", Direction.WEST): [Direction.NORTH, Direction.SOUTH],
@@ -38,11 +35,11 @@ class Beam():
         return hash((self.dir, self.pos))
 
     def __eq__(self, other):
-        return (self.dir, self.pos) == (self.dir, self.pos)
+        return (self.dir, self.pos) == (other.dir, other.pos)
 
 
-def part_one(puzzle_input):
-    beams = [Beam(Direction.EAST, (0, -1))]
+def simulate_beam(puzzle_input, initial_dir, initial_pos):
+    beams = [Beam(initial_dir, initial_pos)]
     processed_beams = set()
     visited_tiles = set()
 
@@ -71,25 +68,28 @@ def part_one(puzzle_input):
                     else:
                         new_beams.append(Beam(beam.dir, (r, c)))
 
-        # os.system('cls' if os.name == 'nt' else 'clear')
-        # for i in range(len(puzzle_input)):
-        #     print("".join(
-        #         [x if (i, j) not in visited_tiles else "#" for j, x in enumerate(puzzle_input[i])]))
-        # time.sleep(0.1)
-
         processed_beams.update(beams)
         beams = new_beams
 
     return len(visited_tiles)
 
 
+def part_one(puzzle_input):
+    return simulate_beam(puzzle_input, Direction.EAST, (0, -1))
+
+
 def part_two(puzzle_input):
-    pass
+    coords = {Direction.NORTH: lambda i: (len(puzzle_input[0]) + 1, i),
+              Direction.SOUTH: lambda i: (-1, i),
+              Direction.EAST: lambda i: (i, -1),
+              Direction.WEST: lambda i: (i, len(puzzle_input) + 1)}
+
+    return max(simulate_beam(puzzle_input, d, pos(i)) for d, pos in coords.items() for i in range(len(puzzle_input)))
 
 
 def main():
     puzzle_input = input_data(
-        "year_2023/day_16_the_floor_will_be_lava/example.txt")
+        "year_2023/day_16_the_floor_will_be_lava/input.txt")
 
     p1, p1_time = time_function(part_one, puzzle_input)
     p2, p2_time = time_function(part_two, puzzle_input)
@@ -103,3 +103,11 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# Print that can be added to the loop for a little animation!
+# os.system('cls' if os.name == 'nt' else 'clear')
+# for i in range(len(puzzle_input)):
+#     print("".join(
+#         [x if (i, j) not in visited_tiles else "#" for j, x in enumerate(puzzle_input[i])]))
+# time.sleep(0.1)
