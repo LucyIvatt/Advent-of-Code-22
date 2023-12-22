@@ -71,14 +71,12 @@ def part_one(puzzle_input):
                     else:
                         new_beams.append(Beam(beam.dir, (r, c)))
 
-            # os.system('cls' if os.name == 'nt' else 'clear')
-            # for i in range(len(puzzle_input)):
-            #     print("".join(
-            #         [x if (i, j) not in visited_tiles else "#" for j, x in enumerate(puzzle_input[i])]))
-            # print(f"{processed_beams=}")
-            # print(f"{beams=}")
+        # os.system('cls' if os.name == 'nt' else 'clear')
+        # for i in range(len(puzzle_input)):
+        #     print("".join(
+        #         [x if (i, j) not in visited_tiles else "#" for j, x in enumerate(puzzle_input[i])]))
+        # time.sleep(0.1)
 
-            # time.sleep(0.5)
         processed_beams.update(beams)
         beams = new_beams
 
@@ -91,7 +89,7 @@ def part_two(puzzle_input):
 
 def main():
     puzzle_input = input_data(
-        "year_2023/day_16_the_floor_will_be_lava/input.txt")
+        "year_2023/day_16_the_floor_will_be_lava/example.txt")
 
     p1, p1_time = time_function(part_one, puzzle_input)
     p2, p2_time = time_function(part_two, puzzle_input)
