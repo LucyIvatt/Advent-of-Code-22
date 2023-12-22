@@ -26,7 +26,7 @@ class Beam():
     def __repr__(self) -> str:
         return f"Beam({self.dir}, {self.pos})"
 
-    def next_pos(self):
+    def next_position(self):
         row, col = self.pos
         dr, dc = self.dir.value
         return (row + dr, col + dc)
@@ -39,37 +39,32 @@ class Beam():
 
 
 def simulate_beam(puzzle_input, initial_dir, initial_pos):
-    beams = [Beam(initial_dir, initial_pos)]
-    processed_beams = set()
-    visited_tiles = set()
+    beams = {Beam(initial_dir, initial_pos)}
+    processed_beams, visited_tiles = set(), set()
 
-    while len(beams) > 0:
-        new_beams = []
+    while beams:
+        next_beams = set()
         for beam in beams:
-            r, c = beam.next_pos()
+            row, col = beam.next_position()
 
-            if beam not in processed_beams:
-                if 0 <= r < len(puzzle_input) and 0 <= c < len(puzzle_input[0]):
+            if beam not in processed_beams and all(0 <= x < len(puzzle_input) for x in (row, col)):
+                visited_tiles.add((row, col))
+                key = (puzzle_input[row][col], beam.dir)
 
-                    visited_tiles.add((r, c))
-                    current_symbol = puzzle_input[r][c]
-                    key = (current_symbol, beam.dir)
+                if key in REFLECT_DIRS.keys():
+                    next_dirs = REFLECT_DIRS[key]
 
-                    if key in REFLECT_DIRS.keys():
-
-                        next_dirs = REFLECT_DIRS[(current_symbol, beam.dir)]
-                        if type(next_dirs) == list:
-                            for direction in next_dirs:
-                                new_beams.append(Beam(direction, (r, c)))
-
-                        else:
-                            new_beams.append(Beam(next_dirs, (r, c)))
-
+                    if isinstance(next_dirs, list):
+                        next_beams.update(Beam(direction, (row, col))
+                                          for direction in next_dirs)
                     else:
-                        new_beams.append(Beam(beam.dir, (r, c)))
+                        next_beams.add(Beam(next_dirs, (row, col)))
+
+                else:
+                    next_beams.add(Beam(beam.dir, (row, col)))
 
         processed_beams.update(beams)
-        beams = new_beams
+        beams = next_beams
 
     return len(visited_tiles)
 
