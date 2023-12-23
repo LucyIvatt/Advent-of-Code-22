@@ -1,7 +1,10 @@
-from helpers.aoc_utils import input_data, time_function
+from functools import reduce
+from itertools import groupby
+from helpers.aoc_utils import input_data, time_function, split_by_empty_line
 import re
+import time
 
-PATTERN = re.compile(r'^([a-z])([<>]\d+):([a-z]+)$')
+PATTERN = re.compile(r'^([a-z])([<>]\d+):([a-zA-Z]+)$')
 
 
 class Rule():
@@ -34,10 +37,37 @@ class Rule():
 
 
 def part_one(puzzle_input):
-    x = Rule("a<2006:qkq")
-    part = {"x": 0, "m": 1, "a": 2, "s": 3}
-    print(x)
-    print(x.process_part(part))
+    workflows, parts = split_by_empty_line(puzzle_input)
+    #fmt:off
+    parts = [eval(reduce(lambda part, char: part.replace(f'{char}=',
+                f"'{char}':"), ["x", "m", "a", "s"], part)) for part in parts]
+    #fmt:on
+    workflows_dict = {}
+    for workflow in workflows:
+        groups = re.match(r'^(.*?){(.*)}$', workflow).groups()
+        workflow_id = groups[0]
+        rules = [Rule(rule) for rule in groups[1].split(",")]
+        workflows_dict[workflow_id] = rules
+
+    accepted = []
+
+    for part in parts:
+        current_location = "in"
+        rule_id = 0
+        while current_location != "R" and current_location != "A":
+            new_location = workflows_dict[current_location][rule_id].process_part(
+                part)
+
+            if new_location == None:
+                rule_id += 1
+            else:
+                rule_id = 0
+                current_location = new_location
+
+        if current_location == "A":
+            accepted.append(part)
+
+    return sum(rating for part in accepted for rating in part.values())
 
 
 def part_two(puzzle_input):
@@ -63,20 +93,6 @@ if __name__ == "__main__":
 # m>2090:A,
 # rfg
 """
-a<2006:qkq,
-m>2090:A,
-rfg
-
-object representing a rule: (maybe use eval?)
-    - letter than is compared
-    - operation
-    - number
-    - destination
-
-
-
-
-
 parts = list of dicts for the parts (x, m, a, s as keys)
 
 rules = dict of workflow with list of rules ({"in": rule1, rule2})

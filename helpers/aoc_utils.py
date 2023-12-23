@@ -1,3 +1,4 @@
+from itertools import groupby
 import time
 from enum import Enum
 
@@ -62,3 +63,8 @@ class Direction(Enum):
     EAST = (0, +1)
     SOUTH = (+1, 0)
     WEST = (0, -1)
+
+
+def split_by_empty_line(puzzle_input):
+    """Splits the puzzle input into patterns by empty line."""
+    return [list(group) for key, group in groupby(puzzle_input, key=lambda x: x == "") if not key]

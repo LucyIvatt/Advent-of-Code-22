@@ -1,10 +1,5 @@
-from helpers.aoc_utils import input_data, time_function, transpose_list
+from helpers.aoc_utils import input_data, time_function, transpose_list, split_by_empty_line
 from itertools import groupby
-
-
-def split_patterns(puzzle_input):
-    """Splits the puzzle input into patterns by empty line."""
-    return [list(group) for key, group in groupby(puzzle_input, key=lambda x: x == "") if not key]
 
 
 def flip_symbol(pattern, row, col):
@@ -40,7 +35,7 @@ def scan_direction(pattern, horizontal=True, ignore=None):
 def part_one(puzzle_input):
     """Finds line of symmetry in each pattern and calculates score accordingly."""
 
-    patterns = split_patterns(puzzle_input)
+    patterns = split_by_empty_line(puzzle_input)
     total_sum = 0
 
     for pattern in patterns:
@@ -57,7 +52,7 @@ def part_two(puzzle_input):
     """Finds line of symmetry in each pattern after flipping the correct symbol, 
     ignoring the original line of symmetry, and calculates score accordingly."""
 
-    patterns = split_patterns(puzzle_input)
+    patterns = split_by_empty_line(puzzle_input)
     total_sum = 0
     for pattern in patterns:
         orig_h_loc = scan_direction(pattern, horizontal=True)[1]
