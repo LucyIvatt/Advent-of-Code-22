@@ -1,15 +1,15 @@
 import unittest
 
-from year_2023.day_14_parabolic_reflector_dish.solution import input_data, part_one, part_two
+from python.year_2023.day_14_parabolic_reflector_dish.solution import input_data, part_one, part_two
 
 
 class TestDay14(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.example = input_data(
-            "year_2023/day_14_parabolic_reflector_dish/example.txt")
+            "python/year_2023/day_14_parabolic_reflector_dish/example.txt")
         cls.puzzle_input = input_data(
-            "year_2023/day_14_parabolic_reflector_dish/input.txt")
+            "python/year_2023/day_14_parabolic_reflector_dish/input.txt")
 
     def test_p1_example(self):
         """

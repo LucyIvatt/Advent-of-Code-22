@@ -84,11 +84,11 @@ def part_2(input):
 
     return score
 
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_02_rock_paper_scissors/input.txt")
 
-input = input_data("day02/input.txt")
-
-print("--------------------------------------")
-print("Day 2: Rock Paper Scissors")
-print("Part One Answer: " + str(part_1(input)))
-print("Part Two Answer: " + str(part_2(input)))
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 2: Rock Paper Scissors")
+    print("Part One Answer: " + str(part_1(input)))
+    print("Part Two Answer: " + str(part_2(input)))
+    print("--------------------------------------")

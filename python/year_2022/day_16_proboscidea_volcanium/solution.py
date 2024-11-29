@@ -29,11 +29,12 @@ def part_one(input):
         print(i.name, i.flow_rate, i.connections)
 
 
-input = input_data("2022/16 Proboscidea Volcanium/example.txt")
-part_one(input)
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_16_proboscidea_volcanium/example.txt")
+    part_one(input)
 
-print("--------------------------------------")
-print("Day 16: Proboscidea Volcanium")
-print("Part One Answer: ")
-print("Part Two Answer: ")
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 16: Proboscidea Volcanium")
+    print("Part One Answer: ")
+    print("Part Two Answer: ")
+    print("--------------------------------------")

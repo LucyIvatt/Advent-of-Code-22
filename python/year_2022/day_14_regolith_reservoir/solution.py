@@ -138,11 +138,11 @@ def part_two(input):
 
     return resting_sand
 
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_14_regolith_reservoir/input.txt")
 
-input = input_data("day14/input.txt")
-
-print("--------------------------------------")
-print("Day 14: Regolith Reservoir")
-print("Part One Answer: " + str(part_one(input)))
-print("Part Two Answer: " + str(part_two(input)))
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 14: Regolith Reservoir")
+    print("Part One Answer: " + str(part_one(input)))
+    print("Part Two Answer: " + str(part_two(input)))
+    print("--------------------------------------")

@@ -1,7 +1,7 @@
 from functools import reduce
 from collections import defaultdict
 import operator
-from helpers.aoc_utils import input_data
+from python.helpers.aoc_utils import input_data
 
 CONSTRAINTS = {"red": 12, "green": 13, "blue": 14}
 
@@ -50,7 +50,7 @@ def part_two(puzzle_input):
 
 
 def main():
-    puzzle_input = input_data("year_2023/day_02_cube_conundrum/input.txt")
+    puzzle_input = input_data("python/year_2023/day_02_cube_conundrum/input.txt")
 
     print("--------------------------------------")
     print("Day 02: Cube Conundrum")

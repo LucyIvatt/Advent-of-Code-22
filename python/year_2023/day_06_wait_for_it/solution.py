@@ -1,8 +1,8 @@
-from helpers.aoc_utils import input_data, time_function
+from python.helpers.aoc_utils import input_data, time_function
 from collections import defaultdict
 from math import prod
 
-puzzle_input = input_data("year_2023/day_06_wait_for_it/input.txt")
+puzzle_input = input_data("python/year_2023/day_06_wait_for_it/input.txt")
 
 
 def ways_to_win(times, distances):

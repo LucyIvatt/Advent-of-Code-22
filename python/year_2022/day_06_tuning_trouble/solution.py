@@ -15,11 +15,11 @@ def solution(input, marker_length):
         if len(chars) == len(set(chars)):
             return i+marker_length
 
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_06_tuning_trouble/input.txt")
 
-input = input_data("day06/input.txt")
-
-print("--------------------------------------")
-print("Day 6: Tuning Trouble")
-print("Part One Answer: " + str(solution(input, 4)))
-print("Part Two Answer: " + str(solution(input, 14)))
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 6: Tuning Trouble")
+    print("Part One Answer: " + str(solution(input, 4)))
+    print("Part Two Answer: " + str(solution(input, 14)))
+    print("--------------------------------------")

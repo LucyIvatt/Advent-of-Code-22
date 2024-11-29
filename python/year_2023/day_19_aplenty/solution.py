@@ -1,6 +1,6 @@
 from functools import reduce
 from itertools import groupby
-from helpers.aoc_utils import input_data, time_function, split_by_empty_line
+from python.helpers.aoc_utils import input_data, time_function, split_by_empty_line
 import re
 import time
 
@@ -75,7 +75,7 @@ def part_two(puzzle_input):
 
 
 def main():
-    puzzle_input = input_data("year_2023/day_19_aplenty/input.txt")
+    puzzle_input = input_data("python/year_2023/day_19_aplenty/input.txt")
 
     p1, p1_time = time_function(part_one, puzzle_input)
     p2, p2_time = time_function(part_two, puzzle_input)

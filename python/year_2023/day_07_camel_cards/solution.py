@@ -1,4 +1,4 @@
-from helpers.aoc_utils import input_data, time_function
+from python.helpers.aoc_utils import input_data, time_function
 from enum import Enum
 from collections import Counter
 
@@ -76,7 +76,7 @@ def solution(puzzle_input, jokers=False):
 
 
 def main():
-    puzzle_input = input_data("year_2023/day_07_camel_cards/input.txt")
+    puzzle_input = input_data("python/year_2023/day_07_camel_cards/input.txt")
 
     p1, p1_time = time_function(solution, puzzle_input)
     p2, p2_time = time_function(solution, puzzle_input, True)

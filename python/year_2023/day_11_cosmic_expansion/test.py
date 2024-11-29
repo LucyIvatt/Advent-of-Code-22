@@ -1,15 +1,15 @@
 import unittest
 
-from year_2023.day_11_cosmic_expansion.solution import input_data, solution
+from python.year_2023.day_11_cosmic_expansion.solution import input_data, solution
 
 
 class TestDay11(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.example = input_data(
-            "year_2023/day_11_cosmic_expansion/example.txt")
+            "python/year_2023/day_11_cosmic_expansion/example.txt")
         cls.puzzle_input = input_data(
-            "year_2023/day_11_cosmic_expansion/input.txt")
+            "python/year_2023/day_11_cosmic_expansion/input.txt")
 
     def test_p1_example(self):
         """

@@ -1,13 +1,13 @@
 import unittest
 
-from day02.solution import input_data, match_outcome, part_1, part_2, Move, Result
-
+from python.year_2022.day_02_rock_paper_scissors.solution import input_data, match_outcome, part_1, part_2, Move, Result
 
 class TestDay2(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("day02/example.txt")
-        cls.input = input_data("day02/input.txt")
+        pathStart = "python/year_2022/day_02_rock_paper_scissors"
+        cls.example = input_data(f"{pathStart}/example.txt")
+        cls.input = input_data(f"{pathStart}/input.txt")
 
     def test_match_outcome_win(self):
         move1 = [Move.ROCK, Move.PAPER, Move.SCISSORS]

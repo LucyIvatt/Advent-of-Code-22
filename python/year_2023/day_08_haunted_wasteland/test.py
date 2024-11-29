@@ -1,19 +1,19 @@
 import unittest
 
-from year_2023.day_08_haunted_wasteland.solution import input_data, part_one, part_two
+from python.year_2023.day_08_haunted_wasteland.solution import input_data, part_one, part_two
 
 
 class TestDay08(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.example = input_data(
-            "year_2023/day_08_haunted_wasteland/example.txt")
+            "python/year_2023/day_08_haunted_wasteland/example.txt")
         cls.example2 = input_data(
-            "year_2023/day_08_haunted_wasteland/example2.txt")
+            "python/year_2023/day_08_haunted_wasteland/example2.txt")
         cls.example3 = input_data(
-            "year_2023/day_08_haunted_wasteland/example3.txt")
+            "python/year_2023/day_08_haunted_wasteland/example3.txt")
         cls.puzzle_input = input_data(
-            "year_2023/day_08_haunted_wasteland/input.txt")
+            "python/year_2023/day_08_haunted_wasteland/input.txt")
 
     def test_p1_example(self):
         """

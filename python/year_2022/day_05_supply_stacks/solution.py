@@ -91,11 +91,11 @@ def solution(input, old_model):
 
     return "".join([stack.top_crate() for stack in stacks.values()])
 
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_05_supply_stacks/input.txt")
 
-input = input_data("day05/input.txt")
-
-print("--------------------------------------")
-print("Day 5: Supply Stacks")
-print("Part One Answer: " + solution(input, old_model=True))
-print("Part Two Answer: " + solution(input, old_model=False))
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 5: Supply Stacks")
+    print("Part One Answer: " + solution(input, old_model=True))
+    print("Part Two Answer: " + solution(input, old_model=False))
+    print("--------------------------------------")

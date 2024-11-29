@@ -1,15 +1,15 @@
 import unittest
 
 # TODO: import other solution methods
-from day13.solution import Packet, input_data, part_one, part_two
+from python.year_2022.day_13_distress_signal.solution import Packet, input_data, part_one, part_two
 
 
 class TestDay13(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-
-        cls.example = input_data("day13/example.txt")
-        cls.input = input_data("day13/input.txt")
+        pathStart = "python/year_2022/day_13_distress_signal"
+        cls.example = input_data(f"{pathStart}/example.txt")
+        cls.input = input_data(f"{pathStart}/input.txt")
 
     def test_compare_basic(self):
         # Basic ints

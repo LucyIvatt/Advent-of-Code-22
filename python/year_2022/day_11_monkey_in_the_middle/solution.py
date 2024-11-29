@@ -95,11 +95,11 @@ def solution(monkeys, part_two=False):
     monkey_business = inspect_nums[-1] * inspect_nums[-2]
     return monkey_business
 
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_11_monkey_in_the_middle/input.txt")
 
-input = input_data("day11/input.txt")
-
-print("--------------------------------------")
-print("Day 11: Monkey in the Middle")
-print("Part One Answer: " + str(solution(input)))
-print("Part Two Answer: " + str(solution(input, part_two=True)))
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 11: Monkey in the Middle")
+    print("Part One Answer: " + str(solution(input)))
+    print("Part Two Answer: " + str(solution(input, part_two=True)))
+    print("--------------------------------------")

@@ -1,6 +1,6 @@
 import re
 from collections import defaultdict
-from helpers.aoc_utils import input_data, get_adjacent_coords, time_function
+from python.helpers.aoc_utils import input_data, get_adjacent_coords, time_function
 
 DIGIT_REGEX = r'\b\d+\b'
 
@@ -38,7 +38,7 @@ def part_two(puzzle_input):
 
 
 def main():
-    puzzle_input = input_data("year_2023/day_03_gear_ratios/input.txt")
+    puzzle_input = input_data("python/year_2023/day_03_gear_ratios/input.txt")
 
     p1, p1_time = time_function(part_one, puzzle_input)
     p2, p2_time = time_function(part_two, puzzle_input)

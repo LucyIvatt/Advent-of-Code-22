@@ -39,11 +39,11 @@ def part_two(input):
             count += 1
     return count
 
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_04_camp_cleanup/input.txt")
 
-input = input_data("day04/input.txt")
-
-print("--------------------------------------")
-print("Day 4: Camp Cleanup")
-print("Part One Answer: " + str(part_one(input)))
-print("Part Two Answer: " + str(part_two(input)))
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 4: Camp Cleanup")
+    print("Part One Answer: " + str(part_one(input)))
+    print("Part Two Answer: " + str(part_two(input)))
+    print("--------------------------------------")

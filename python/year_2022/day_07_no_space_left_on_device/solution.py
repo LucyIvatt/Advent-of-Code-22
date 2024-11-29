@@ -1,4 +1,4 @@
-from anytree import Node, RenderTree, Resolver
+from anytree import Node, Resolver
 from anytree.search import findall
 from enum import Enum
 
@@ -49,7 +49,7 @@ def solution(input):
         else:
             # Adds type and size to node to show it is a file
             Node(y, parent=r.get(root, current_directory),
-                 n_type=Type.File, size=int(x))
+                 n_type=Type.File, file_size=int(x))
 
     # Finds all directory nodes on the tree
     directories = findall(
@@ -60,8 +60,10 @@ def solution(input):
     for dir in directories:
         dir_sum = 0
         for file in findall(dir, filter_=lambda node: node.n_type == Type.File):
-            dir_sum += file.size
+            dir_sum += file.file_size
+        
         dir_sizes[dir] = dir_sum
+
 
     # Returns the sum of all directories smaller than 100_000
     p1_ans = sum((x for x in dir_sizes.values() if x <= 100_000))
@@ -72,13 +74,13 @@ def solution(input):
 
     return p1_ans, p2_ans
 
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_07_no_space_left_on_device/example.txt")
+    p1_ans, p2_ans = solution(input)
 
-input = input_data("day07/input.txt")
-p1_ans, p2_ans = solution(input)
 
-
-print("--------------------------------------")
-print("Day 7: No Space Left On Device")
-print("Part One Answer: " + str(p1_ans))
-print("Part Two Answer: " + str(p2_ans))
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 7: No Space Left On Device")
+    print("Part One Answer: " + str(p1_ans))
+    print("Part Two Answer: " + str(p2_ans))
+    print("--------------------------------------")

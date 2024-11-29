@@ -64,12 +64,12 @@ def check_directions(input, i, j):
 
     return tree_visible, np.prod(viewing_distances)
 
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_08_treetop_tree_house/example.txt")
+    p1, p2 = solution(input)
 
-input = input_data("day08/example.txt")
-p1, p2 = solution(input)
-
-print("--------------------------------------")
-print("Day 8: Treetop Tree House")
-print("Part One Answer: " + str(p1))
-print("Part Two Answer: " + str(p2))
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 8: Treetop Tree House")
+    print("Part One Answer: " + str(p1))
+    print("Part Two Answer: " + str(p2))
+    print("--------------------------------------")

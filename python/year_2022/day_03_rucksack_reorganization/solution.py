@@ -36,11 +36,11 @@ def part_two(input):
         sum_priorities += PRIORITIES[str(badge.pop())]
     return sum_priorities
 
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_03_rucksack_reorganization/input.txt")
 
-input = input_data("day03/input.txt")
-
-print("--------------------------------------")
-print("Day 3: Rucksack")
-print("Part One Answer: " + str(part_one(input)))
-print("Part Two Answer: " + str(part_two(input)))
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 3: Rucksack")
+    print("Part One Answer: " + str(part_one(input)))
+    print("Part Two Answer: " + str(part_two(input)))
+    print("--------------------------------------")

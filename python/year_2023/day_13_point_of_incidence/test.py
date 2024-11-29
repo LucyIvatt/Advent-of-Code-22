@@ -1,15 +1,15 @@
 import unittest
 
-from year_2023.day_13_point_of_incidence.solution import input_data, part_one, part_two
+from python.year_2023.day_13_point_of_incidence.solution import input_data, part_one, part_two
 
 
 class TestDay13(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.example = input_data(
-            "year_2023/day_13_point_of_incidence/example.txt")
+            "python/year_2023/day_13_point_of_incidence/example.txt")
         cls.puzzle_input = input_data(
-            "year_2023/day_13_point_of_incidence/input.txt")
+            "python/year_2023/day_13_point_of_incidence/input.txt")
 
     def test_p1_example(self):
         """

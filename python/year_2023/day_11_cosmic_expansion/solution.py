@@ -1,4 +1,4 @@
-from helpers.aoc_utils import input_data, time_function, manhattan_distance
+from python.helpers.aoc_utils import input_data, time_function, manhattan_distance
 from itertools import combinations
 
 
@@ -35,7 +35,7 @@ def solution(puzzle_input, expansion_size):
 
 
 def main():
-    puzzle_input = input_data("year_2023/day_11_cosmic_expansion/input.txt")
+    puzzle_input = input_data("python/year_2023/day_11_cosmic_expansion/input.txt")
 
     p1, p1_time = time_function(solution, puzzle_input, 2)
     p2, p2_time = time_function(solution, puzzle_input, 1_000_000)

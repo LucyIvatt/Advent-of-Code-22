@@ -1,15 +1,15 @@
 import unittest
 
-from year_2023.day_09_mirage_maintenance.solution import input_data, solution
+from python.year_2023.day_09_mirage_maintenance.solution import input_data, solution
 
 
 class TestDay09(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.example = input_data(
-            "year_2023/day_09_mirage_maintenance/example.txt")
+            "python/year_2023/day_09_mirage_maintenance/example.txt")
         cls.puzzle_input = input_data(
-            "year_2023/day_09_mirage_maintenance/input.txt")
+            "python/year_2023/day_09_mirage_maintenance/input.txt")
 
     def test_p1_example(self):
         """

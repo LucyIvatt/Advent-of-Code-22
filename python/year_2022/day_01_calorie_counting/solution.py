@@ -32,11 +32,11 @@ def find_highest_cals(input, num_elf):
             current = 0
     return sum(highest)
 
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_01_calorie_counting/input.txt")
 
-input = input_data("2022/01 Calorie Counting/input.txt")
-
-print("--------------------------------------")
-print("Day 1: Calorie Counting")
-print("Part One Answer: " + str(find_highest_cals(input, 1)))
-print("Part Two Answer: " + str(find_highest_cals(input, 3)))
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 1: Calorie Counting")
+    print("Part One Answer: " + str(find_highest_cals(input, 1)))
+    print("Part Two Answer: " + str(find_highest_cals(input, 3)))
+    print("--------------------------------------")

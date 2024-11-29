@@ -1,6 +1,6 @@
 import unittest
 
-from helpers.aoc_utils import get_adjacent_coords
+from python.helpers.aoc_utils import get_adjacent_coords
 
 
 class AocUtilsTest(unittest.TestCase):

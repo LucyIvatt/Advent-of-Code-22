@@ -1,14 +1,14 @@
 import unittest
 
-# TODO: import other solution methods
-from day16.solution import input_data
+from python.year_2022.day_16_proboscidea_volcanium.solution import input_data
 
 
 class TestDay16(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("day16/example.txt")
-        cls.input = input_data("day16/input.txt")
+        pathStart = "python/year_2022/day_16_proboscidea_volcanium"
+        cls.example = input_data(pathStart + "/example.txt")
+        cls.input = input_data(pathStart + "/input.txt")
 
     def test_day_16_p1_example(self):
         """

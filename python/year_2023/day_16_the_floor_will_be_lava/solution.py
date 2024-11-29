@@ -1,4 +1,4 @@
-from helpers.aoc_utils import input_data, time_function, Direction
+from python.helpers.aoc_utils import input_data, time_function, Direction
 
 REFLECT_DIRS = {("|", Direction.EAST): [Direction.NORTH, Direction.SOUTH],
                 ("|", Direction.WEST): [Direction.NORTH, Direction.SOUTH],
@@ -84,7 +84,7 @@ def part_two(puzzle_input):
 
 def main():
     puzzle_input = input_data(
-        "year_2023/day_16_the_floor_will_be_lava/input.txt")
+        "python/year_2023/day_16_the_floor_will_be_lava/input.txt")
 
     p1, p1_time = time_function(part_one, puzzle_input)
     p2, p2_time = time_function(part_two, puzzle_input)

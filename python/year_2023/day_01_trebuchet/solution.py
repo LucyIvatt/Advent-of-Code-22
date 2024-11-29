@@ -1,6 +1,6 @@
 import re
 
-from helpers.aoc_utils import input_data
+from python.helpers.aoc_utils import input_data
 
 
 def part_one_original(puzzle_input):
@@ -44,7 +44,7 @@ def answer(puzzle_input, words_included=False):
 
 
 def main():
-    puzzle_input = input_data("year_2023/day_01_trebuchet/input.txt")
+    puzzle_input = input_data("python/year_2023/day_01_trebuchet/input.txt")
 
     print("--------------------------------------")
     print("Day 01: Trebuchet")

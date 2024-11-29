@@ -91,14 +91,14 @@ def run_cycle(current_instr, cycle_num, x, ss_sum):
         ss_sum += cycle_num * x
     return current_instr, cycle_num, x, ss_sum
 
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_10_cathode_ray_tube/input.txt")
+    p1, p2 = solution(input)
 
-input = input_data("day10/input.txt")
-p1, p2 = solution(input)
 
-
-print("--------------------------------------")
-print("Day 10: Cathode-Ray Tube")
-print("Part One Answer: " + str(p1))
-print("Part Two Answer:")
-print(p2)
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 10: Cathode-Ray Tube")
+    print("Part One Answer: " + str(p1))
+    print("Part Two Answer:")
+    print(p2)
+    print("--------------------------------------")

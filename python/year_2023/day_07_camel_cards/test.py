@@ -1,13 +1,13 @@
 import unittest
 
-from year_2023.day_07_camel_cards.solution import input_data, HandType, Hand, solution
+from python.year_2023.day_07_camel_cards.solution import input_data, HandType, Hand, solution
 
 
 class TestDay07(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("year_2023/day_07_camel_cards/example.txt")
-        cls.puzzle_input = input_data("year_2023/day_07_camel_cards/input.txt")
+        cls.example = input_data("python/year_2023/day_07_camel_cards/example.txt")
+        cls.puzzle_input = input_data("python/year_2023/day_07_camel_cards/input.txt")
 
     def test_classify_hand(self):
         test_cases = {"AAAAA 1": HandType.FIVE_OF_KIND,

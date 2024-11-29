@@ -1,4 +1,4 @@
-from helpers.aoc_utils import input_data, time_function, Direction
+from python.helpers.aoc_utils import input_data, time_function, Direction
 
 TOTAL_CYCLES = 1_000_000_000
 
@@ -67,7 +67,7 @@ def part_two(puzzle_input):
 
 def main():
     puzzle_input = input_data(
-        "year_2023/day_14_parabolic_reflector_dish/input.txt")
+        "python/year_2023/day_14_parabolic_reflector_dish/input.txt")
 
     p1, p1_time = time_function(part_one, puzzle_input)
     p2, p2_time = time_function(part_two, puzzle_input)

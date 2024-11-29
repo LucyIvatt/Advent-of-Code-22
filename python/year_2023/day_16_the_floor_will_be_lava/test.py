@@ -1,15 +1,15 @@
 import unittest
 
-from year_2023.day_16_the_floor_will_be_lava.solution import input_data, part_one, part_two
+from python.year_2023.day_16_the_floor_will_be_lava.solution import input_data, part_one, part_two
 
 
 class TestDay16(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.example = input_data(
-            "year_2023/day_16_the_floor_will_be_lava/example.txt")
+            "python/year_2023/day_16_the_floor_will_be_lava/example.txt")
         cls.puzzle_input = input_data(
-            "year_2023/day_16_the_floor_will_be_lava/input.txt")
+            "python/year_2023/day_16_the_floor_will_be_lava/input.txt")
 
     def test_p1_example(self):
         """

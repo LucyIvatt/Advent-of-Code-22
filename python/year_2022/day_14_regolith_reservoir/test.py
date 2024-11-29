@@ -1,13 +1,14 @@
 import unittest
 
-from day14.solution import input_data, part_one, part_two
+from python.year_2022.day_14_regolith_reservoir.solution import input_data, part_one, part_two
 
 
 class TestDay14(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("day14/example.txt")
-        cls.input = input_data("day14/input.txt")
+        pathStart = "python/year_2022/day_14_regolith_reservoir"
+        cls.example = input_data(f"{pathStart}/example.txt")
+        cls.input = input_data(f"{pathStart}/input.txt")
 
     def test_day_14_p1_example(self):
         """

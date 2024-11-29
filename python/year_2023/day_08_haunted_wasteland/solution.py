@@ -1,4 +1,4 @@
-from helpers.aoc_utils import input_data, time_function
+from python.helpers.aoc_utils import input_data, time_function
 import re
 import math
 
@@ -43,7 +43,7 @@ def part_two(puzzle_input):
 
 
 def main():
-    puzzle_input = input_data("year_2023/day_08_haunted_wasteland/input.txt")
+    puzzle_input = input_data("python/year_2023/day_08_haunted_wasteland/input.txt")
 
     p1, p1_time = time_function(part_one, puzzle_input)
     p2, p2_time = time_function(part_two, puzzle_input)

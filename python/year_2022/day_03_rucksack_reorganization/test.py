@@ -1,13 +1,14 @@
 import unittest
 
-from day03.solution import input_data, part_one, part_two
+from python.year_2022.day_03_rucksack_reorganization.solution import input_data, part_one, part_two
 
 
 class TestDay3(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("day03/example.txt")
-        cls.input = input_data("day03/input.txt")
+        pathStart = "python/year_2022/day_03_rucksack_reorganization"
+        cls.example = input_data(f"{pathStart}/example.txt")
+        cls.input = input_data(f"{pathStart}/input.txt")
 
     def test_day_3_p1_example(self):
         """

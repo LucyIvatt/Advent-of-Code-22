@@ -1,5 +1,5 @@
 from functools import reduce
-from helpers.aoc_utils import input_data, time_function
+from python.helpers.aoc_utils import input_data, time_function
 import re
 from collections import defaultdict
 
@@ -40,7 +40,7 @@ def part_two(puzzle_input):
 
 
 def main():
-    puzzle_input = input_data("year_2023/day_15_lens_library/input.txt")
+    puzzle_input = input_data("python/year_2023/day_15_lens_library/input.txt")
 
     p1, p1_time = time_function(part_one, puzzle_input)
     p2, p2_time = time_function(part_two, puzzle_input)

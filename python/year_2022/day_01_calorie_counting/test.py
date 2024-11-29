@@ -1,13 +1,13 @@
 import unittest
 
-from solution import input_data, find_highest_cals
-
+from python.year_2022.day_01_calorie_counting.solution import input_data, find_highest_cals
 
 class TestDay1(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("example.txt")
-        cls.input = input_data("input.txt")
+        pathStart = "python/year_2022/day_01_calorie_counting"
+        cls.example = input_data(f"{pathStart}/example.txt")
+        cls.input = input_data(f"{pathStart}/input.txt")
 
     def test_day_1_p1_example(self):
         """

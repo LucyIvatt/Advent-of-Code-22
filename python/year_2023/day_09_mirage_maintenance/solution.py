@@ -1,4 +1,4 @@
-from helpers.aoc_utils import input_data, time_function
+from python.helpers.aoc_utils import input_data, time_function
 
 
 def solution(puzzle_input, backwards=False):
@@ -25,7 +25,7 @@ def solution(puzzle_input, backwards=False):
 
 
 def main():
-    puzzle_input = input_data("year_2023/day_09_mirage_maintenance/input.txt")
+    puzzle_input = input_data("python/year_2023/day_09_mirage_maintenance/input.txt")
 
     p1, p1_time = time_function(solution, puzzle_input)
     p2, p2_time = time_function(solution, puzzle_input, True)

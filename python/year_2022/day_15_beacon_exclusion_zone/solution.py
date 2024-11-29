@@ -116,11 +116,11 @@ def part_two(input, max_xy):
     # Returns the tuning frequency
     return bx * 4_000_000 + by
 
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_15_beacon_exclusion_zone/input.txt")
 
-input = input_data("day15/input.txt")
-
-print("--------------------------------------")
-print("Day 15: Beacon Exclusion Zone")
-print("Part One Answer: " + str(part_one(input, p1_y=2_000_000)))
-print("Part Two Answer: " + str(part_two(input, max_xy=4_000_000)))
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 15: Beacon Exclusion Zone")
+    print("Part One Answer: " + str(part_one(input, p1_y=2_000_000)))
+    print("Part Two Answer: " + str(part_two(input, max_xy=4_000_000)))
+    print("--------------------------------------")

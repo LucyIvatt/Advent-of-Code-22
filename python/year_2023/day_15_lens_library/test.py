@@ -1,14 +1,14 @@
 import unittest
 
-from year_2023.day_15_lens_library.solution import input_data, part_one, part_two
+from python.year_2023.day_15_lens_library.solution import input_data, part_one, part_two
 
 
 class TestDay15(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("year_2023/day_15_lens_library/example.txt")
+        cls.example = input_data("python/year_2023/day_15_lens_library/example.txt")
         cls.puzzle_input = input_data(
-            "year_2023/day_15_lens_library/input.txt")
+            "python/year_2023/day_15_lens_library/input.txt")
 
     def test_p1_example(self):
         """

@@ -1,13 +1,14 @@
 import unittest
 
-from day09.solution import input_data, part_one, part_two, move_tail
+from python.year_2022.day_09_rope_bridge.solution import input_data, part_one, part_two, move_tail
 
 
 class TestDay9(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("day09/example.txt")
-        cls.input = input_data("day09/input.txt")
+        pathStart = "python/year_2022/day_09_rope_bridge"
+        cls.example = input_data(f"{pathStart}/example.txt")
+        cls.input = input_data(f"{pathStart}/input.txt")
 
     def test_move_tail_horizontal(self):
         self.assertEqual(move_tail((-2, 0), (0, 0)), (-1, 0))

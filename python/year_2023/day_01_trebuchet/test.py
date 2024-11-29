@@ -1,15 +1,15 @@
 import unittest
 
-from year_2023.day_01_trebuchet.solution import answer, find_numbers
-from helpers.aoc_utils import input_data
+from python.year_2023.day_01_trebuchet.solution import answer, find_numbers
+from python.helpers.aoc_utils import input_data
 
 
 class TestDay01(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("year_2023/day_01_trebuchet/example.txt")
-        cls.example2 = input_data("year_2023/day_01_trebuchet/example2.txt")
-        cls.puzzle_input = input_data("year_2023/day_01_trebuchet/input.txt")
+        cls.example = input_data("python/year_2023/day_01_trebuchet/example.txt")
+        cls.example2 = input_data("python/year_2023/day_01_trebuchet/example2.txt")
+        cls.puzzle_input = input_data("python/year_2023/day_01_trebuchet/input.txt")
 
     def test_p1_example(self):
         """

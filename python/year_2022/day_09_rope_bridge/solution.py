@@ -70,11 +70,11 @@ def part_two(input):
                 t_positions.append(rope[-1])
     return len(t_positions)
 
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_09_rope_bridge/input.txt")
 
-input = input_data("day09/input.txt")
-
-print("--------------------------------------")
-print("Day 9: Rope Bridge")
-print("Part One Answer: " + str(part_one(input)))
-print("Part Two Answer: " + str(part_two(input)))
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 9: Rope Bridge")
+    print("Part One Answer: " + str(part_one(input)))
+    print("Part Two Answer: " + str(part_two(input)))
+    print("--------------------------------------")

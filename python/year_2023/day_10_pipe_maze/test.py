@@ -1,14 +1,14 @@
 import unittest
 
-from year_2023.day_10_pipe_maze.solution import input_data, part_one, part_two
+from python.year_2023.day_10_pipe_maze.solution import input_data, part_one, part_two
 
 
 class TestDay10(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("year_2023/day_10_pipe_maze/example.txt")
-        cls.example2 = input_data("year_2023/day_10_pipe_maze/example2.txt")
-        cls.puzzle_input = input_data("year_2023/day_10_pipe_maze/input.txt")
+        cls.example = input_data("python/year_2023/day_10_pipe_maze/example.txt")
+        cls.example2 = input_data("python/year_2023/day_10_pipe_maze/example2.txt")
+        cls.puzzle_input = input_data("python/year_2023/day_10_pipe_maze/input.txt")
 
     def test_p1_example(self):
         """

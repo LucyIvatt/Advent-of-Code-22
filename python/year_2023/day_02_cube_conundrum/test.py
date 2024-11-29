@@ -1,14 +1,14 @@
 import unittest
 
-from year_2023.day_02_cube_conundrum.solution import part_one, part_two
-from helpers.aoc_utils import input_data
+from python.year_2023.day_02_cube_conundrum.solution import part_one, part_two
+from python.helpers.aoc_utils import input_data
 
 
 class TestDay02(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("year_2023/day_02_cube_conundrum/example.txt")
-        cls.puzzle_input = input_data("year_2023/day_02_cube_conundrum/input.txt")
+        cls.example = input_data("python/year_2023/day_02_cube_conundrum/example.txt")
+        cls.puzzle_input = input_data("python/year_2023/day_02_cube_conundrum/input.txt")
 
     def test_p1_example(self):
         """

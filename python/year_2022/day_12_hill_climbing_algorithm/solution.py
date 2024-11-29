@@ -76,11 +76,11 @@ def part_two(grid, graph, e):
             continue
     return min_dist
 
+if __name__ == "__main__":
+    grid, graph, s, e = input_data("python/year_2022/day_12_hill_climbing_algorithm/input.txt")
 
-grid, graph, s, e = input_data("day12/input.txt")
-
-print("--------------------------------------")
-print("Day 12: Hill Climbing Algorithm")
-print("Part One Answer: " + str(part_one(graph, s, e)))
-print("Part Two Answer: " + str(part_two(grid, graph, e)))
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 12: Hill Climbing Algorithm")
+    print("Part One Answer: " + str(part_one(graph, s, e)))
+    print("Part Two Answer: " + str(part_two(grid, graph, e)))
+    print("--------------------------------------")

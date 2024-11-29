@@ -86,11 +86,11 @@ def part_two(input):
     packets = sorted(packets)
     return prod([packets.index(packet)+1 for packet in packets if packet.divider == True])
 
+if __name__ == "__main__":
+    input = input_data("python/year_2022/day_13_distress_signal/input.txt")
 
-input = input_data("day13/input.txt")
-
-print("--------------------------------------")
-print("Day 13: Distress Signal")
-print("Part One Answer: " + str(part_one(input)))
-print("Part Two Answer: " + str(part_two(input)))
-print("--------------------------------------")
+    print("--------------------------------------")
+    print("Day 13: Distress Signal")
+    print("Part One Answer: " + str(part_one(input)))
+    print("Part Two Answer: " + str(part_two(input)))
+    print("--------------------------------------")

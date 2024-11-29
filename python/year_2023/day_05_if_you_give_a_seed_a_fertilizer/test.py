@@ -1,15 +1,15 @@
 import unittest
 
-from year_2023.day_05_if_you_give_a_seed_a_fertilizer.solution import input_data, part_one, part_two
+from python.year_2023.day_05_if_you_give_a_seed_a_fertilizer.solution import input_data, part_one, part_two
 
 
 class TestDay05(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.example = input_data(
-            "year_2023/day_05_if_you_give_a_seed_a_fertilizer/example.txt")
+            "python/year_2023/day_05_if_you_give_a_seed_a_fertilizer/example.txt")
         cls.puzzle_input = input_data(
-            "year_2023/day_05_if_you_give_a_seed_a_fertilizer/input.txt")
+            "python/year_2023/day_05_if_you_give_a_seed_a_fertilizer/input.txt")
 
     def test_p1_example(self):
         """

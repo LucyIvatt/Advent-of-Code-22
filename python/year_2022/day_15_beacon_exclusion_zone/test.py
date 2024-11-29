@@ -1,14 +1,14 @@
 import unittest
 
-# TODO: import other solution methods
-from day15.solution import input_data, part_one, part_two
+from python.year_2022.day_15_beacon_exclusion_zone.solution import input_data, part_one, part_two
 
 
 class TestDay15(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("day15/example.txt")
-        cls.input = input_data("day15/input.txt")
+        pathStart = "python/year_2022/day_15_beacon_exclusion_zone"
+        cls.example = input_data(f"{pathStart}/example.txt")
+        cls.input = input_data(f"{pathStart}/input.txt")
 
     def test_day_15_p1_example(self):
         """

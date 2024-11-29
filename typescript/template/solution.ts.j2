@@ -1,0 +1,37 @@
+import path from "path";
+import { InputFile, readPuzzleInput } from "../../utils/readFile";
+import { functionTimer } from "../../utils/time";
+
+export const partOne = (puzzle_input: string[]) => {
+  return "Part 1 Answer";
+};
+
+export const partTwo = (puzzle_input: string[]) => {
+  return "Part 2 Answer";
+};
+
+const run = () => {
+  const filePath = path.resolve(__dirname, InputFile.EXAMPLE);
+  const puzzle_input = readPuzzleInput(filePath);
+
+  const { output: p1_output, time: p1_time } = functionTimer(
+    partOne,
+    puzzle_input,
+  );
+
+  const { output: p2_output, time: p2_time } = functionTimer(
+    partTwo,
+    puzzle_input,
+  );
+
+  console.log("--------------------------------------");
+  console.log("Day {{ day_num }}: {{ task_name }}");
+  console.log("--------------------------------------");
+  console.log(`Part One Answer: ${p1_output} - [${p1_time}ms]`);
+  console.log(`Part Two Answer: ${p2_output} - [${p2_time}ms]`);
+  console.log("--------------------------------------");
+};
+
+if (require.main === module) {
+  run();
+}

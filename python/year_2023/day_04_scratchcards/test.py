@@ -1,12 +1,12 @@
 import unittest
 
-from year_2023.day_04_scratchcards.solution import input_data, part_one, part_two
+from python.year_2023.day_04_scratchcards.solution import input_data, part_one, part_two
 
 class TestDay04(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.example = input_data("year_2023/day_04_scratchcards/example.txt")
-        cls.puzzle_input = input_data("year_2023/day_04_scratchcards/input.txt")
+        cls.example = input_data("python/year_2023/day_04_scratchcards/example.txt")
+        cls.puzzle_input = input_data("python/year_2023/day_04_scratchcards/input.txt")
 
     def test_p1_example(self):
         """
