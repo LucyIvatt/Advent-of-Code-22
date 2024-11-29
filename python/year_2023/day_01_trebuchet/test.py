@@ -3,6 +3,7 @@ import unittest
 from year_2023.day_01_trebuchet.solution import answer, find_numbers
 from helpers.aoc_utils import input_data
 
+
 class TestDay01(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -35,10 +36,11 @@ class TestDay01(unittest.TestCase):
         made to the program have not broken it.
         """
         self.assertEqual(answer(self.__class__.puzzle_input, True), 54649)
-    
+
     def test_find_number_locations(self):
         self.assertEqual(find_numbers('two1nine', True), ['2', '1', '9'])
-        self.assertEqual(find_numbers('eightthree3ninekzhtlqsevenssprmrqhhgncrs', True), ['8', '3', '3', '9', '7'])
+        self.assertEqual(find_numbers(
+            'eightthree3ninekzhtlqsevenssprmrqhhgncrs', True), ['8', '3', '3', '9', '7'])
         self.assertEqual(find_numbers('sevennine3', True), ['7', '9', '3'])
 
 
