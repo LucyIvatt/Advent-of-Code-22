@@ -12,7 +12,7 @@ export const partTwo = (puzzle_input: string[]) => {
 
 const run = () => {
   const mode = InputFile.INPUT; // or InputFile.EXAMPLE
-  
+
   const puzzle_input = readPuzzleInput(path.resolve(__dirname, mode));
 
   const { output: p1_output, time: p1_time } = functionTimer(
@@ -28,8 +28,8 @@ const run = () => {
   console.log("--------------------------------------");
   console.log("Day {{ day_num }}: {{ task_name }}");
   console.log("--------------------------------------");
-  console.log(`Part One Answer: ${p1_output} - [${p1_time}ms]`);
-  console.log(`Part Two Answer: ${p2_output} - [${p2_time}ms]`);
+  console.log(`Part One Answer: ${p1_output} - [${p1_time} seconds]`);
+  console.log(`Part Two Answer: ${p2_output} - [${p2_time} seconds]`);
   console.log("--------------------------------------");
 };
 

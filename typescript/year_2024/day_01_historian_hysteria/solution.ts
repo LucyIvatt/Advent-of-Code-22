@@ -42,8 +42,8 @@ const run = () => {
   console.log('--------------------------------------');
   console.log('Day 01: historian_hysteria');
   console.log('--------------------------------------');
-  console.log(`Part One Answer: ${p1_output} - [${p1_time}ms]`);
-  console.log(`Part Two Answer: ${p2_output} - [${p2_time}ms]`);
+  console.log(`Part One Answer: ${p1_output} - [${p1_time} seconds]`);
+  console.log(`Part Two Answer: ${p2_output} - [${p2_time} seconds]`);
   console.log('--------------------------------------');
 };
 
