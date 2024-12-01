@@ -11,8 +11,9 @@ export const partTwo = (puzzle_input: string[]) => {
 };
 
 const run = () => {
-  const filePath = path.resolve(__dirname, InputFile.EXAMPLE);
-  const puzzle_input = readPuzzleInput(filePath);
+  const mode = InputFile.INPUT; // or InputFile.EXAMPLE
+  
+  const puzzle_input = readPuzzleInput(path.resolve(__dirname, mode));
 
   const { output: p1_output, time: p1_time } = functionTimer(
     partOne,

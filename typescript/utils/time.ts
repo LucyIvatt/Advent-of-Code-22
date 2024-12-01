@@ -1,4 +1,4 @@
-export const functionTimer = (fn: (input: string[]) => string, input: string[]): { output: string; time: string } => {
+export const functionTimer = (fn: (input: string[]) => string, input: string[]) => {
   const start = performance.now();
   const output = fn(input);
   const end = performance.now();
