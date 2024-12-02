@@ -10,29 +10,8 @@ export const partTwo = (puzzle_input: string[]) => {
   return "Part 2 Answer";
 };
 
-const run = () => {
-  const mode = InputFile.INPUT; // or InputFile.EXAMPLE
-
-  const puzzle_input = readPuzzleInput(path.resolve(__dirname, mode));
-
-  const { output: p1_output, time: p1_time } = functionTimer(
-    partOne,
-    puzzle_input,
-  );
-
-  const { output: p2_output, time: p2_time } = functionTimer(
-    partTwo,
-    puzzle_input,
-  );
-
-  console.log("--------------------------------------");
-  console.log("Day {{ day_num }}: {{ task_name }}");
-  console.log("--------------------------------------");
-  console.log(`Part One Answer: ${p1_output} - [${p1_time} seconds]`);
-  console.log(`Part Two Answer: ${p2_output} - [${p2_time} seconds]`);
-  console.log("--------------------------------------");
-};
-
 if (require.main === module) {
-  run();
+  const puzzle_input = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
+  runPuzzle('{{ day_num }}', '{{ task_name }}', partOne, partTwo, puzzle_input);
+};
 }
