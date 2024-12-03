@@ -11,8 +11,8 @@ const isWithinRange = (diffs: number[], lb: number, ub: number) =>
   diffs.every((diff) => Math.abs(diff) >= lb && Math.abs(diff) <= ub);
 
 const isSafeReport = (report: number[]): boolean => {
-  const differences = report.slice(0, -1).map((level, index) => level - report[index + 1]);
-  return isMonotonic(differences) && isWithinRange(differences, 1, 3);
+  const diffs = report.slice(0, -1).map((level, index) => level - report[index + 1]);
+  return isMonotonic(diffs) && isWithinRange(diffs, 1, 3);
 };
 
 export const partOne = (puzzle_input: string[]): string => {
