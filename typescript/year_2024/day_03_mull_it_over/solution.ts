@@ -30,8 +30,13 @@ export const partTwo = (puzzle_input: string[]) => {
   const multiplications = findMatches(instructions, MUL_REGEX);
   const conditions = findMatches(instructions, COND_REGEX);
 
+  let conditionPointer = 0;
+
   const result = multiplications.reduce((sum, { groups: [a, b], index }) => {
-    const condition = conditions.filter((cond) => cond.index < index).at(-1);
+    while (conditionPointer < conditions.length && conditions[conditionPointer].index < index) {
+      conditionPointer++;
+    }
+    const condition = conditions[conditionPointer - 1];
 
     if (!condition || condition.match === 'do()') {
       sum += a * b;
@@ -46,3 +51,6 @@ if (require.main === module) {
   const puzzle_input = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE_2));
   runPuzzle('03', 'mull_it_over', partOne, partTwo, puzzle_input);
 }
+
+// 0.000972 seconds without pointer
+// 0.000320 seconds with pointer
