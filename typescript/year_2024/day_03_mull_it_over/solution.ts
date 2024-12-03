@@ -2,20 +2,45 @@ import path from 'path';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 
-const findMatches = (input: string) => {
-  const matches = [...input.matchAll(/mul\((\d{1,3}),(\d{1,3})\)/g)];
+type RegexMatch = { match: string; index: number; groups: number[] };
 
-  return matches.reduce((acc, match) => {
-    return (acc += Number(match[1]) * Number(match[2]));
-  }, 0);
+const MUL_REGEX = /mul\((\d{1,3}),(\d{1,3})\)/g;
+const COND_REGEX = /do\(\)|don't\(\)/g;
+
+const findMatches = (input: string, re: RegExp): RegexMatch[] => {
+  return [...input.matchAll(re)].map((match) => ({
+    match: match[0],
+    index: match.index ?? 0,
+    groups: match.slice(1).map(Number)
+  }));
 };
 
 export const partOne = (puzzle_input: string[]) => {
-  return puzzle_input.reduce((acc, line) => (acc += findMatches(line)), 0).toString();
+  const instructions = puzzle_input.join('');
+
+  return findMatches(instructions, MUL_REGEX)
+    .reduce((acc, match) => (acc += match.groups[0] * match.groups[1]), 0)
+    .toString();
 };
 
 export const partTwo = (puzzle_input: string[]) => {
-  return 'Part 2 Answer';
+  const instructions = puzzle_input.join('');
+
+  const mul_instructions = findMatches(instructions, MUL_REGEX);
+  const cond_instructions = findMatches(instructions, COND_REGEX);
+
+  return mul_instructions
+    .reduce((acc, instruction) => {
+      const earlierConditions = cond_instructions.filter((a) => a.index < instruction.index);
+      const conditional = earlierConditions[earlierConditions.length - 1];
+
+      if (!conditional || conditional.match === 'do()') {
+        return (acc += instruction.groups[0] * instruction.groups[1]);
+      }
+
+      return acc;
+    }, 0)
+    .toString();
 };
 
 if (require.main === module) {
