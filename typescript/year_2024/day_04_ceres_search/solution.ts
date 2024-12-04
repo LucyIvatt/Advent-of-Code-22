@@ -1,7 +1,7 @@
 import path from 'path';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
-import { Direction, Grid } from '../../utils/grids';
+import { Direction, Grid } from '../../utils/grid';
 
 const countXmas = (i: number, j: number, grid: Grid<string>): number =>
   Object.values(Direction).filter((direction) => {
@@ -39,6 +39,6 @@ export const partTwo = (puzzleInput: string[]) => {
 };
 
 if (require.main === module) {
-  const puzzle_input = readPuzzleInput(path.resolve(__dirname, InputFile.INPUT));
+  const puzzle_input = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
   runPuzzle('04', 'ceres_search', partOne, partTwo, puzzle_input);
 }
