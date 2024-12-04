@@ -44,13 +44,15 @@ export class Grid<Type> {
     return { val: this.array[newPos[0]][newPos[1]], newPos };
   }
 
-  walk(i: number, j: number, direction: Direction, length: number): { val: Type; pos: [number, number] }[] {
-    const elements = [{ val: this.array[i][j], pos: [i, j] as [number, number] }];
+  walk(i: number, j: number, direction: Direction, length: number): { values: Type[]; positions: number[][] } {
+    const values = [this.array[i][j]];
+    const positions = [[i, j]];
 
-    while (elements.length < length) {
+    while (values.length < length) {
       try {
         const adjacent = this.getAdacent(i, j, direction);
-        elements.push({ val: adjacent.val, pos: adjacent.newPos });
+        values.push(adjacent.val);
+        positions.push(adjacent.newPos);
         i = adjacent.newPos[0];
         j = adjacent.newPos[1];
       } catch {
@@ -58,7 +60,7 @@ export class Grid<Type> {
       }
     }
 
-    return elements;
+    return { values, positions };
   }
 
   toString(): string {
