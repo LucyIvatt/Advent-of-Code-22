@@ -35,6 +35,9 @@ export class Grid<Type> {
    * @param grid - A two-dimensional array representing the grid.
    */
   constructor(grid: Type[][]) {
+    if (grid.length === 0 || grid[0].length === 0) {
+      throw new Error('Grid must have at least one element.');
+    }
     this.array = grid;
   }
 
@@ -103,7 +106,7 @@ export class Grid<Type> {
    * @returns {string} The string representation of the grid.
    */
   toString(): string {
-    const cols = this.array[0]?.length || 0;
+    const cols = this.array[0].length;
     const cellWidth = this.getMaxCellWidth();
 
     const columnHeaders = this.createColumnHeaders(cols, cellWidth);

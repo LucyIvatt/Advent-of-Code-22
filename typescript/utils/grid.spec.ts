@@ -1,11 +1,19 @@
 import { Direction, Grid } from './grid';
 
 describe('grid', () => {
-  const grid = new Grid([
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
-  ]);
+  let grid: Grid<number>;
+
+  it('should create a grid from a 2D array', () => {
+    grid = new Grid([
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8, 9]
+    ]);
+  });
+
+  it('should throw an error if no elements', () => {
+    expect(() => new Grid([[]])).toThrow('Grid must have at least one element.');
+  });
 
   describe('getAdjacent', () => {
     const expectedAdjacentCoords = {
