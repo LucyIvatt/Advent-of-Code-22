@@ -1,5 +1,14 @@
 import { functionTimer } from './time';
 
+/**
+ * Runs the puzzle for a given day and logs the results for both parts.
+ *
+ * @param dayNum - The day number of the puzzle.
+ * @param dayName - The name of the puzzle for the given day.
+ * @param partOne - The function to solve part one of the puzzle. It takes an array of strings as input and returns a string as the answer.
+ * @param partTwo - The function to solve part two of the puzzle. It takes an array of strings as input and returns a string as the answer.
+ * @param puzzle_input - The input data for the puzzle as an array of strings.
+ */
 export const runPuzzle = (
   dayNum: string,
   dayName: string,

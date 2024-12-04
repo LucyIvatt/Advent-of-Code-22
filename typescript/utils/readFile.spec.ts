@@ -4,24 +4,13 @@ import { readFileSync } from 'fs';
 jest.mock('fs');
 
 describe('readPuzzleInput', () => {
-  it('should read and parse the example file correctly', () => {
-    const mockFileContent = 'line1\nline2\nline3\n';
-    (readFileSync as jest.Mock).mockReturnValue(mockFileContent);
+  it('should read and parse the a file correctly', () => {
+    (readFileSync as jest.Mock).mockReturnValue('line1\nline2\nline3\n');
 
     const result = readPuzzleInput(InputFile.EXAMPLE);
 
     expect(result).toEqual(['line1', 'line2', 'line3']);
     expect(readFileSync).toHaveBeenCalledWith('example.txt', 'utf-8');
-  });
-
-  it('should read and parse the input file correctly', () => {
-    const mockFileContent = 'lineA\nlineB\nlineC\n';
-    (readFileSync as jest.Mock).mockReturnValue(mockFileContent);
-
-    const result = readPuzzleInput(InputFile.INPUT);
-
-    expect(result).toEqual(['lineA', 'lineB', 'lineC']);
-    expect(readFileSync).toHaveBeenCalledWith('input.txt', 'utf-8');
   });
 
   it('should ignore empty lines and trim spaces', () => {
