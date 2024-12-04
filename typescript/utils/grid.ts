@@ -11,6 +11,10 @@ export enum Direction {
   NorthWest = 'NorthWest'
 }
 
+/**
+ * A map that associates each direction with its corresponding offset in the grid,
+ * representing the change in the x and y coordinates when moving a single cell in that direction.
+ */
 export const directionOffsets = new Map<Direction, { dx: number; dy: number }>([
   [Direction.North, { dx: 0, dy: -1 }],
   [Direction.NorthEast, { dx: +1, dy: -1 }],
@@ -25,10 +29,24 @@ export const directionOffsets = new Map<Direction, { dx: number; dy: number }>([
 export class Grid<Type> {
   array: Type[][];
 
+  /**
+   * Creates an instance of the grid.
+   *
+   * @param grid - A two-dimensional array representing the grid.
+   */
   constructor(grid: Type[][]) {
     this.array = grid;
   }
 
+  /**
+   * Retrieves the adjacent cell value and its position based on the given direction.
+   *
+   * @param i - The row index of the current cell.
+   * @param j - The column index of the current cell.
+   * @param direction - The direction to move from the current cell.
+   * @returns An object containing the value of the adjacent cell and its position as a tuple [row, column].
+   * @throws Will throw an error if the direction is invalid or if the resulting position is out of bounds.
+   */
   getAdjacent(i: number, j: number, direction: Direction): { value: Type; position: [number, number] } {
     const offset = directionOffsets.get(direction);
 
@@ -44,6 +62,16 @@ export class Grid<Type> {
     return { value: this.array[position[0]][position[1]], position };
   }
 
+  /**
+   * Walks through the grid starting from the given coordinates (i, j) in the specified direction
+   * for a certain length and collects the values and positions encountered.
+   *
+   * @param i - The starting row index.
+   * @param j - The starting column index.
+   * @param direction - The direction to walk in.
+   * @param length - The number of steps to walk. Must be greater than 0.
+   * @returns An object containing the values and positions encountered during the walk.
+   */
   walk(i: number, j: number, direction: Direction, length: number): { values: Type[]; positions: number[][] } {
     if (length < 1) throw Error('Length must be > 0');
 
@@ -65,6 +93,15 @@ export class Grid<Type> {
     return { values, positions };
   }
 
+  /**
+   * Converts the grid to a string representation.
+   *
+   * The string representation includes column headers and grid rows.
+   * Each cell is formatted to have a consistent width based on the
+   * maximum cell width in the grid.
+   *
+   * @returns {string} The string representation of the grid.
+   */
   toString(): string {
     const cols = this.array[0]?.length || 0;
     const cellWidth = this.getMaxCellWidth();
@@ -75,6 +112,15 @@ export class Grid<Type> {
     return `${columnHeaders}\n${gridRows}`;
   }
 
+  /**
+   * Calculates the maximum width of the cells in the grid.
+   *
+   * This method flattens the 2D array of cells into a single array,
+   * then maps each cell to its string length (or 1 if the cell is null or undefined).
+   * Finally, it returns the maximum value found in the mapped array.
+   *
+   * @returns {number} The maximum width of the cells in the grid.
+   */
   private getMaxCellWidth(): number {
     return Math.max(
       ...this.array.flat().map((cell) => (cell === null || cell === undefined ? 1 : cell.toString().length)),
@@ -82,6 +128,13 @@ export class Grid<Type> {
     );
   }
 
+  /**
+   * Creates a string representing the column headers for a grid.
+   *
+   * @param cols - The number of columns in the grid.
+   * @param cellWidth - The width of each cell in characters.
+   * @returns A string with the column headers, where each header is padded to the specified cell width and colored blue.
+   */
   private createColumnHeaders(cols: number, cellWidth: number): string {
     return [
       ' '.repeat(cellWidth),
@@ -89,6 +142,13 @@ export class Grid<Type> {
     ].join(' ');
   }
 
+  /**
+   * Creates a string representation of the grid with rows formatted to a specified cell width.
+   * Each row is prefixed with its index, and cells are padded to align properly.
+   *
+   * @param cellWidth - The width to pad each cell to.
+   * @returns A string representation of the grid with formatted rows.
+   */
   private createGridRows(cellWidth: number): string {
     return this.array
       .map(
