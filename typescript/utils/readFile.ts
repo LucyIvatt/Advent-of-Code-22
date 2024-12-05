@@ -16,6 +16,5 @@ export enum InputFile {
 export const readPuzzleInput = (fileName: string): string[] => {
   return readFileSync(fileName, 'utf-8')
     .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
+    .map((line) => line.trim());
 };
