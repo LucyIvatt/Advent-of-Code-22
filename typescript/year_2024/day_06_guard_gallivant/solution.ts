@@ -25,7 +25,6 @@ const navigateGrid = (
           foundValidMove = true;
           break;
         }
-
         currentDirection = rotate90Degrees(currentDirection);
       } catch {
         return false;
@@ -36,9 +35,7 @@ const navigateGrid = (
 
     [x, y] = nextPos;
 
-    if (onVisit(x, y, currentDirection)) {
-      return true; // Custom condition met (e.g., loop detected)
-    }
+    if (onVisit(x, y, currentDirection)) return true; // Custom condition met (e.g., loop detected)
   }
 };
 
@@ -47,7 +44,7 @@ export const partOne = async (puzzleInput: string[]) => {
   const visited = new Set<string>();
 
   const [x, y] = grid.find('^')[0];
-  grid.array[x][y] = '.'; // Replace starting pos with empty space
+  grid.array[x][y] = '.';
   visited.add(`${x},${y}`);
 
   navigateGrid(grid, [x, y], Direction.North, (x, y) => {
@@ -63,13 +60,13 @@ export const partTwo = (puzzleInput: string[]) => {
 
   for (let i = 0; i < puzzleInput.length; i++) {
     for (let j = 0; j < puzzleInput[i].length; j++) {
-      const grid = new Grid(puzzleInput.map((row) => row.split('')));
-      if (puzzleInput[i][j] === '^' || puzzleInput[i][j] === '#' || grid.array[i][j] === '#') continue;
+      if (puzzleInput[i][j] === '^' || puzzleInput[i][j] === '#') continue; // skip start location & current obstacles
 
+      const grid = new Grid(puzzleInput.map((row) => row.split('')));
       const visited = new Set<string>();
 
       const [x, y] = grid.find('^')[0];
-      grid.array[x][y] = '.'; // Replace starting pos with empty space
+      grid.array[x][y] = '.';
       visited.add(`${x},${y},${Direction.North}`);
 
       grid.array[i][j] = '#'; // Set new obstacle
@@ -77,7 +74,7 @@ export const partTwo = (puzzleInput: string[]) => {
       const foundLoop = navigateGrid(grid, [x, y], Direction.North, (x, y, direction) => {
         const state = `${x},${y},${direction}`;
         if (visited.has(state)) {
-          return true; // Loop detected
+          return true;
         }
         visited.add(state);
         return false;

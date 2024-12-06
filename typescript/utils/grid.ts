@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-import { dir } from 'console';
 
 export enum Direction {
   North = 'North',
@@ -28,21 +27,9 @@ export const directionOffsets = new Map<Direction, { dx: number; dy: number }>([
 ]);
 
 export const rotate90Degrees = (direction: Direction): Direction => {
-  switch (direction) {
-    case Direction.North: {
-      return Direction.East;
-    }
-    case Direction.East: {
-      return Direction.South;
-    }
-    case Direction.South: {
-      return Direction.West;
-    }
-    case Direction.West: {
-      return Direction.North;
-    }
-  }
-  return Direction.North;
+  const directions = [Direction.North, Direction.East, Direction.South, Direction.West];
+  const currentIndex = directions.indexOf(direction);
+  return directions[(currentIndex + 1) % directions.length];
 };
 
 export class Grid<Type> {
