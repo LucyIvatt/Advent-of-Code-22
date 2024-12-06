@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import { dir } from 'console';
 
 export enum Direction {
   North = 'North',
@@ -26,6 +27,24 @@ export const directionOffsets = new Map<Direction, { dx: number; dy: number }>([
   [Direction.NorthWest, { dx: -1, dy: -1 }]
 ]);
 
+export const rotate90Degrees = (direction: Direction): Direction => {
+  switch (direction) {
+    case Direction.North: {
+      return Direction.East;
+    }
+    case Direction.East: {
+      return Direction.South;
+    }
+    case Direction.South: {
+      return Direction.West;
+    }
+    case Direction.West: {
+      return Direction.North;
+    }
+  }
+  return Direction.North;
+};
+
 export class Grid<Type> {
   array: Type[][];
 
@@ -39,6 +58,17 @@ export class Grid<Type> {
       throw new Error('Grid must have at least one element.');
     }
     this.array = grid;
+  }
+
+  find(value: Type) {
+    const locations = [] as [number, number][];
+
+    for (let i = 0; i < this.array.length; i++) {
+      for (let j = 0; j < this.array[i].length; j++) {
+        if (this.array[i][j] === value) locations.push([i, j]);
+      }
+    }
+    return locations;
   }
 
   /**
@@ -105,14 +135,14 @@ export class Grid<Type> {
    *
    * @returns {string} The string representation of the grid.
    */
-  toString(): string {
+  toString(showHeaders = true): string {
     const cols = this.array[0].length;
     const cellWidth = this.getMaxCellWidth();
 
-    const columnHeaders = this.createColumnHeaders(cols, cellWidth);
-    const gridRows = this.createGridRows(cellWidth);
+    const columnHeaders = showHeaders ? this.createColumnHeaders(cols, cellWidth) : '';
+    const gridRows = this.createGridRows(cellWidth, showHeaders);
 
-    return `${columnHeaders}\n${gridRows}`;
+    return showHeaders ? `${columnHeaders}\n${gridRows}` : gridRows;
   }
 
   /**
@@ -152,11 +182,11 @@ export class Grid<Type> {
    * @param cellWidth - The width to pad each cell to.
    * @returns A string representation of the grid with formatted rows.
    */
-  private createGridRows(cellWidth: number): string {
+  private createGridRows(cellWidth: number, showHeaders: boolean): string {
     return this.array
       .map(
         (row, rowIndex) =>
-          `${chalk.blue(rowIndex.toString().padStart(cellWidth))} ${row
+          `${showHeaders ? chalk.blue(rowIndex.toString().padStart(cellWidth)) + ' ' : ''}${row
             .map((cell) => (cell ?? ' ').toString().padStart(cellWidth))
             .join(' ')}`
       )

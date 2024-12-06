@@ -9,15 +9,15 @@ import { functionTimer } from './time';
  * @param partTwo - The function to solve part two of the puzzle. It takes an array of strings as input and returns a string as the answer.
  * @param puzzle_input - The input data for the puzzle as an array of strings.
  */
-export const runPuzzle = (
+export const runPuzzle = async (
   dayNum: string,
   dayName: string,
-  partOne: (input: string[]) => string,
-  partTwo: (input: string[]) => string,
+  partOne: (input: string[]) => string | Promise<string>,
+  partTwo: (input: string[]) => string | Promise<string>,
   puzzle_input: string[]
-): void => {
-  const { output: p1_output, time: p1_time } = functionTimer(partOne, puzzle_input);
-  const { output: p2_output, time: p2_time } = functionTimer(partTwo, puzzle_input);
+): Promise<void> => {
+  const { output: p1_output, time: p1_time } = await functionTimer(partOne, puzzle_input);
+  const { output: p2_output, time: p2_time } = await functionTimer(partTwo, puzzle_input);
 
   console.log('--------------------------------------');
   console.log(`Day ${dayNum}: ${dayName}`);
