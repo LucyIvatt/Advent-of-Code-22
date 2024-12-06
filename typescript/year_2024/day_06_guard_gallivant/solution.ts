@@ -48,7 +48,6 @@ export const partOne = async (puzzleInput: string[]) => {
 
   const [x, y] = grid.find('^')[0];
   grid.array[x][y] = '.'; // Replace starting pos with empty space
-
   visited.add(`${x},${y}`);
 
   navigateGrid(grid, [x, y], Direction.North, (x, y) => {
@@ -71,9 +70,9 @@ export const partTwo = (puzzleInput: string[]) => {
 
       const [x, y] = grid.find('^')[0];
       grid.array[x][y] = '.'; // Replace starting pos with empty space
-      grid.array[i][j] = '#'; // Set new obstacle
-
       visited.add(`${x},${y},${Direction.North}`);
+
+      grid.array[i][j] = '#'; // Set new obstacle
 
       const foundLoop = navigateGrid(grid, [x, y], Direction.North, (x, y, direction) => {
         const state = `${x},${y},${direction}`;
