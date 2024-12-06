@@ -3,47 +3,58 @@ import { Direction, Grid, rotate90Degrees } from '../../utils/grid';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 
-export const partOne = async (puzzleInput: string[]) => {
-  const grid = new Grid(puzzleInput.map((row) => row.split('')));
-  const visited = new Set<string>();
+const navigateGrid = (
+  grid: Grid<string>,
+  start: [number, number],
+  direction: Direction,
+  onVisit: (x: number, y: number, direction: Direction) => boolean
+): boolean => {
+  let [x, y] = start;
+  let currentDirection = direction;
 
-  let [x, y] = grid.find('^')[0];
-  grid.array[x][y] = '.';
-
-  let direction = Direction.North;
-
-  visited.add(`${x},${y}`);
-
-  let escaped = false;
-
-  while (!escaped) {
+  while (true) {
     let nextPos: [number, number] | undefined;
     let nextVal: string | undefined;
     let foundValidMove = false;
 
     for (let i = 0; i < 4; i++) {
       try {
-        ({ value: nextVal, position: nextPos } = grid.getAdjacent(x, y, direction));
+        ({ value: nextVal, position: nextPos } = grid.getAdjacent(x, y, currentDirection));
 
         if (nextVal === '.') {
           foundValidMove = true;
           break;
         }
 
-        direction = rotate90Degrees(direction);
+        currentDirection = rotate90Degrees(currentDirection);
       } catch {
-        escaped = true;
-        break;
+        return false;
       }
     }
 
-    if (escaped) break;
+    if (!foundValidMove || !nextPos) return false;
 
-    if (foundValidMove && nextPos) {
-      [x, y] = nextPos;
-      visited.add(`${x},${y}`);
+    [x, y] = nextPos;
+
+    if (onVisit(x, y, currentDirection)) {
+      return true; // Custom condition met (e.g., loop detected)
     }
   }
+};
+
+export const partOne = async (puzzleInput: string[]) => {
+  const grid = new Grid(puzzleInput.map((row) => row.split('')));
+  const visited = new Set<string>();
+
+  const [x, y] = grid.find('^')[0];
+  grid.array[x][y] = '.'; // Replace starting pos with empty space
+
+  visited.add(`${x},${y}`);
+
+  navigateGrid(grid, [x, y], Direction.North, (x, y) => {
+    visited.add(`${x},${y}`);
+    return false;
+  });
 
   return visited.size.toString();
 };
@@ -54,57 +65,33 @@ export const partTwo = (puzzleInput: string[]) => {
   for (let i = 0; i < puzzleInput.length; i++) {
     for (let j = 0; j < puzzleInput[i].length; j++) {
       const grid = new Grid(puzzleInput.map((row) => row.split('')));
+      if (puzzleInput[i][j] === '^' || puzzleInput[i][j] === '#' || grid.array[i][j] === '#') continue;
 
       const visited = new Set<string>();
 
-      let [x, y] = grid.find('^')[0];
-      let direction = Direction.North;
+      const [x, y] = grid.find('^')[0];
+      grid.array[x][y] = '.'; // Replace starting pos with empty space
+      grid.array[i][j] = '#'; // Set new obstacle
 
-      grid.array[x][y] = '.';
-      grid.array[i][j] = '#';
+      visited.add(`${x},${y},${Direction.North}`);
 
-      visited.add(`${x},${y},${direction}`);
-
-      let escaped = false;
-
-      while (!escaped) {
-        let nextPos: [number, number] | undefined;
-        let nextVal: string | undefined;
-        let foundValidMove = false;
-
-        for (let i = 0; i < 4; i++) {
-          try {
-            ({ value: nextVal, position: nextPos } = grid.getAdjacent(x, y, direction));
-
-            if (nextVal === '.') {
-              foundValidMove = true;
-              break;
-            }
-
-            direction = rotate90Degrees(direction);
-          } catch {
-            escaped = true;
-            break;
-          }
+      const foundLoop = navigateGrid(grid, [x, y], Direction.North, (x, y, direction) => {
+        const state = `${x},${y},${direction}`;
+        if (visited.has(state)) {
+          return true; // Loop detected
         }
+        visited.add(state);
+        return false;
+      });
 
-        if (escaped) break;
-
-        if (foundValidMove && nextPos) {
-          [x, y] = nextPos;
-          if (visited.has(`${x},${y},${direction}`)) {
-            loops++;
-            break;
-          }
-          visited.add(`${x},${y},${direction}`);
-        }
-      }
+      if (foundLoop) loops++;
     }
   }
+
   return loops.toString();
 };
 
 if (require.main === module) {
-  const puzzle_input = readPuzzleInput(path.resolve(__dirname, InputFile.INPUT));
+  const puzzle_input = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
   runPuzzle('06', 'guard_gallivant', partOne, partTwo, puzzle_input);
 }
