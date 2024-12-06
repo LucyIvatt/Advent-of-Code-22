@@ -28,8 +28,7 @@ export const directionOffsets = new Map<Direction, { dx: number; dy: number }>([
 
 export const rotate90Degrees = (direction: Direction): Direction => {
   const directions = [Direction.North, Direction.East, Direction.South, Direction.West];
-  const currentIndex = directions.indexOf(direction);
-  return directions[(currentIndex + 1) % directions.length];
+  return directions[(directions.indexOf(direction) + 1) % directions.length];
 };
 
 export class Grid<Type> {
