@@ -13,31 +13,34 @@ const parseInput = (puzzle_input: string[]) =>
   });
 
 const evaluateEquation = (numbers: number[], operators: string[], target: number) => {
-  const operations = {
-    '+': (a: number, b: number) => a + b,
-    '*': (a: number, b: number) => a * b,
-    '|': (a: number, b: number) => Number(`${a}${b}`)
-  };
   let total = numbers[0];
   for (let i = 0; i < operators.length; i++) {
     const nextNum = numbers[i + 1];
-    total = operations[operators[i] as keyof typeof operations](total, nextNum);
+    switch (operators[i]) {
+      case '+':
+        total += nextNum;
+        break;
+      case '*':
+        total *= nextNum;
+        break;
+      case '|':
+        total = Number(`${total}${nextNum}`);
+        break;
+    }
     if (total > target) return false;
   }
   return total === target;
 };
 
 const findCalibrationResult = (puzzle_input: string[], operators: string[]) => {
-  let sum = 0;
-  parseInput(puzzle_input).forEach(({ output, equation }) => {
+  return parseInput(puzzle_input).reduce((sum, { output, equation }) => {
     for (const combination of generateCombinations(operators, equation.length - 1)) {
       if (evaluateEquation(equation, Array.from(combination), output)) {
-        sum += output;
-        break;
+        return sum + output;
       }
     }
-  });
-  return sum;
+    return sum;
+  }, 0);
 };
 
 export const partOne = (puzzle_input: string[]) => {

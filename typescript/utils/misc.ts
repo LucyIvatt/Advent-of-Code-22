@@ -7,14 +7,16 @@ export const count = <T extends string | number>(array: T[]): Record<T, number> 
 };
 
 export function* generateCombinations(allowedCharacters: string[], length: number): Generator<string> {
-  if (length === 0) {
-    yield '';
-    return;
-  }
+  const stack: string[] = [''];
 
-  for (const char of allowedCharacters) {
-    for (const smallerCombination of generateCombinations(allowedCharacters, length - 1)) {
-      yield char + smallerCombination;
+  while (stack.length) {
+    const combination = stack.pop()!;
+    if (combination.length === length) {
+      yield combination;
+    } else {
+      for (const char of allowedCharacters) {
+        stack.push(combination + char);
+      }
     }
   }
 }
