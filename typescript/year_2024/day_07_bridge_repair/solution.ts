@@ -3,58 +3,49 @@ import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 import { generateCombinations } from '../../utils/misc';
 
-const formatInput = (puzzle_input: string[]) => {
-  return puzzle_input.map((a) => {
-    const s = a.split(':');
-    return { output: Number(s[0]), equation: s[1].split(' ').splice(1).map(Number) };
+const parseInput = (puzzle_input: string[]) =>
+  puzzle_input.map((line) => {
+    const [output, equation] = line.split(':');
+    return {
+      output: Number(output),
+      equation: equation.trim().split(' ').map(Number)
+    };
   });
-};
 
 const evaluateEquation = (numbers: number[], operators: string[], target: number) => {
+  const operations = {
+    '+': (a: number, b: number) => a + b,
+    '*': (a: number, b: number) => a * b,
+    '|': (a: number, b: number) => Number(`${a}${b}`)
+  };
   let total = numbers[0];
   for (let i = 0; i < operators.length; i++) {
     const nextNum = numbers[i + 1];
-    switch (operators[i]) {
-      case '+':
-        total += nextNum;
-        break;
-      case '*':
-        total *= nextNum;
-        break;
-      case '|':
-        total = Number(`${total}${nextNum}`);
-        break;
-    }
+    total = operations[operators[i] as keyof typeof operations](total, nextNum);
     if (total > target) return false;
   }
   return total === target;
 };
 
-export const partOne = (puzzle_input: string[]) => {
-  let validEquations = 0;
-  for (const { output, equation } of formatInput(puzzle_input)) {
-    for (const combination of generateCombinations(['*', '+'], equation.length - 1)) {
+const findCalibrationResult = (puzzle_input: string[], operators: string[]) => {
+  let sum = 0;
+  parseInput(puzzle_input).forEach(({ output, equation }) => {
+    for (const combination of generateCombinations(operators, equation.length - 1)) {
       if (evaluateEquation(equation, Array.from(combination), output)) {
-        validEquations += output;
+        sum += output;
         break;
       }
     }
-  }
-  return validEquations.toString();
+  });
+  return sum;
+};
+
+export const partOne = (puzzle_input: string[]) => {
+  return findCalibrationResult(puzzle_input, ['*', '+']).toString();
 };
 
 export const partTwo = (puzzle_input: string[]) => {
-  let validEquations = 0;
-  for (const { output, equation } of formatInput(puzzle_input)) {
-    for (const combination of generateCombinations(['*', '+', '|'], equation.length - 1)) {
-      if (evaluateEquation(equation, Array.from(combination), output)) {
-        validEquations += output;
-        break;
-      }
-    }
-  }
-
-  return validEquations.toString();
+  return findCalibrationResult(puzzle_input, ['*', '+', '|']).toString();
 };
 
 if (require.main === module) {
