@@ -5,3 +5,16 @@ export const count = <T extends string | number>(array: T[]): Record<T, number> 
   });
   return counter;
 };
+
+export function* generateCombinations(allowedCharacters: string[], length: number): Generator<string> {
+  if (length === 0) {
+    yield '';
+    return;
+  }
+
+  for (const char of allowedCharacters) {
+    for (const smallerCombination of generateCombinations(allowedCharacters, length - 1)) {
+      yield char + smallerCombination;
+    }
+  }
+}
