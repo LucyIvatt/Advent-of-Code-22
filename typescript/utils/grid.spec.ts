@@ -1,4 +1,16 @@
-import { Direction, Grid } from './grid';
+import { Direction, Grid, rotate } from './grid';
+
+describe('directions', () => {
+  describe('rotate', () => {
+    it('should correctly rotate by 45 degree angles', () => {
+      expect(rotate(Direction.North, 45)).toBe(Direction.NorthEast);
+    });
+
+    it('should throw error if angle not divisible by 45', () => {
+      expect(() => rotate(Direction.East, 5)).toThrow();
+    });
+  });
+});
 
 describe('grid', () => {
   let grid: Grid<number>;

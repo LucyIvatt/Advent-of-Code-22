@@ -26,9 +26,22 @@ export const directionOffsets = new Map<Direction, { dx: number; dy: number }>([
   [Direction.NorthWest, { dx: -1, dy: -1 }]
 ]);
 
-export const rotate90Degrees = (direction: Direction): Direction => {
-  const directions = [Direction.North, Direction.East, Direction.South, Direction.West];
-  return directions[(directions.indexOf(direction) + 1) % directions.length];
+/**
+ * Rotates a given direction by a specified number of degrees.
+ *
+ * @param direction - The initial direction to rotate from, represented as a value from the Direction enum.
+ * @param degrees - The number of degrees to rotate, which must be a multiple of 45.
+ * @returns The new direction after rotation.
+ * @throws Will throw an error if the degrees are not in 45-degree increments.
+ */
+export const rotate = (direction: Direction, degrees: number): Direction => {
+  if (degrees % 45 !== 0) throw new Error('Degrees must be in 45 degree increments');
+
+  const directions = Object.values(Direction);
+  const currentIndex = directions.indexOf(direction);
+  const newIndex = (currentIndex + degrees / 45 + directions.length) % directions.length;
+
+  return directions[newIndex];
 };
 
 export class Grid<Type> {

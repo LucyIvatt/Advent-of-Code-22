@@ -1,5 +1,5 @@
 import path from 'path';
-import { Direction, Grid, rotate90Degrees } from '../../utils/grid';
+import { Direction, Grid, rotate } from '../../utils/grid';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 
@@ -24,7 +24,7 @@ const traverseGrid = (grid: Grid<string>, startX: number, startY: number, startD
           break;
         }
 
-        direction = rotate90Degrees(direction);
+        direction = rotate(direction, 90);
       } catch {
         escaped = true;
         break;
