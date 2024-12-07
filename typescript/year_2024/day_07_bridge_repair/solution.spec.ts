@@ -14,14 +14,14 @@ describe('TestDay07', () => {
 
     it('should return correct answer for the real input', () => {
       const result = partOne(input);
-      expect(result).toBe('11387');
+      expect(result).toBe('1289579105366');
     });
   });
 
   describe('Part two', () => {
     it('should return correct answer for the example input', () => {
       const result = partTwo(exampleInput);
-      expect(result).toBe('1289579105366');
+      expect(result).toBe('11387');
     });
 
     it('should return correct answer for the real input', () => {

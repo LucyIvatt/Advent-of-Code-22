@@ -3,46 +3,51 @@ import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 import { generateCombinations } from '../../utils/misc';
 
-export const partOne = (puzzle_input: string[]) => {
-  const formatted_input = puzzle_input.map((a) => {
+const formatInput = (puzzle_input: string[]) => {
+  return puzzle_input.map((a) => {
     const s = a.split(':');
-    return { output: Number(s[0]), equation: s[1].split(' ').splice(1) };
+    return { output: Number(s[0]), equation: s[1].split(' ').splice(1).map(Number) };
   });
-  let validEquations = 0;
+};
 
-  for (const { output, equation } of formatted_input) {
+const evaluateEquation = (numbers: number[], operators: string[], target: number) => {
+  let total = numbers[0];
+  for (let i = 0; i < operators.length; i++) {
+    const nextNum = numbers[i + 1];
+    switch (operators[i]) {
+      case '+':
+        total += nextNum;
+        break;
+      case '*':
+        total *= nextNum;
+        break;
+      case '|':
+        total = Number(`${total}${nextNum}`);
+        break;
+    }
+    if (total > target) return false;
+  }
+  return total === target;
+};
+
+export const partOne = (puzzle_input: string[]) => {
+  let validEquations = 0;
+  for (const { output, equation } of formatInput(puzzle_input)) {
     for (const combination of generateCombinations(['*', '+'], equation.length - 1)) {
-      let total = Number(equation[0]);
-      for (let i = 0; i < combination.length; i++) {
-        total = eval(total.toString() + combination[i] + equation[i + 1]);
-        if (total > output) break;
-      }
-      if (total === output) {
+      if (evaluateEquation(equation, Array.from(combination), output)) {
         validEquations += output;
         break;
       }
     }
   }
-
   return validEquations.toString();
 };
 
 export const partTwo = (puzzle_input: string[]) => {
-  const formatted_input = puzzle_input.map((a) => {
-    const s = a.split(':');
-    return { output: Number(s[0]), equation: s[1].split(' ').splice(1) };
-  });
   let validEquations = 0;
-
-  for (const { output, equation } of formatted_input) {
+  for (const { output, equation } of formatInput(puzzle_input)) {
     for (const combination of generateCombinations(['*', '+', '|'], equation.length - 1)) {
-      let total = Number(equation[0]);
-      for (let i = 0; i < combination.length; i++) {
-        if (combination[i] === '|') total = Number(total.toString() + equation[i + 1]);
-        else total = eval(total.toString() + combination[i] + equation[i + 1]);
-        if (total > output) break;
-      }
-      if (total === output) {
+      if (evaluateEquation(equation, Array.from(combination), output)) {
         validEquations += output;
         break;
       }
