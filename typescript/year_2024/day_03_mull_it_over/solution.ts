@@ -18,14 +18,14 @@ const findMatches = (input: string, regex: RegExp): RegexMatch[] => {
   }));
 };
 
-export const partOne = (puzzle_input: string[]) => {
-  const instructions = puzzle_input.join('');
+export const partOne = (puzzleInput: string[]) => {
+  const instructions = puzzleInput.join('');
   const result = findMatches(instructions, MUL_REGEX).reduce((acc, { groups: [a, b] }) => (acc += a * b), 0);
   return result.toString();
 };
 
-export const partTwo = (puzzle_input: string[]) => {
-  const instructions = puzzle_input.join('');
+export const partTwo = (puzzleInput: string[]) => {
+  const instructions = puzzleInput.join('');
 
   const multiplications = findMatches(instructions, MUL_REGEX);
   const conditions = findMatches(instructions, COND_REGEX);
@@ -48,8 +48,8 @@ export const partTwo = (puzzle_input: string[]) => {
 };
 
 if (require.main === module) {
-  const puzzle_input = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE_2));
-  runPuzzle('03', 'mull_it_over', partOne, partTwo, puzzle_input);
+  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE_2));
+  runPuzzle('03', 'mull_it_over', partOne, partTwo, puzzleInput);
 }
 
 // 0.000972 seconds without pointer

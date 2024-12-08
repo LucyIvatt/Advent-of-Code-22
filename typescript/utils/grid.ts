@@ -26,6 +26,29 @@ export const directionOffsets = new Map<Direction, { dx: number; dy: number }>([
   [Direction.NorthWest, { dx: -1, dy: -1 }]
 ]);
 
+export const findDirectionFromOffset = (dx_input: number, dy_input: number): Direction | null => {
+  const directionOffsetsObject = Object.fromEntries(directionOffsets);
+  for (const [direction, { dx, dy }] of Object.entries(directionOffsetsObject)) {
+    const [normDx, normDy] = normalizeOffset(dx_input, dy_input);
+    if (dx === normDx && dy === normDy) {
+      return direction as Direction;
+    }
+  }
+  return null;
+};
+
+const normalizeOffset = (dx: number, dy: number): [number, number] => {
+  const normalised = [];
+
+  if (dx === 0) normalised.push(0);
+  else normalised.push(dx / Math.abs(dx));
+
+  if (dy === 0) normalised.push(0);
+  else normalised.push(dy / Math.abs(dy));
+
+  return normalised as [number, number];
+};
+
 /**
  * Rotates a given direction by a specified number of degrees.
  *
@@ -44,6 +67,9 @@ export const rotate = (direction: Direction, degrees: number): Direction => {
   return directions[newIndex];
 };
 
+export const manhattanDistance = (pos1: [number, number], pos2: [number, number]) => {
+  return Math.abs(pos1[0] - pos2[0]) + Math.abs(pos1[1] - pos2[1]);
+};
 export class Grid<Type> {
   array: Type[][];
 
@@ -68,6 +94,10 @@ export class Grid<Type> {
       }
     }
     return locations;
+  }
+
+  isValidLocation([i, j]: [number, number]) {
+    return i >= 0 && i < this.array.length && j >= 0 && j < this.array[i].length;
   }
 
   /**

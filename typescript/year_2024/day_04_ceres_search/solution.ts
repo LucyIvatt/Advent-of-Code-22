@@ -39,6 +39,6 @@ export const partTwo = (puzzleInput: string[]) => {
 };
 
 if (require.main === module) {
-  const puzzle_input = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
-  runPuzzle('04', 'ceres_search', partOne, partTwo, puzzle_input);
+  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
+  runPuzzle('04', 'ceres_search', partOne, partTwo, puzzleInput);
 }

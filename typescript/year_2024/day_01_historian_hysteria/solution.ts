@@ -4,8 +4,8 @@ import { runPuzzle } from '../../utils/runPuzzle';
 
 type SplitLists = { left: number[]; right: number[] };
 
-const separateLists = (puzzle_input: string[]): SplitLists => {
-  return puzzle_input.reduce(
+const separateLists = (puzzleInput: string[]): SplitLists => {
+  return puzzleInput.reduce(
     (acc, line) => {
       const [leftValue, rightValue] = line.split('   ').map(Number);
       acc.left.push(leftValue);
@@ -16,8 +16,8 @@ const separateLists = (puzzle_input: string[]): SplitLists => {
   );
 };
 
-export const partOne = (puzzle_input: string[]) => {
-  const { left, right } = separateLists(puzzle_input);
+export const partOne = (puzzleInput: string[]) => {
+  const { left, right } = separateLists(puzzleInput);
 
   left.sort((a, b) => a - b);
   right.sort((a, b) => a - b);
@@ -25,13 +25,13 @@ export const partOne = (puzzle_input: string[]) => {
   return left.reduce((acc, l, index) => acc + Math.abs(l - right[index]), 0).toString();
 };
 
-export const partTwo = (puzzle_input: string[]) => {
-  const { left, right } = separateLists(puzzle_input);
+export const partTwo = (puzzleInput: string[]) => {
+  const { left, right } = separateLists(puzzleInput);
 
   return left.reduce((acc, l) => acc + l * right.filter((r) => r === l).length, 0).toString();
 };
 
 if (require.main === module) {
-  const puzzle_input = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
-  runPuzzle('01', 'historian_hysteria', partOne, partTwo, puzzle_input);
+  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
+  runPuzzle('01', 'historian_hysteria', partOne, partTwo, puzzleInput);
 }

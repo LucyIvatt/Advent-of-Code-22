@@ -3,11 +3,11 @@ import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 import { count } from '../../utils/misc';
 
-const formatInputs = (puzzle_input: string[]) => {
-  const delimiterIndex = puzzle_input.indexOf('');
+const formatInputs = (puzzleInput: string[]) => {
+  const delimiterIndex = puzzleInput.indexOf('');
 
-  const rules = puzzle_input.slice(0, delimiterIndex).map((rule) => rule.split('|').map(Number));
-  const lists = puzzle_input.slice(delimiterIndex + 1).map((list) => list.split(',').map(Number));
+  const rules = puzzleInput.slice(0, delimiterIndex).map((rule) => rule.split('|').map(Number));
+  const lists = puzzleInput.slice(delimiterIndex + 1).map((list) => list.split(',').map(Number));
 
   return { rules, lists };
 };
@@ -37,17 +37,17 @@ const processLists = (lists: number[][], rules: number[][], fixBrokenOrders = fa
   return totalSum;
 };
 
-export const partOne = (puzzle_input: string[]) => {
-  const { rules, lists } = formatInputs(puzzle_input);
+export const partOne = (puzzleInput: string[]) => {
+  const { rules, lists } = formatInputs(puzzleInput);
   return processLists(lists, rules).toString();
 };
 
-export const partTwo = (puzzle_input: string[]) => {
-  const { rules, lists } = formatInputs(puzzle_input);
+export const partTwo = (puzzleInput: string[]) => {
+  const { rules, lists } = formatInputs(puzzleInput);
   return processLists(lists, rules, true).toString();
 };
 
 if (require.main === module) {
-  const puzzle_input = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
-  runPuzzle('05', 'print_queue', partOne, partTwo, puzzle_input);
+  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
+  runPuzzle('05', 'print_queue', partOne, partTwo, puzzleInput);
 }

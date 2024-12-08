@@ -2,15 +2,15 @@ import path from "path";
 import { InputFile, readPuzzleInput } from "../../utils/readFile";
 import { runPuzzle } from '../../utils/runPuzzle';
 
-export const partOne = (puzzle_input: string[]) => {
+export const partOne = (puzzleInput: string[]) => {
   return "Part 1 Answer";
 };
 
-export const partTwo = (puzzle_input: string[]) => {
+export const partTwo = (puzzleInput: string[]) => {
   return "Part 2 Answer";
 };
 
 if (require.main === module) {
-  const puzzle_input = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
-  runPuzzle('{{ day_num }}', '{{ task_name }}', partOne, partTwo, puzzle_input);
+  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
+  runPuzzle('{{ day_num }}', '{{ task_name }}', partOne, partTwo, puzzleInput);
 }

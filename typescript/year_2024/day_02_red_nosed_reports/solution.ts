@@ -2,8 +2,8 @@ import path from 'path';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 
-const parseReports = (puzzle_input: string[]): number[][] => {
-  return puzzle_input.map((report) => report.split(' ').map(Number));
+const parseReports = (puzzleInput: string[]): number[][] => {
+  return puzzleInput.map((report) => report.split(' ').map(Number));
 };
 
 const isMonotonic = (diffs: number[]) => diffs.every((level) => level > 0) || diffs.every((level) => level < 0);
@@ -15,12 +15,12 @@ const isSafeReport = (report: number[]): boolean => {
   return isMonotonic(diffs) && isWithinRange(diffs, 1, 3);
 };
 
-export const partOne = (puzzle_input: string[]): string => {
-  return parseReports(puzzle_input).filter(isSafeReport).length.toString();
+export const partOne = (puzzleInput: string[]): string => {
+  return parseReports(puzzleInput).filter(isSafeReport).length.toString();
 };
 
-export const partTwo = (puzzle_input: string[]) => {
-  const reports = parseReports(puzzle_input);
+export const partTwo = (puzzleInput: string[]) => {
+  const reports = parseReports(puzzleInput);
   let numSafeReports = 0;
 
   reports.forEach((report) => {
@@ -41,6 +41,6 @@ export const partTwo = (puzzle_input: string[]) => {
 };
 
 if (require.main === module) {
-  const puzzle_input = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
-  runPuzzle('02', 'red_nosed_reports', partOne, partTwo, puzzle_input);
+  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
+  runPuzzle('02', 'red_nosed_reports', partOne, partTwo, puzzleInput);
 }

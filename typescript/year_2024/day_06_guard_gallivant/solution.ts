@@ -71,6 +71,6 @@ export const partTwo = (puzzleInput: string[]) => {
 };
 
 if (require.main === module) {
-  const puzzle_input = readPuzzleInput(path.resolve(__dirname, InputFile.INPUT));
-  runPuzzle('06', 'guard_gallivant', partOne, partTwo, puzzle_input);
+  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.INPUT));
+  runPuzzle('06', 'guard_gallivant', partOne, partTwo, puzzleInput);
 }
