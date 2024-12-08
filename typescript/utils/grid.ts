@@ -1,5 +1,7 @@
 import chalk from 'chalk';
 
+export type Coord = [number, number];
+
 export enum Direction {
   North = 'North',
   NorthEast = 'NorthEast',
@@ -26,29 +28,6 @@ export const directionOffsets = new Map<Direction, { dx: number; dy: number }>([
   [Direction.NorthWest, { dx: -1, dy: -1 }]
 ]);
 
-export const findDirectionFromOffset = (dx_input: number, dy_input: number): Direction | null => {
-  const directionOffsetsObject = Object.fromEntries(directionOffsets);
-  for (const [direction, { dx, dy }] of Object.entries(directionOffsetsObject)) {
-    const [normDx, normDy] = normalizeOffset(dx_input, dy_input);
-    if (dx === normDx && dy === normDy) {
-      return direction as Direction;
-    }
-  }
-  return null;
-};
-
-const normalizeOffset = (dx: number, dy: number): [number, number] => {
-  const normalised = [];
-
-  if (dx === 0) normalised.push(0);
-  else normalised.push(dx / Math.abs(dx));
-
-  if (dy === 0) normalised.push(0);
-  else normalised.push(dy / Math.abs(dy));
-
-  return normalised as [number, number];
-};
-
 /**
  * Rotates a given direction by a specified number of degrees.
  *
@@ -67,7 +46,7 @@ export const rotate = (direction: Direction, degrees: number): Direction => {
   return directions[newIndex];
 };
 
-export const manhattanDistance = (pos1: [number, number], pos2: [number, number]) => {
+export const manhattanDistance = (pos1: Coord, pos2: Coord) => {
   return Math.abs(pos1[0] - pos2[0]) + Math.abs(pos1[1] - pos2[1]);
 };
 export class Grid<Type> {
@@ -86,7 +65,7 @@ export class Grid<Type> {
   }
 
   find(value: Type) {
-    const locations = [] as [number, number][];
+    const locations = [] as Coord[];
 
     for (let i = 0; i < this.array.length; i++) {
       for (let j = 0; j < this.array[i].length; j++) {
@@ -96,7 +75,7 @@ export class Grid<Type> {
     return locations;
   }
 
-  isValidLocation([i, j]: [number, number]) {
+  isValidLocation([i, j]: Coord) {
     return i >= 0 && i < this.array.length && j >= 0 && j < this.array[i].length;
   }
 
@@ -109,14 +88,14 @@ export class Grid<Type> {
    * @returns An object containing the value of the adjacent cell and its position as a tuple [row, column].
    * @throws Will throw an error if the direction is invalid or if the resulting position is out of bounds.
    */
-  getAdjacent(i: number, j: number, direction: Direction): { value: Type; position: [number, number] } {
+  getAdjacent(i: number, j: number, direction: Direction): { value: Type; position: Coord } {
     const offset = directionOffsets.get(direction);
 
     if (!offset) {
       throw new Error(`Invalid direction: ${direction}`);
     }
 
-    const position = [i + offset.dy, j + offset.dx] as [number, number];
+    const position = [i + offset.dy, j + offset.dx] as Coord;
 
     if (position[0] < 0 || position[0] >= this.array.length || position[1] < 0 || position[1] >= this.array[0].length) {
       throw new Error(`Position out of bounds at [${i}, ${j}] moving ${direction} to [${position[0]}, ${position[1]}]`);

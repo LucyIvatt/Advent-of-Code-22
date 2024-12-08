@@ -1,5 +1,5 @@
 import path from 'path';
-import { Direction, Grid, rotate } from '../../utils/grid';
+import { Coord, Direction, Grid, rotate } from '../../utils/grid';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 
@@ -35,9 +35,9 @@ const traverseGrid = (grid: Grid<string>, startX: number, startY: number, startD
   return { visited, loops: false };
 };
 
-const getUniquePositions = (visited: Set<string>): [number, number][] =>
+const getUniquePositions = (visited: Set<string>): Coord[] =>
   [...new Set([...visited].map((state) => state.split(',').slice(0, 2).join(',')))].map(
-    (pos) => pos.split(',').map(Number) as [number, number]
+    (pos) => pos.split(',').map(Number) as Coord
   );
 
 export const partOne = async (puzzleInput: string[]) => {
