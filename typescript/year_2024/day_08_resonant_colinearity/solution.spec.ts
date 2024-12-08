@@ -21,12 +21,12 @@ describe('TestDay08', () => {
   describe('Part two', () => {
     it('should return correct answer for the example input', () => {
       const result = partTwo(exampleInput);
-      expect(result).toBe('Part 2 Answer');
+      expect(result).toBe('34');
     });
 
     it('should return correct answer for the real input', () => {
       const result = partTwo(input);
-      expect(result).toBe('Part 2 Answer');
+      expect(result).toBe('1030');
     });
   });
 });

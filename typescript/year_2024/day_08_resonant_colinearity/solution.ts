@@ -26,7 +26,7 @@ export const partOne = (puzzleInput: string[]) => {
 
   const antinodeLocations = new Set();
 
-  for (const [_symbol, coordinates] of Object.entries(antennaLocations)) {
+  for (const coordinates of Object.values(antennaLocations)) {
     for (let a = 0; a < coordinates.length; a++) {
       for (let b = a + 1; b < coordinates.length; b++) {
         const dx = coordinates[a][0] - coordinates[b][0];
@@ -44,7 +44,34 @@ export const partOne = (puzzleInput: string[]) => {
 };
 
 export const partTwo = (puzzleInput: string[]) => {
-  return 'Part 2 Answer';
+  const grid = new Grid(puzzleInput.map((line) => line.split('')));
+  const antennaLocations = findAntennaLocations(grid);
+
+  const antinodeLocations = new Set();
+
+  for (const coordinates of Object.values(antennaLocations)) {
+    for (let a = 0; a < coordinates.length; a++) {
+      for (let b = a + 1; b < coordinates.length; b++) {
+        const dx = coordinates[a][0] - coordinates[b][0];
+        const dy = coordinates[a][1] - coordinates[b][1];
+
+        let aNode = coordinates[a] as [number, number];
+        let bNode = coordinates[b] as [number, number];
+
+        while (grid.isValidLocation(aNode) || grid.isValidLocation(bNode)) {
+          if (grid.isValidLocation(aNode)) {
+            antinodeLocations.add(`${aNode[0]},${aNode[1]}`);
+            aNode = [aNode[0] + dx, aNode[1] + dy];
+          }
+          if (grid.isValidLocation(bNode)) {
+            antinodeLocations.add(`${bNode[0]},${bNode[1]}`);
+            bNode = [bNode[0] - dx, bNode[1] - dy];
+          }
+        }
+      }
+    }
+  }
+  return new Set(antinodeLocations).size.toString();
 };
 
 if (require.main === module) {
