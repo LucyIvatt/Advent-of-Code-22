@@ -26,29 +26,34 @@ const checkSum = (blocks: IndexRange[]) => {
   }, 0);
 };
 
-const formatInput = (puzzleInput: string[]) => {
-  const blocks: IndexRange[] = [];
+const findBlocks = (puzzleInput: string[]): IndexRange[] => {
   let currentIndex = 0;
+  const blocks: IndexRange[] = [];
+  const values = puzzleInput[0].split('').map(Number);
 
-  puzzleInput[0].split('').forEach((val, index) => {
-    if (index % 2 === 0) {
-      blocks.push(new IndexRange(index / 2, currentIndex, currentIndex + Number(val) - 1));
-    }
-    currentIndex += Number(val);
-  });
-
+  for (let i = 0; i < values.length; i++) {
+    if (i % 2 === 0) blocks.push(new IndexRange(i / 2, currentIndex, currentIndex + values[i] - 1));
+    currentIndex += values[i];
+  }
   return blocks;
 };
+
+const findGaps = (blocks: IndexRange[]): IndexRange[] =>
+  blocks
+    .slice(0, -1)
+    .flatMap((block, i) =>
+      block.right + 1 < blocks[i + 1].left ? [new IndexRange(0, block.right + 1, blocks[i + 1].left - 1)] : []
+    );
 
 const shuffleSingleChars = (blocks: IndexRange[]) => {
   let i = 0;
 
   while (i < blocks.length - 2) {
-    const b1 = blocks[i];
-    const b2 = blocks[i + 1];
+    const leftBlock = blocks[i];
+    const rightBlock = blocks[i + 1];
 
-    let gapLength = b2.left - b1.right - 1;
-    let gapLocation = b1.right + 1;
+    let gapLength = rightBlock.left - leftBlock.right - 1;
+    let gapLocation = leftBlock.right + 1;
 
     let newBlockPos = i + 1;
 
@@ -92,16 +97,7 @@ const shuffleSingleChars = (blocks: IndexRange[]) => {
 };
 
 const shuffleEntireFiles = (blocks: IndexRange[]) => {
-  // Find all possible gaps
-  const gaps: IndexRange[] = [];
-  let i = 0;
-  while (i < blocks.length - 1) {
-    const leftBound = blocks[i].right;
-    const rightBound = blocks[i + 1].left;
-    const gap = new IndexRange(0, leftBound + 1, rightBound - 1);
-    if (leftBound + 1 !== rightBound) gaps.push(gap);
-    i++;
-  }
+  const gaps = findGaps(blocks);
 
   for (const block of blocks.sort((a, b) => b.value - a.value)) {
     for (let j = 0; j < gaps.length; j++) {
@@ -125,13 +121,13 @@ const shuffleEntireFiles = (blocks: IndexRange[]) => {
 };
 
 export const partOne = (puzzleInput: string[]) => {
-  const formatted = formatInput(puzzleInput);
+  const formatted = findBlocks(puzzleInput);
   const blocks = shuffleSingleChars(formatted);
   return checkSum(blocks).toString();
 };
 
 export const partTwo = (puzzleInput: string[]) => {
-  const formatted = formatInput(puzzleInput);
+  const formatted = findBlocks(puzzleInput);
   const blocks = shuffleEntireFiles(formatted);
   return checkSum(blocks).toString();
 };
