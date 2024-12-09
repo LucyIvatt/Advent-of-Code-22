@@ -18,7 +18,7 @@ const formatInput = (puzzleInput: string[]) => {
   return blocks;
 };
 
-const shuffle = (blocks: FileBlock[]) => {
+const shuffleSingleChars = (blocks: FileBlock[]) => {
   let i = 0;
 
   while (i < blocks.length - 2) {
@@ -70,11 +70,51 @@ const shuffle = (blocks: FileBlock[]) => {
   return blocks;
 };
 
-export const partOne = async (puzzleInput: string[]) => {
-  const formatted = formatInput(puzzleInput);
-  const blocks = shuffle(formatted);
+const shuffleEntireFiles = (blocks: FileBlock[]) => {
+  console.log(blocks);
+  // Find all possible gaps
+  const gaps = [];
+  let i = 0;
+  while (i < blocks.length - 1) {
+    const leftBound = blocks[i].range[1];
+    const rightBound = blocks[i + 1].range[0];
+    if (leftBound + 1 !== rightBound)
+      gaps.push({ range: [leftBound + 1, rightBound - 1], length: rightBound - 1 - leftBound });
+    i++;
+  }
+
+  for (const block of blocks.sort((a, b) => b.id - a.id)) {
+    console.log('processing', block);
+    for (let j = 0; j < gaps.length; j++) {
+      const gap = gaps[j];
+      if (gap.length >= block.length && gap.range[0] < block.range[0]) {
+        console.log('found gap', gap);
+        block.range = [gap.range[0], gap.range[0] + block.length - 1];
+
+        gap.range = [gap.range[0] + block.length, gap.range[1]];
+        gap.length = gap.length - block.length;
+
+        console.log(block);
+        console.log(gap);
+
+        if (gap.range[0] > gap.range[1]) {
+          console.log('removing gap', gap);
+          gaps.splice(j, 1);
+        }
+        console.log('\n');
+        break;
+      }
+    }
+  }
 
   console.log(blocks);
+
+  return blocks;
+};
+
+export const partOne = async (puzzleInput: string[]) => {
+  const formatted = formatInput(puzzleInput);
+  const blocks = shuffleSingleChars(formatted);
 
   let checkSum = 0;
 
@@ -88,7 +128,18 @@ export const partOne = async (puzzleInput: string[]) => {
 };
 
 export const partTwo = (puzzleInput: string[]) => {
-  return 'Part 2 Answer';
+  const formatted = formatInput(puzzleInput);
+  const blocks = shuffleEntireFiles(formatted);
+
+  let checkSum = 0;
+
+  for (const block of blocks) {
+    for (let i = block.range[0]; i <= block.range[1]; i++) {
+      checkSum += block.id * i;
+    }
+  }
+
+  return checkSum.toString();
 };
 
 if (require.main === module) {
