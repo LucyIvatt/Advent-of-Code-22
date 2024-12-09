@@ -1,41 +1,54 @@
 import path from 'path';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
-import { Coord } from '../../utils/grid';
 
-export type FileBlock = { id: number; range: [number, number]; length: number };
+class IndexRange {
+  value: number;
+  left: number;
+  right: number;
 
-const checkSum = (blocks: FileBlock[]) => {
+  constructor(id: number, left: number, right: number) {
+    this.value = id;
+    this.left = left;
+    this.right = right;
+  }
+
+  getLength = () => this.right - this.left + 1;
+  toString = () => `{value:${this.value}, range:[${this.left}, ${this.right}], length:${this.getLength()}}`;
+}
+
+const checkSum = (blocks: IndexRange[]) => {
   return blocks.reduce((checkSum, block) => {
-    for (let i = block.range[0]; i <= block.range[1]; i++) {
-      checkSum += block.id * i;
+    for (let i = block.left; i <= block.right; i++) {
+      checkSum += block.value * i;
     }
     return checkSum;
   }, 0);
 };
 
 const formatInput = (puzzleInput: string[]) => {
-  const blocks: FileBlock[] = [];
+  const blocks: IndexRange[] = [];
   let currentIndex = 0;
 
   puzzleInput[0].split('').forEach((val, index) => {
     if (index % 2 === 0) {
-      blocks.push({ id: index / 2, range: [currentIndex, currentIndex + Number(val) - 1], length: Number(val) });
+      blocks.push(new IndexRange(index / 2, currentIndex, currentIndex + Number(val) - 1));
     }
     currentIndex += Number(val);
   });
+
   return blocks;
 };
 
-const shuffleSingleChars = (blocks: FileBlock[]) => {
+const shuffleSingleChars = (blocks: IndexRange[]) => {
   let i = 0;
 
   while (i < blocks.length - 2) {
     const b1 = blocks[i];
     const b2 = blocks[i + 1];
 
-    let gapLength = b2.range[0] - b1.range[1] - 1;
-    let gapLocation = b1.range[1] + 1;
+    let gapLength = b2.left - b1.right - 1;
+    let gapLocation = b1.right + 1;
 
     let newBlockPos = i + 1;
 
@@ -43,22 +56,18 @@ const shuffleSingleChars = (blocks: FileBlock[]) => {
       const lastBlock = blocks.at(-1);
       if (!lastBlock) throw new Error('no final element found');
 
-      const lastBlockLength = lastBlock.range[1] - lastBlock.range[0] + 1;
+      const lastBlockLength = lastBlock.getLength();
 
       let newBlock;
 
       if (lastBlockLength > gapLength) {
         // last block bigger than the gap, will remain in the list
-        newBlock = { id: lastBlock.id, range: [gapLocation, gapLocation + gapLength - 1] as Coord, length: gapLength };
-        lastBlock.range = [lastBlock.range[0], lastBlock.range[1] - gapLength];
+        newBlock = new IndexRange(lastBlock.value, gapLocation, gapLocation + gapLength - 1);
+        lastBlock.right = lastBlock.right - gapLength;
         gapLength = 0;
       } else {
         // last block smaller than the gap, will be removed
-        newBlock = {
-          id: lastBlock.id,
-          range: [gapLocation, gapLocation + lastBlockLength - 1] as Coord,
-          length: lastBlockLength
-        };
+        newBlock = new IndexRange(lastBlock.value, gapLocation, gapLocation + lastBlockLength - 1);
         gapLength -= lastBlockLength;
         gapLocation += lastBlockLength;
         blocks.pop();
@@ -72,35 +81,39 @@ const shuffleSingleChars = (blocks: FileBlock[]) => {
 
   const last = blocks.at(-1);
   const last_2 = blocks.at(-2);
-  if (!last || !last_2) throw new Error("Can't find final 2 elements");
 
-  last.range = [last_2.range[1] + 1, last_2.range[1] + last.range[1] - last.range[0] + 1];
+  if (!last || !last_2) throw new Error("Can't find final 2 elements");
+  const lastLength = last.getLength(); // need to define this or length is off due to change in left first
+
+  last.left = last_2.right + 1;
+  last.right = last.left + lastLength - 1;
 
   return blocks;
 };
 
-const shuffleEntireFiles = (blocks: FileBlock[]) => {
+const shuffleEntireFiles = (blocks: IndexRange[]) => {
   // Find all possible gaps
-  const gaps = [];
+  const gaps: IndexRange[] = [];
   let i = 0;
   while (i < blocks.length - 1) {
-    const leftBound = blocks[i].range[1];
-    const rightBound = blocks[i + 1].range[0];
-    if (leftBound + 1 !== rightBound)
-      gaps.push({ range: [leftBound + 1, rightBound - 1], length: rightBound - 1 - leftBound });
+    const leftBound = blocks[i].right;
+    const rightBound = blocks[i + 1].left;
+    const gap = new IndexRange(0, leftBound + 1, rightBound - 1);
+    if (leftBound + 1 !== rightBound) gaps.push(gap);
     i++;
   }
 
-  for (const block of blocks.sort((a, b) => b.id - a.id)) {
+  for (const block of blocks.sort((a, b) => b.value - a.value)) {
     for (let j = 0; j < gaps.length; j++) {
       const gap = gaps[j];
-      if (gap.length >= block.length && gap.range[0] < block.range[0]) {
-        block.range = [gap.range[0], gap.range[0] + block.length - 1];
+      if (gap.getLength() >= block.getLength() && gap.left < block.left) {
+        const blockLength = block.getLength();
+        block.right = gap.left + blockLength - 1;
+        block.left = gap.left;
 
-        gap.range = [gap.range[0] + block.length, gap.range[1]];
-        gap.length = gap.length - block.length;
+        gap.left = gap.left + blockLength;
 
-        if (gap.range[0] > gap.range[1]) {
+        if (gap.left > gap.right) {
           gaps.splice(j, 1);
         }
         break;
@@ -124,6 +137,6 @@ export const partTwo = (puzzleInput: string[]) => {
 };
 
 if (require.main === module) {
-  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.INPUT));
+  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
   runPuzzle('09', 'disk_fragmenter', partOne, partTwo, puzzleInput);
 }
