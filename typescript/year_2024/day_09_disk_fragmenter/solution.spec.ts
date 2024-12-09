@@ -14,19 +14,19 @@ describe('TestDay09', () => {
 
     it('should return correct answer for the real input', () => {
       const result = partOne(input);
-      expect(result).toBe('Part 1 Answer');
+      expect(result).toBe('6283170117911');
     });
   });
 
   describe('Part two', () => {
     it('should return correct answer for the example input', () => {
       const result = partTwo(exampleInput);
-      expect(result).toBe('Part 2 Answer');
+      expect(result).toBe('2858');
     });
 
     it('should return correct answer for the real input', () => {
       const result = partTwo(input);
-      expect(result).toBe('Part 2 Answer');
+      expect(result).toBe('6307653242596');
     });
   });
 });
