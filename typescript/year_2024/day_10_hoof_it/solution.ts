@@ -18,11 +18,12 @@ const findTrailheads = (grid: Grid<number>) => {
   return trailheads;
 };
 
-export const partOne = (puzzleInput: string[]) => {
+const analyseTrailheads = (puzzleInput: string[]) => {
   const grid = new Grid(puzzleInput.map((r) => r.split('').map(Number)));
   const trailheads = findTrailheads(grid);
 
   let trailheadScores = 0;
+  let trailheadRating = 0;
 
   for (const trailhead of trailheads) {
     const validSummits = new Set();
@@ -30,7 +31,6 @@ export const partOne = (puzzleInput: string[]) => {
 
     // For all paths for a single trail head
     while (currentPaths.length > 0) {
-      console.log(currentPaths);
       const newPaths: Coord[][] = [];
 
       // For each single path
@@ -43,15 +43,12 @@ export const partOne = (puzzleInput: string[]) => {
           if (!offset) continue;
 
           try {
-            console.log(i, j);
             const { value, position } = grid.getAdjacent(i, j, direction);
-            console.log(direction);
-            console.log(value, position);
 
             if (value === grid.array[i][j] + 1) {
               if (value === 9) {
-                console.log('hello');
                 validSummits.add(`${position}`);
+                trailheadRating += 1;
               } else {
                 newPaths.push([...path, position]);
               }
@@ -60,19 +57,22 @@ export const partOne = (puzzleInput: string[]) => {
             continue;
           }
         }
-        console.log('----');
       }
       currentPaths = newPaths;
     }
-    console.log(trailhead, validSummits);
     trailheadScores += validSummits.size;
   }
+  return { trailheadScores, trailheadRating };
+};
 
+export const partOne = (puzzleInput: string[]) => {
+  const { trailheadScores } = analyseTrailheads(puzzleInput);
   return trailheadScores.toString();
 };
 
 export const partTwo = (puzzleInput: string[]) => {
-  return 'Part 2 Answer';
+  const { trailheadRating } = analyseTrailheads(puzzleInput);
+  return trailheadRating.toString();
 };
 
 if (require.main === module) {
