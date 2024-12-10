@@ -53,14 +53,15 @@ const analyseMap = (puzzleInput: string[]) => {
   const grid = new Grid(puzzleInput.map((row) => row.split('').map(Number)));
   const trailheads = findTrailheads(grid);
 
-  let trailheadScores = 0;
-  let trailheadRating = 0;
-
-  for (const trailhead of trailheads) {
-    const { reachableSummits, rating } = findReachableSummits(grid, trailhead);
-    trailheadScores += reachableSummits.size;
-    trailheadRating += rating;
-  }
+  const { trailheadScores, trailheadRating } = trailheads.reduce(
+    (acc, trailhead) => {
+      const { reachableSummits, rating } = findReachableSummits(grid, trailhead);
+      acc.trailheadScores += reachableSummits.size;
+      acc.trailheadRating += rating;
+      return acc;
+    },
+    { trailheadScores: 0, trailheadRating: 0 }
+  );
 
   return { trailheadScores, trailheadRating };
 };
