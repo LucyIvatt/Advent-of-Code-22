@@ -3,21 +3,22 @@ import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 import { Coord, Direction, Grid } from '../../utils/grid';
 
-const validDirections = [Direction.North, Direction.East, Direction.South, Direction.West];
+const VALID_DIRECTIONS = [Direction.North, Direction.East, Direction.South, Direction.West];
+const SUMMIT_HEIGHT = 9;
+const TRAILHEAD_HEIGHT = 0;
 
 const findTrailheads = (grid: Grid<number>) =>
-  grid.array.flatMap((row, x) => row.map((height, y) => (height === 0 ? [x, y] : null)).filter(Boolean) as Coord[]);
+  grid.array.flatMap(
+    (row, x) => row.map((height, y) => (height === TRAILHEAD_HEIGHT ? [x, y] : null)).filter(Boolean) as Coord[]
+  );
 
 const isValidLocation = (grid: Grid<number>, i: number, j: number, direction: Direction) => {
   try {
     const { value: height, position } = grid.getAdjacent(i, j, direction);
-    if (height === grid.array[i][j] + 1) {
-      return { isReachable: true, position };
-    }
+    return { isReachable: height === grid.array[i][j] + 1, position };
   } catch {
-    // Ignore out of bounds locations or invalid directions
+    return { isReachable: false };
   }
-  return { isReachable: false };
 };
 
 const findReachableSummits = (grid: Grid<number>, trailhead: Coord) => {
@@ -26,16 +27,16 @@ const findReachableSummits = (grid: Grid<number>, trailhead: Coord) => {
   let currentPaths = [[trailhead]];
 
   while (currentPaths.length) {
-    const newPaths: Coord[][] = [];
+    const newPaths = [];
 
     for (const path of currentPaths) {
       const [i, j] = path.at(-1)!;
 
-      for (const direction of validDirections) {
+      for (const direction of VALID_DIRECTIONS) {
         const { isReachable, position } = isValidLocation(grid, i, j, direction);
 
         if (isReachable && position) {
-          if (grid.array[position[0]][position[1]] === 9) {
+          if (grid.array[position[0]][position[1]] === SUMMIT_HEIGHT) {
             reachableSummits.add(position.toString());
             rating++;
           } else {
@@ -51,9 +52,8 @@ const findReachableSummits = (grid: Grid<number>, trailhead: Coord) => {
 
 const analyseMap = (puzzleInput: string[]) => {
   const grid = new Grid(puzzleInput.map((row) => row.split('').map(Number)));
-  const trailheads = findTrailheads(grid);
 
-  const { scores, ratings } = trailheads.reduce(
+  return findTrailheads(grid).reduce(
     (acc, trailhead) => {
       const { reachableSummits, rating } = findReachableSummits(grid, trailhead);
       acc.scores += reachableSummits.size;
@@ -62,8 +62,6 @@ const analyseMap = (puzzleInput: string[]) => {
     },
     { scores: 0, ratings: 0 }
   );
-
-  return { scores, ratings };
 };
 
 export const partOne = (puzzleInput: string[]) => analyseMap(puzzleInput).scores.toString();
