@@ -1,42 +1,26 @@
 import path from 'path';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
-
-class IndexRange {
-  value: number;
-  left: number;
-  right: number;
-
-  constructor(id: number, left: number, right: number) {
-    this.value = id;
-    this.left = left;
-    this.right = right;
-  }
-
-  getLength = () => this.right - this.left + 1;
-  toString = () => `{value:${this.value}, range:[${this.left}, ${this.right}], length:${this.getLength()}}`;
-  updateRange = (left: number, right: number) => {
-    this.left = left;
-    this.right = right;
-  };
-}
+import { IndexRange } from '../../utils/range';
 
 const checkSum = (blocks: IndexRange[]) => {
-  return blocks.reduce((checkSum, block) => {
+  return blocks.reduce((sum, block) => {
     for (let i = block.left; i <= block.right; i++) {
-      checkSum += block.value * i;
+      sum += block.value * i;
     }
-    return checkSum;
+    return sum;
   }, 0);
 };
 
-const findBlocks = (puzzleInput: string[]): IndexRange[] => {
+const parseBlocks = (puzzleInput: string[]): IndexRange[] => {
   let currentIndex = 0;
   const blocks: IndexRange[] = [];
   const values = puzzleInput[0].split('').map(Number);
 
   for (let i = 0; i < values.length; i++) {
-    if (i % 2 === 0) blocks.push(new IndexRange(i / 2, currentIndex, currentIndex + values[i] - 1));
+    if (i % 2 === 0) {
+      blocks.push(new IndexRange(i / 2, currentIndex, currentIndex + values[i] - 1));
+    }
     currentIndex += values[i];
   }
   return blocks;
@@ -49,10 +33,11 @@ const findGaps = (blocks: IndexRange[]): IndexRange[] =>
       block.right + 1 < blocks[i + 1].left ? [new IndexRange(0, block.right + 1, blocks[i + 1].left - 1)] : []
     );
 
+/**
+ * Reorganises blocks to fill gaps, shuffling single characters.
+ */
 const shuffleSingleChars = (blocks: IndexRange[]) => {
-  let i = 0;
-
-  while (i < blocks.length - 1) {
+  for (let i = 0; i < blocks.length - 1; i++) {
     const leftBlock = blocks[i];
     const rightBlock = blocks[i + 1];
     const gap = new IndexRange(0, leftBlock.right + 1, rightBlock.left - 1);
@@ -69,38 +54,36 @@ const shuffleSingleChars = (blocks: IndexRange[]) => {
 
       if (isLastBlockLarger) {
         lastBlock.right -= gap.getLength();
-        gap.updateRange(0, -1); // Empty gap
+        gap.left = gap.right + 1; // mark gap as empty
       } else {
         gap.left += lastBlock.getLength();
         blocks.pop();
       }
 
-      blocks.splice(insertPosition, 0, newBlock);
-      insertPosition++;
+      blocks.splice(insertPosition++, 0, newBlock);
     }
-
-    i++;
   }
 
   return blocks;
 };
 
+/**
+ * Reorganises blocks to fill gaps by shuffling entire blocks.
+ */
 const shuffleEntireFiles = (blocks: IndexRange[]) => {
   const gaps = findGaps(blocks);
 
-  for (const block of blocks.sort((a, b) => b.value - a.value)) {
+  for (let i = blocks.length - 1; i >= 0; i--) {
+    const block = blocks[i];
+
     for (let j = 0; j < gaps.length; j++) {
       const gap = gaps[j];
+
       if (gap.getLength() >= block.getLength() && gap.left < block.left) {
-        const blockLength = block.getLength();
-        block.right = gap.left + blockLength - 1;
-        block.left = gap.left;
+        block.updateRange(gap.left, gap.left + block.getLength() - 1);
+        gap.left = gap.left + block.getLength();
 
-        gap.left = gap.left + blockLength;
-
-        if (gap.left > gap.right) {
-          gaps.splice(j, 1);
-        }
+        if (gap.left > gap.right) gaps.splice(j, 1); // removes gap if now empty
         break;
       }
     }
@@ -110,15 +93,11 @@ const shuffleEntireFiles = (blocks: IndexRange[]) => {
 };
 
 export const partOne = (puzzleInput: string[]) => {
-  const formatted = findBlocks(puzzleInput);
-  const blocks = shuffleSingleChars(formatted);
-  return checkSum(blocks).toString();
+  return checkSum(shuffleSingleChars(parseBlocks(puzzleInput))).toString();
 };
 
 export const partTwo = (puzzleInput: string[]) => {
-  const formatted = findBlocks(puzzleInput);
-  const blocks = shuffleEntireFiles(formatted);
-  return checkSum(blocks).toString();
+  return checkSum(shuffleEntireFiles(parseBlocks(puzzleInput))).toString();
 };
 
 if (require.main === module) {
