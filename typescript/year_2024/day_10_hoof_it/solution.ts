@@ -53,21 +53,21 @@ const analyseMap = (puzzleInput: string[]) => {
   const grid = new Grid(puzzleInput.map((row) => row.split('').map(Number)));
   const trailheads = findTrailheads(grid);
 
-  const { trailheadScores, trailheadRating } = trailheads.reduce(
+  const { scores, ratings } = trailheads.reduce(
     (acc, trailhead) => {
       const { reachableSummits, rating } = findReachableSummits(grid, trailhead);
-      acc.trailheadScores += reachableSummits.size;
-      acc.trailheadRating += rating;
+      acc.scores += reachableSummits.size;
+      acc.ratings += rating;
       return acc;
     },
-    { trailheadScores: 0, trailheadRating: 0 }
+    { scores: 0, ratings: 0 }
   );
 
-  return { trailheadScores, trailheadRating };
+  return { scores, ratings };
 };
 
-export const partOne = (puzzleInput: string[]) => analyseMap(puzzleInput).trailheadScores.toString();
-export const partTwo = (puzzleInput: string[]) => analyseMap(puzzleInput).trailheadRating.toString();
+export const partOne = (puzzleInput: string[]) => analyseMap(puzzleInput).scores.toString();
+export const partTwo = (puzzleInput: string[]) => analyseMap(puzzleInput).ratings.toString();
 
 if (require.main === module) {
   const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.INPUT));
