@@ -55,33 +55,31 @@ const shuffleSingleChars = (blocks: IndexRange[]) => {
   while (i < blocks.length - 1) {
     const leftBlock = blocks[i];
     const rightBlock = blocks[i + 1];
-
     const gap = new IndexRange(0, leftBlock.right + 1, rightBlock.left - 1);
 
-    let newBlockPos = i + 1;
+    let insertPosition = i + 1;
 
-    while (gap.getLength() != 0) {
-      const lastBlock = blocks.at(-1);
-      if (!lastBlock) throw new Error('no final element found');
+    while (gap.getLength() > 0) {
+      const lastBlock = blocks.at(-1)!;
+      const isLastBlockLarger = lastBlock.getLength() > gap.getLength();
 
-      const lastBlockLength = lastBlock.getLength();
+      const newBlock = isLastBlockLarger
+        ? new IndexRange(lastBlock.value, gap.left, gap.right)
+        : new IndexRange(lastBlock.value, gap.left, gap.left + lastBlock.getLength() - 1);
 
-      let newBlock;
-
-      if (lastBlockLength > gap.getLength()) {
-        newBlock = new IndexRange(lastBlock.value, gap.left, gap.right);
-        lastBlock.right = lastBlock.right - gap.getLength();
-        gap.updateRange(0, -1); // empty gap
+      if (isLastBlockLarger) {
+        lastBlock.right -= gap.getLength();
+        gap.updateRange(0, -1); // Empty gap
       } else {
-        newBlock = new IndexRange(lastBlock.value, gap.left, gap.left + lastBlockLength - 1);
-        gap.left += lastBlockLength;
+        gap.left += lastBlock.getLength();
         blocks.pop();
       }
 
-      blocks.splice(newBlockPos, 0, newBlock);
-      newBlockPos++;
+      blocks.splice(insertPosition, 0, newBlock);
+      insertPosition++;
     }
-    i += 1;
+
+    i++;
   }
 
   return blocks;
