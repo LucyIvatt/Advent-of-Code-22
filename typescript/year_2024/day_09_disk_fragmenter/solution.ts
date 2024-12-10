@@ -56,12 +56,11 @@ const shuffleSingleChars = (blocks: IndexRange[]) => {
     const leftBlock = blocks[i];
     const rightBlock = blocks[i + 1];
 
-    let gapLength = rightBlock.left - leftBlock.right - 1;
-    let gapLocation = leftBlock.right + 1;
+    const gap = new IndexRange(0, leftBlock.right + 1, rightBlock.left - 1);
 
     let newBlockPos = i + 1;
 
-    while (gapLength != 0) {
+    while (gap.getLength() != 0) {
       const lastBlock = blocks.at(-1);
       if (!lastBlock) throw new Error('no final element found');
 
@@ -69,16 +68,13 @@ const shuffleSingleChars = (blocks: IndexRange[]) => {
 
       let newBlock;
 
-      if (lastBlockLength > gapLength) {
-        // last block bigger than the gap, will remain in the list
-        newBlock = new IndexRange(lastBlock.value, gapLocation, gapLocation + gapLength - 1);
-        lastBlock.right = lastBlock.right - gapLength;
-        gapLength = 0;
+      if (lastBlockLength > gap.getLength()) {
+        newBlock = new IndexRange(lastBlock.value, gap.left, gap.right);
+        lastBlock.right = lastBlock.right - gap.getLength();
+        gap.updateRange(0, -1); // empty gap
       } else {
-        // last block smaller than the gap, will be removed
-        newBlock = new IndexRange(lastBlock.value, gapLocation, gapLocation + lastBlockLength - 1);
-        gapLength -= lastBlockLength;
-        gapLocation += lastBlockLength;
+        newBlock = new IndexRange(lastBlock.value, gap.left, gap.left + lastBlockLength - 1);
+        gap.left += lastBlockLength;
         blocks.pop();
       }
 
