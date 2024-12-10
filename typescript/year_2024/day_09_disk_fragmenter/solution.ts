@@ -15,6 +15,10 @@ class IndexRange {
 
   getLength = () => this.right - this.left + 1;
   toString = () => `{value:${this.value}, range:[${this.left}, ${this.right}], length:${this.getLength()}}`;
+  updateRange = (left: number, right: number) => {
+    this.left = left;
+    this.right = right;
+  };
 }
 
 const checkSum = (blocks: IndexRange[]) => {
@@ -48,7 +52,7 @@ const findGaps = (blocks: IndexRange[]): IndexRange[] =>
 const shuffleSingleChars = (blocks: IndexRange[]) => {
   let i = 0;
 
-  while (i < blocks.length - 2) {
+  while (i < blocks.length - 1) {
     const leftBlock = blocks[i];
     const rightBlock = blocks[i + 1];
 
@@ -81,17 +85,8 @@ const shuffleSingleChars = (blocks: IndexRange[]) => {
       blocks.splice(newBlockPos, 0, newBlock);
       newBlockPos++;
     }
-    i += gapLength === 0 ? 1 : 2;
+    i += 1;
   }
-
-  const last = blocks.at(-1);
-  const last_2 = blocks.at(-2);
-
-  if (!last || !last_2) throw new Error("Can't find final 2 elements");
-  const lastLength = last.getLength(); // need to define this or length is off due to change in left first
-
-  last.left = last_2.right + 1;
-  last.right = last.left + lastLength - 1;
 
   return blocks;
 };
