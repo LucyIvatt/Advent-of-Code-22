@@ -1,79 +1,72 @@
 import path from 'path';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
-import { Coord, Direction, directionOffsets, Grid } from '../../utils/grid';
+import { Coord, Direction, Grid } from '../../utils/grid';
 
-const directions = [Direction.North, Direction.East, Direction.South, Direction.West];
+const validDirections = [Direction.North, Direction.East, Direction.South, Direction.West];
 
-const findTrailheads = (grid: Grid<number>) => {
-  const trailheads: Coord[] = [];
+const findTrailheads = (grid: Grid<number>) =>
+  grid.array.flatMap((row, x) => row.map((height, y) => (height === 0 ? [x, y] : null)).filter(Boolean) as Coord[]);
 
-  grid.array.forEach((row, x) => {
-    row.forEach((height, y) => {
-      if (height === 0) {
-        trailheads.push([x, y] as Coord);
-      }
-    });
-  });
-  return trailheads;
+const isValidLocation = (grid: Grid<number>, i: number, j: number, direction: Direction) => {
+  try {
+    const { value: height, position } = grid.getAdjacent(i, j, direction);
+    if (height === grid.array[i][j] + 1) {
+      return { isReachable: true, position };
+    }
+  } catch {
+    // Ignore out of bounds locations or invalid directions
+  }
+  return { isReachable: false };
 };
 
-const analyseTrailheads = (puzzleInput: string[]) => {
-  const grid = new Grid(puzzleInput.map((r) => r.split('').map(Number)));
+const findReachableSummits = (grid: Grid<number>, trailhead: Coord) => {
+  const reachableSummits = new Set<string>();
+  let rating = 0;
+  let currentPaths = [[trailhead]];
+
+  while (currentPaths.length) {
+    const newPaths: Coord[][] = [];
+
+    for (const path of currentPaths) {
+      const [i, j] = path.at(-1)!;
+
+      for (const direction of validDirections) {
+        const { isReachable, position } = isValidLocation(grid, i, j, direction);
+
+        if (isReachable && position) {
+          if (grid.array[position[0]][position[1]] === 9) {
+            reachableSummits.add(position.toString());
+            rating++;
+          } else {
+            newPaths.push([...path, position]);
+          }
+        }
+      }
+    }
+    currentPaths = newPaths;
+  }
+  return { reachableSummits, rating };
+};
+
+const analyseMap = (puzzleInput: string[]) => {
+  const grid = new Grid(puzzleInput.map((row) => row.split('').map(Number)));
   const trailheads = findTrailheads(grid);
 
   let trailheadScores = 0;
   let trailheadRating = 0;
 
   for (const trailhead of trailheads) {
-    const validSummits = new Set();
-    let currentPaths = [[trailhead]];
-
-    // For all paths for a single trail head
-    while (currentPaths.length > 0) {
-      const newPaths: Coord[][] = [];
-
-      // For each single path
-      for (const path of currentPaths) {
-        const [i, j] = path.at(-1)!;
-
-        // For each direction possible
-        for (const direction of directions) {
-          const offset = directionOffsets.get(direction);
-          if (!offset) continue;
-
-          try {
-            const { value, position } = grid.getAdjacent(i, j, direction);
-
-            if (value === grid.array[i][j] + 1) {
-              if (value === 9) {
-                validSummits.add(`${position}`);
-                trailheadRating += 1;
-              } else {
-                newPaths.push([...path, position]);
-              }
-            }
-          } catch {
-            continue;
-          }
-        }
-      }
-      currentPaths = newPaths;
-    }
-    trailheadScores += validSummits.size;
+    const { reachableSummits, rating } = findReachableSummits(grid, trailhead);
+    trailheadScores += reachableSummits.size;
+    trailheadRating += rating;
   }
+
   return { trailheadScores, trailheadRating };
 };
 
-export const partOne = (puzzleInput: string[]) => {
-  const { trailheadScores } = analyseTrailheads(puzzleInput);
-  return trailheadScores.toString();
-};
-
-export const partTwo = (puzzleInput: string[]) => {
-  const { trailheadRating } = analyseTrailheads(puzzleInput);
-  return trailheadRating.toString();
-};
+export const partOne = (puzzleInput: string[]) => analyseMap(puzzleInput).trailheadScores.toString();
+export const partTwo = (puzzleInput: string[]) => analyseMap(puzzleInput).trailheadRating.toString();
 
 if (require.main === module) {
   const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.INPUT));
