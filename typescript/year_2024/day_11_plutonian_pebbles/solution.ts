@@ -47,6 +47,6 @@ export const partTwo = (puzzleInput: string[]) => {
 };
 
 if (require.main === module) {
-  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
+  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.INPUT));
   runPuzzle('11', 'plutonian_pebbles', partOne, partTwo, puzzleInput);
 }
