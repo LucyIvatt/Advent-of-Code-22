@@ -3,46 +3,47 @@ import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 
 const shiftStone = (stone: number): number[] => {
-  if (stone == 0) return [1];
+  if (stone === 0) return [1];
 
   const stoneString = stone.toString();
   const length = stoneString.length;
 
-  return length % 2 === 0
-    ? [Number(stoneString.substring(0, length / 2)), Number(stoneString.substring(length / 2))]
-    : [stone * 2024];
+  if (length % 2 === 0) {
+    const half = length / 2;
+    return [Number(stoneString.substring(0, half)), Number(stoneString.substring(half))];
+  }
+
+  return [stone * 2024];
 };
 
 const processBlinks = (stones: number[], blinks: number) => {
-  let stoneCounts = new Map<number, number>();
-  stones.forEach((s) => stoneCounts.set(s, 1));
+  const stoneCounts = new Map<number, number>();
+
+  stones.forEach((stone) => {
+    stoneCounts.set(stone, (stoneCounts.get(stone) ?? 0) + 1);
+  });
 
   for (let i = 0; i < blinks; i++) {
-    const updatedStones = new Map<number, number>();
-    for (const [s, num] of stoneCounts) {
-      stoneCounts.delete(s);
+    const currentStones = new Map<number, number>(stoneCounts);
+    stoneCounts.clear();
+    for (const [stone, count] of currentStones) {
+      const newStones = shiftStone(stone);
 
-      const newStones = shiftStone(s);
-
-      for (const x of newStones) updatedStones.set(x, (updatedStones.get(x) ?? 0) + num);
+      for (const newStone of newStones) stoneCounts.set(newStone, (stoneCounts.get(newStone) ?? 0) + count);
     }
-    stoneCounts = updatedStones;
   }
 
-  let ans = 0;
-  for (const count of stoneCounts.values()) ans += count;
-
-  return ans.toString();
+  return Array.from(stoneCounts.values())
+    .reduce((sum, count) => sum + count, 0)
+    .toString();
 };
 
 export const partOne = (puzzleInput: string[]) => {
-  const stones = puzzleInput[0].split(' ').map(Number);
-  return processBlinks(stones, 25);
+  return processBlinks(puzzleInput[0].split(' ').map(Number), 25);
 };
 
 export const partTwo = (puzzleInput: string[]) => {
-  const stones = puzzleInput[0].split(' ').map(Number);
-  return processBlinks(stones, 75);
+  return processBlinks(puzzleInput[0].split(' ').map(Number), 75);
 };
 
 if (require.main === module) {
