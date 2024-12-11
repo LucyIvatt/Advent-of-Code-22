@@ -2,10 +2,6 @@ import path from 'path';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 
-const updateMap = (stone: number, num: number, map: Map<number, number>) => {
-  map.set(stone, (map.get(stone) ?? 0) + num);
-};
-
 const shiftStone = (stone: number): number[] => {
   if (stone == 0) return [1];
 
@@ -28,7 +24,7 @@ const processBlinks = (stones: number[], blinks: number) => {
 
       const newStones = shiftStone(s);
 
-      for (const x of newStones) updateMap(x, num, updatedStones);
+      for (const x of newStones) updatedStones.set(x, (updatedStones.get(x) ?? 0) + num);
     }
     stoneCounts = updatedStones;
   }
