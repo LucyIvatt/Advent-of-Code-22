@@ -1,41 +1,58 @@
 import path from 'path';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
-import { Coord, Direction, Grid } from '../../utils/grid';
+import { Coord, DIAGONAL_DIRECTIONS, Direction, Grid, rotate } from '../../utils/grid';
 
-// for each coordinate, check if tis been processed or skip
+export const getDiagonalDirectionsForTShape = (directions: Direction[]): Direction[] => {
+  // Assume input is valid and contains exactly three straight directions
+  const [d1, d2, d3] = directions;
 
-// if not been processed, create a new region,
-// iterate through open sides (need to find a way to not reprocess backwards) - keep previous and say if not previous?
-// for each cell, add closed sides to permeter and add to list of processed coordinates
+  // Identify the "stem" direction (perpendicular to the other two)
+  const stem = [d1, d2, d3].find(
+    (dir) => directions.includes(rotate(dir, 90)) && directions.includes(rotate(dir, -90))
+  )!;
 
-// finish when open coordinates  queue to process is empty
-// once done find the area by counting cooordinates
+  // Find the two diagonal directions
+  const diagonal1 = rotate(stem, 45); // Clockwise diagonal
+  const diagonal2 = rotate(stem, -45); // Counterclockwise diagonal
+
+  return [diagonal1, diagonal2];
+};
+
+const VALID_DIRECTIONS = [Direction.North, Direction.East, Direction.South, Direction.West];
 
 const coordEquals = (a: Coord, b: Coord): boolean => a[0] === b[0] && a[1] === b[1];
 const coordInList = (coord: Coord, list: Coord[]): boolean => list.some((c) => coordEquals(c, coord));
+
+const calculatePrice = (regions: Region[]) => {
+  return regions.reduce((acc, region) => {
+    return (acc += region.perimeter * region.getArea());
+  }, 0);
+};
 
 export class Region {
   plantType: string;
   startLocation: Coord;
   locations: Coord[];
-  area: number;
   perimeter: number;
+  corners: number;
 
   constructor(plantType: string, startLocation: Coord) {
     this.plantType = plantType;
     this.startLocation = startLocation;
     this.locations = [startLocation];
-    this.area = 0;
     this.perimeter = 0;
+    this.corners = 0;
   }
-}
 
-const VALID_DIRECTIONS = [Direction.North, Direction.East, Direction.South, Direction.West];
+  getArea = () => this.locations.length;
+  getSecondPrice = () => this.getArea() * this.corners;
+}
 
 const getOpenSides = (i: number, j: number, grid: Grid<string>, region: Region) => {
   const openSides = [];
   const typeOfPlant = grid.array[i][j];
+  const directionOfMatch = [];
   let perimeter = 0;
 
   for (const dir of VALID_DIRECTIONS) {
@@ -44,13 +61,91 @@ const getOpenSides = (i: number, j: number, grid: Grid<string>, region: Region) 
       if (typeOfPlant !== value) perimeter += 1;
       else {
         if (!coordInList(position, region.locations)) openSides.push(position);
+        directionOfMatch.push(dir);
       }
     } catch {
       perimeter += 1;
     }
   }
-  return { openSides, perimeter };
+  //  regions.forEach((region) => console.log(region.plantType, region.corners))
+
+  if (typeOfPlant === 'R') {
+    console.log('coordinate', i, j);
+    console.log('open sides without entry');
+    console.log(openSides);
+    console.log(directionOfMatch);
+  }
+
+  let corners = 0;
+  if (directionOfMatch.length === 1) corners = 2; // end of tunnel, must have 2 corners
+
+  // no corners if opposite ends open (but if L shape could have 1 or 2 corners)
+  if (directionOfMatch.length === 2 && directionOfMatch[0] !== rotate(directionOfMatch[1], 180)) {
+    const diag = getDiagonalDirection(directionOfMatch[0], directionOfMatch[1])!;
+    // console.log(diag);
+    try {
+      const diagonal = grid.getAdjacent(i, j, diag);
+      if (diagonal.value === typeOfPlant) corners = 1;
+      else corners = 2;
+    } catch {
+      corners = 2;
+    }
+  }
+  // could have no corners, 1, or even 2 if T shaped
+  if (directionOfMatch.length === 3) {
+    // console.log(directionOfMatch);
+    // console.log('tshape alrt');
+    const diagonalDirections = getDiagonalDirectionsForTShape(directionOfMatch);
+
+    let invalidDiags = 0;
+    for (const diagDirec of diagonalDirections) {
+      try {
+        const diagonal = grid.getAdjacent(i, j, diagDirec);
+        if (diagonal.value !== typeOfPlant) invalidDiags += 1;
+      } catch {
+        invalidDiags += 1;
+      }
+    }
+    corners = invalidDiags;
+  }
+  if (directionOfMatch.length === 0) corners = 4; // single cell region, must have 4 corners
+
+  if (directionOfMatch.length === 4) {
+    let invalidDiags = 0;
+    for (const diagDirec of DIAGONAL_DIRECTIONS) {
+      try {
+        const diagonal = grid.getAdjacent(i, j, diagDirec);
+        if (diagonal.value !== typeOfPlant) invalidDiags += 1;
+      } catch {
+        invalidDiags += 1;
+      }
+    }
+    corners = invalidDiags;
+  }
+
+  if (typeOfPlant === 'R') {
+    console.log('CORNERS HERE', corners);
+    console.log('----');
+  }
+
+  return { openSides, perimeter, corners };
 };
+
+function getDiagonalDirection(dir1: Direction, dir2: Direction): Direction | null {
+  const directionSet = new Set([dir1, dir2]);
+
+  if (directionSet.has(Direction.North) && directionSet.has(Direction.East)) {
+    return Direction.NorthEast;
+  } else if (directionSet.has(Direction.East) && directionSet.has(Direction.South)) {
+    return Direction.SouthEast;
+  } else if (directionSet.has(Direction.South) && directionSet.has(Direction.West)) {
+    return Direction.SouthWest;
+  } else if (directionSet.has(Direction.West) && directionSet.has(Direction.North)) {
+    return Direction.NorthWest;
+  }
+
+  return null; // Return null if the directions are not at a 90-degree angle
+}
 
 export const partOne = (puzzleInput: string[]) => {
   const plants = new Grid(puzzleInput.map((row) => row.split('')));
@@ -69,8 +164,9 @@ export const partOne = (puzzleInput: string[]) => {
         while (coordsToProcess.length > 0) {
           const coordToProcess = coordsToProcess[0];
 
-          const { openSides, perimeter } = getOpenSides(coordToProcess[0], coordToProcess[1], plants, region);
+          const { openSides, perimeter, corners } = getOpenSides(coordToProcess[0], coordToProcess[1], plants, region);
           region.perimeter += perimeter;
+          region.corners += corners;
 
           region.locations = region.locations.concat(openSides);
 
@@ -82,12 +178,14 @@ export const partOne = (puzzleInput: string[]) => {
     });
   });
 
-  console.log(regions);
+  let price = 0;
+  regions.forEach((region) => {
+    console.log(region.plantType, region.getArea(), region.corners);
+    price += region.getSecondPrice();
+  });
+  console.log(price);
 
-  // const processedLocations: Coord[] = [];
-  // console.log(plants);
-
-  return 'Part 1 Answer';
+  return calculatePrice(regions).toString();
 };
 
 export const partTwo = (puzzleInput: string[]) => {
@@ -95,6 +193,6 @@ export const partTwo = (puzzleInput: string[]) => {
 };
 
 if (require.main === module) {
-  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
+  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.INPUT));
   runPuzzle('12', 'garden_groups', partOne, partTwo, puzzleInput);
 }

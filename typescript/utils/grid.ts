@@ -13,6 +13,9 @@ export enum Direction {
   NorthWest = 'NorthWest'
 }
 
+export const STRAIGHT_DIRECTIONS = [Direction.North, Direction.East, Direction.South, Direction.West];
+export const DIAGONAL_DIRECTIONS = [Direction.NorthEast, Direction.SouthEast, Direction.SouthWest, Direction.NorthWest];
+
 /**
  * A map that associates each direction with its corresponding offset in the grid,
  * representing the change in the x and y coordinates when moving a single cell in that direction.
@@ -101,6 +104,22 @@ export class Grid<Type> {
       throw new Error(`Position out of bounds at [${i}, ${j}] moving ${direction} to [${position[0]}, ${position[1]}]`);
     }
     return { value: this.array[position[0]][position[1]], position };
+  }
+
+  getAdjacents(i: number, j: number, diagonal = false): { value: Type; position: Coord }[] {
+    const directions = diagonal ? STRAIGHT_DIRECTIONS.concat(DIAGONAL_DIRECTIONS) : STRAIGHT_DIRECTIONS;
+    const adjacents: { value: Type; position: Coord }[] = [];
+
+    for (const direction of directions) {
+      try {
+        const { value, position } = this.getAdjacent(i, j, direction);
+        adjacents.push({ value, position });
+      } catch {
+        continue;
+      }
+    }
+
+    return adjacents;
   }
 
   /**
