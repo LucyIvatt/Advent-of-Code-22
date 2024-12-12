@@ -4,53 +4,42 @@ import { runPuzzle } from '../../utils/runPuzzle';
 import { Coord, DIAGONAL_DIRECTIONS, Direction, Grid, rotate, STRAIGHT_DIRECTIONS } from '../../utils/grid';
 
 // Rotate directions by 45 degrees and find the common direction
-export const getDiagonalDirectionForLShape = (directions: Direction[]): Direction => {
+const getDiagonalDirectionForLShape = (directions: Direction[]): Direction => {
   const [dir1, dir2] = directions;
-
   const diagonals1 = [rotate(dir1, 45), rotate(dir1, -45)];
   const diagonals2 = [rotate(dir2, 45), rotate(dir2, -45)];
 
-  const [diagonal] = diagonals1.filter((d) => diagonals2.includes(d));
-  return diagonal;
+  return diagonals1.find((d) => diagonals2.includes(d))!;
 };
 
-// finds middle direction by getting the direction 90 degrees left and right and checking if the array includes them
-export const getDiagonalDirectionsForTShape = (directions: Direction[]): Direction[] => {
+// Finds middle direction for T shape and provides diagonal directions 45 degrees either side of it
+const getDiagonalDirectionsForTShape = (directions: Direction[]): Direction[] => {
   const middle = directions.find(
     (dir) => directions.includes(rotate(dir, 90)) && directions.includes(rotate(dir, -90))
   )!;
 
-  const diagonal1 = rotate(middle, 45); // Clockwise diagonal
-  const diagonal2 = rotate(middle, -45); // Counterclockwise diagonal
-  return [diagonal1, diagonal2];
+  return [rotate(middle, 45), rotate(middle, -45)];
 };
 
 const coordEquals = (a: Coord, b: Coord): boolean => a[0] === b[0] && a[1] === b[1];
 const coordInList = (coord: Coord, list: Coord[]): boolean => list.some((c) => coordEquals(c, coord));
 
-const calculatePrice = (regions: Region[]) => {
-  return regions.reduce((acc, region) => {
-    return (acc += region.perimeter * region.getArea());
-  }, 0);
-};
-
-export class Region {
+class Region {
   plantType: string;
   startLocation: Coord;
-  locations: Coord[];
-  perimeter: number;
-  corners: number;
+  locations: Coord[] = [];
+  perimeter: number = 0;
+  corners: number = 0;
 
   constructor(plantType: string, startLocation: Coord) {
     this.plantType = plantType;
     this.startLocation = startLocation;
-    this.locations = [startLocation];
-    this.perimeter = 0;
-    this.corners = 0;
+    this.locations.push(startLocation);
   }
 
   getArea = () => this.locations.length;
-  getSecondPrice = () => this.getArea() * this.corners;
+  getFencePrice = () => this.getArea() * this.perimeter;
+  getDiscountPrice = () => this.getArea() * this.corners;
 }
 
 const findOpenSides = (i: number, j: number, grid: Grid<string>, region: Region) => {
@@ -156,7 +145,11 @@ const findRegions = (plants: Grid<string>) => {
 export const partOne = (puzzleInput: string[]) => {
   const plants = new Grid(puzzleInput.map((row) => row.split('')));
   const regions = findRegions(plants);
-  return calculatePrice(regions).toString();
+  return regions
+    .reduce((acc, region) => {
+      return (acc += region.getFencePrice());
+    }, 0)
+    .toString();
 };
 
 export const partTwo = (puzzleInput: string[]) => {
@@ -164,7 +157,7 @@ export const partTwo = (puzzleInput: string[]) => {
   const regions = findRegions(plants);
   let price = 0;
   regions.forEach((region) => {
-    price += region.getSecondPrice();
+    price += region.getDiscountPrice();
   });
   return price.toString();
 };
