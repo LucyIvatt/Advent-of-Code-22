@@ -4,18 +4,13 @@ import { runPuzzle } from '../../utils/runPuzzle';
 import { Coord, DIAGONAL_DIRECTIONS, Direction, Grid, rotate } from '../../utils/grid';
 
 export const getDiagonalDirectionsForTShape = (directions: Direction[]): Direction[] => {
-  // Assume input is valid and contains exactly three straight directions
   const [d1, d2, d3] = directions;
-
-  // Identify the "stem" direction (perpendicular to the other two)
   const stem = [d1, d2, d3].find(
     (dir) => directions.includes(rotate(dir, 90)) && directions.includes(rotate(dir, -90))
   )!;
 
-  // Find the two diagonal directions
   const diagonal1 = rotate(stem, 45); // Clockwise diagonal
   const diagonal2 = rotate(stem, -45); // Counterclockwise diagonal
-
   return [diagonal1, diagonal2];
 };
 
@@ -67,14 +62,6 @@ const getOpenSides = (i: number, j: number, grid: Grid<string>, region: Region) 
       perimeter += 1;
     }
   }
-  //  regions.forEach((region) => console.log(region.plantType, region.corners))
-
-  if (typeOfPlant === 'R') {
-    console.log('coordinate', i, j);
-    console.log('open sides without entry');
-    console.log(openSides);
-    console.log(directionOfMatch);
-  }
 
   let corners = 0;
   if (directionOfMatch.length === 1) corners = 2; // end of tunnel, must have 2 corners
@@ -82,7 +69,6 @@ const getOpenSides = (i: number, j: number, grid: Grid<string>, region: Region) 
   // no corners if opposite ends open (but if L shape could have 1 or 2 corners)
   if (directionOfMatch.length === 2 && directionOfMatch[0] !== rotate(directionOfMatch[1], 180)) {
     const diag = getDiagonalDirection(directionOfMatch[0], directionOfMatch[1])!;
-    // console.log(diag);
     try {
       const diagonal = grid.getAdjacent(i, j, diag);
       if (diagonal.value === typeOfPlant) corners = 1;
@@ -93,8 +79,6 @@ const getOpenSides = (i: number, j: number, grid: Grid<string>, region: Region) 
   }
   // could have no corners, 1, or even 2 if T shaped
   if (directionOfMatch.length === 3) {
-    // console.log(directionOfMatch);
-    // console.log('tshape alrt');
     const diagonalDirections = getDiagonalDirectionsForTShape(directionOfMatch);
 
     let invalidDiags = 0;
@@ -123,11 +107,6 @@ const getOpenSides = (i: number, j: number, grid: Grid<string>, region: Region) 
     corners = invalidDiags;
   }
 
-  if (typeOfPlant === 'R') {
-    console.log('CORNERS HERE', corners);
-    console.log('----');
-  }
-
   return { openSides, perimeter, corners };
 };
 
@@ -147,8 +126,7 @@ function getDiagonalDirection(dir1: Direction, dir2: Direction): Direction | nul
   return null; // Return null if the directions are not at a 90-degree angle
 }
 
-export const partOne = (puzzleInput: string[]) => {
-  const plants = new Grid(puzzleInput.map((row) => row.split('')));
+const findRegions = (plants: Grid<string>) => {
   let processedCoords: Coord[] = [];
   const regions: Region[] = [];
 
@@ -177,19 +155,23 @@ export const partOne = (puzzleInput: string[]) => {
       }
     });
   });
+  return regions;
+};
 
-  let price = 0;
-  regions.forEach((region) => {
-    console.log(region.plantType, region.getArea(), region.corners);
-    price += region.getSecondPrice();
-  });
-  console.log(price);
-
+export const partOne = (puzzleInput: string[]) => {
+  const plants = new Grid(puzzleInput.map((row) => row.split('')));
+  const regions = findRegions(plants);
   return calculatePrice(regions).toString();
 };
 
 export const partTwo = (puzzleInput: string[]) => {
-  return 'Part 2 Answer';
+  const plants = new Grid(puzzleInput.map((row) => row.split('')));
+  const regions = findRegions(plants);
+  let price = 0;
+  regions.forEach((region) => {
+    price += region.getSecondPrice();
+  });
+  return price.toString();
 };
 
 if (require.main === module) {
