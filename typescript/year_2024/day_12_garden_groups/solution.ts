@@ -3,6 +3,24 @@ import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 import { Coord, DIAGONAL_DIRECTIONS, Direction, Grid, rotate, STRAIGHT_DIRECTIONS } from '../../utils/grid';
 
+class Region {
+  plantType: string;
+  startLocation: Coord;
+  locations: Coord[] = [];
+  perimeter: number = 0;
+  corners: number = 0;
+
+  constructor(plantType: string, startLocation: Coord) {
+    this.plantType = plantType;
+    this.startLocation = startLocation;
+    this.locations.push(startLocation);
+  }
+
+  getArea = () => this.locations.length;
+  getFencePrice = () => this.getArea() * this.perimeter;
+  getDiscountPrice = () => this.getArea() * this.corners;
+}
+
 // Rotate directions by 45 degrees and find the common direction
 const getDiagonalDirectionForLShape = (directions: Direction[]): Direction => {
   const [dir1, dir2] = directions;
@@ -23,24 +41,6 @@ const getDiagonalDirectionsForTShape = (directions: Direction[]): Direction[] =>
 
 const coordEquals = (a: Coord, b: Coord): boolean => a[0] === b[0] && a[1] === b[1];
 const coordInList = (coord: Coord, list: Coord[]): boolean => list.some((c) => coordEquals(c, coord));
-
-class Region {
-  plantType: string;
-  startLocation: Coord;
-  locations: Coord[] = [];
-  perimeter: number = 0;
-  corners: number = 0;
-
-  constructor(plantType: string, startLocation: Coord) {
-    this.plantType = plantType;
-    this.startLocation = startLocation;
-    this.locations.push(startLocation);
-  }
-
-  getArea = () => this.locations.length;
-  getFencePrice = () => this.getArea() * this.perimeter;
-  getDiscountPrice = () => this.getArea() * this.corners;
-}
 
 const findOpenSides = (i: number, j: number, grid: Grid<string>, region: Region) => {
   const openSides = [];
@@ -111,7 +111,7 @@ const findOpenSides = (i: number, j: number, grid: Grid<string>, region: Region)
   return { openSides, perimeter, corners };
 };
 const findRegions = (plants: Grid<string>) => {
-  let processedCoords: Coord[] = [];
+  const processedCoords: Coord[] = [];
   const regions: Region[] = [];
 
   plants.array.forEach((line, i) => {
@@ -120,21 +120,19 @@ const findRegions = (plants: Grid<string>) => {
         const region = new Region(plant, [i, j]);
         regions.push(region);
 
-        let coordsToProcess: Coord[] = [[i, j]];
+        const coordsToProcess: Coord[] = [[i, j]];
         processedCoords.push([i, j]);
 
         while (coordsToProcess.length > 0) {
-          const coordToProcess = coordsToProcess[0];
+          const coordToProcess = coordsToProcess.shift()!;
 
           const { openSides, perimeter, corners } = findOpenSides(coordToProcess[0], coordToProcess[1], plants, region);
+
           region.perimeter += perimeter;
           region.corners += corners;
-
-          region.locations = region.locations.concat(openSides);
-
-          coordsToProcess.splice(0, 1);
-          coordsToProcess = coordsToProcess.concat(openSides);
-          processedCoords = processedCoords.concat([coordToProcess]);
+          region.locations.push(...openSides);
+          coordsToProcess.push(...openSides);
+          processedCoords.push(coordToProcess);
         }
       }
     });
@@ -143,23 +141,15 @@ const findRegions = (plants: Grid<string>) => {
 };
 
 export const partOne = (puzzleInput: string[]) => {
-  const plants = new Grid(puzzleInput.map((row) => row.split('')));
-  const regions = findRegions(plants);
-  return regions
-    .reduce((acc, region) => {
-      return (acc += region.getFencePrice());
-    }, 0)
+  return findRegions(new Grid(puzzleInput.map((row) => row.split(''))))
+    .reduce((acc, region) => acc + region.getFencePrice(), 0)
     .toString();
 };
 
 export const partTwo = (puzzleInput: string[]) => {
-  const plants = new Grid(puzzleInput.map((row) => row.split('')));
-  const regions = findRegions(plants);
-  let price = 0;
-  regions.forEach((region) => {
-    price += region.getDiscountPrice();
-  });
-  return price.toString();
+  return findRegions(new Grid(puzzleInput.map((row) => row.split(''))))
+    .reduce((acc, region) => acc + region.getDiscountPrice(), 0)
+    .toString();
 };
 
 if (require.main === module) {
