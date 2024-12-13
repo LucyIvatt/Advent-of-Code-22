@@ -43,17 +43,19 @@ const coordEquals = (a: Coord, b: Coord): boolean => a[0] === b[0] && a[1] === b
 const coordInList = (coord: Coord, list: Coord[]): boolean => list.some((c) => coordEquals(c, coord));
 
 const findOpenSides = (i: number, j: number, grid: Grid<string>, region: Region) => {
-  const openSides = [];
-  const typeOfPlant = grid.array[i][j];
-  const openDirections = [];
+  const openSides: Coord[] = [];
+  const plantType = grid.array[i][j];
+  const openDirections: Direction[] = [];
   let perimeter = 0;
+  let corners = 0;
 
   for (const direction of STRAIGHT_DIRECTIONS) {
     try {
       const { value, position } = grid.getAdjacent(i, j, direction);
-      if (typeOfPlant !== value) perimeter += 1;
+
+      if (value !== plantType) perimeter += 1;
       else {
-        if (!coordInList(position, region.locations)) openSides.push(position);
+        if (!region.locations.some((coord) => coordEquals(coord, position))) openSides.push(position);
         openDirections.push(direction);
       }
     } catch {
@@ -61,51 +63,50 @@ const findOpenSides = (i: number, j: number, grid: Grid<string>, region: Region)
     }
   }
 
-  let corners = 0;
+  switch (openDirections.length) {
+    case 0:
+      corners = 4;
+      break;
+    case 1:
+      corners = 2;
+      break;
 
-  if (openDirections.length === 0) corners = 4; // single cell region, must have 4 corners
-  if (openDirections.length === 1) corners = 2; // end of a tunnel, must always have 2 corners
-
-  // no corners if opposite ends open (but if L shape could have 1 or 2 corners)
-  if (openDirections.length === 2 && openDirections[0] !== rotate(openDirections[1], 180)) {
-    const diag = getDiagonalDirectionForLShape(openDirections);
-    try {
-      const diagonal = grid.getAdjacent(i, j, diag);
-      if (diagonal.value === typeOfPlant)
-        corners = 1; // valid position directly diagonal from L shape corneer (no addtional corner needed)
-      else corners = 2; // corner direction diagonal from L shape corner
-    } catch {
-      corners = 2; // corner direction diagonal from L shape corner
-    }
-  }
-  // T shaped opening - could have 2 additional corners
-  if (openDirections.length === 3) {
-    const diagonalDirections = getDiagonalDirectionsForTShape(openDirections);
-
-    let invalidDiags = 0;
-    for (const diagDirec of diagonalDirections) {
-      try {
-        const diagonal = grid.getAdjacent(i, j, diagDirec);
-        if (diagonal.value !== typeOfPlant) invalidDiags += 1;
-      } catch {
-        invalidDiags += 1;
+    case 2:
+      if (openDirections[0] !== rotate(openDirections[1], 180)) {
+        const diagonal = getDiagonalDirectionForLShape(openDirections);
+        try {
+          const { value } = grid.getAdjacent(i, j, diagonal);
+          if (value === plantType)
+            corners = 1; // valid position directly diagonal from L shape corner (no addtional corner needed)
+          else corners = 2; // corner direction diagonal from L shape corner
+        } catch {
+          corners = 2; // corner direction diagonal from L shape corner
+        }
       }
+      break;
+    case 3: {
+      const diagonalDirections = getDiagonalDirectionsForTShape(openDirections);
+      const invalidDiags = diagonalDirections.filter((direction) => {
+        try {
+          const { value } = grid.getAdjacent(i, j, direction);
+          return value !== plantType;
+        } catch {
+          return true;
+        }
+      }).length;
+      corners = invalidDiags;
+      break;
     }
-    corners = invalidDiags;
-  }
-
-  // completely open space, could have up to 4 additional corners
-  if (openDirections.length === 4) {
-    let invalidDiags = 0;
-    for (const diagDirec of DIAGONAL_DIRECTIONS) {
-      try {
-        const diagonal = grid.getAdjacent(i, j, diagDirec);
-        if (diagonal.value !== typeOfPlant) invalidDiags += 1;
-      } catch {
-        invalidDiags += 1;
-      }
-    }
-    corners = invalidDiags;
+    case 4:
+      corners = DIAGONAL_DIRECTIONS.filter((direction) => {
+        try {
+          const { value } = grid.getAdjacent(i, j, direction);
+          return value !== plantType;
+        } catch {
+          return true;
+        }
+      }).length;
+      break;
   }
 
   return { openSides, perimeter, corners };
