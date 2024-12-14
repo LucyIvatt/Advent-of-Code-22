@@ -19,7 +19,8 @@ export const count = <T extends string | number>(array: T[]): Record<T, number> 
  * @param allowedCharacters - An array of characters to be used in generating combinations.
  * @param length - The desired length of each generated combination.
  * @returns A generator that yields each combination as a string.
- */ export function* generateCombinations(allowedCharacters: string[], length: number): Generator<string> {
+ */
+export function* generateCombinations(allowedCharacters: string[], length: number): Generator<string> {
   const stack: string[] = [''];
 
   while (stack.length) {
