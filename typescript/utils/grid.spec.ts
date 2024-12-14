@@ -13,15 +13,11 @@ describe('directions', () => {
 });
 
 describe('grid', () => {
-  let grid: Grid<number>;
-
-  it('should create a grid from a 2D array', () => {
-    grid = new Grid([
-      [1, 2, 3],
-      [4, 5, 6],
-      [7, 8, 9]
-    ]);
-  });
+  const grid: Grid<number> = new Grid([
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+  ]);
 
   it('should throw an error if no elements', () => {
     expect(() => new Grid([[]])).toThrow('Grid must have at least one element.');
@@ -46,16 +42,14 @@ describe('grid', () => {
     });
 
     it('should throw an error if the adjacent coord is out of bounds', () => {
-      expect(() => grid.getAdjacent(0, 0, Direction.North)).toThrow(
-        `Position out of bounds at [0, 0] moving North to [-1, 0]`
-      );
+      expect(grid.getAdjacent(0, 0, Direction.North)).toBe(undefined);
     });
 
     Object.keys(expectedAdjacentCoords).forEach((direction) => {
       const { value, position } = expectedAdjacentCoords[direction as Direction];
 
       it(`should return the correct value and position for direction ${direction}`, () => {
-        const result = grid.getAdjacent(1, 1, direction as Direction);
+        const result = grid.getAdjacent(1, 1, direction as Direction)!;
 
         expect(result.value).toBe(value);
         expect(result.position).toEqual(position);

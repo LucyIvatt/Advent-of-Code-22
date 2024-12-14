@@ -12,23 +12,23 @@ const traverseGrid = (grid: Grid<string>, startX: number, startY: number, startD
 
   while (!escaped) {
     while (true) {
-      try {
-        const { value, position } = grid.getAdjacent(x, y, direction);
+      const adjacent = grid.getAdjacent(x, y, direction);
 
-        if (value !== '#') {
-          [x, y] = position;
-          const stateKey = `${x},${y},${direction}`;
-
-          if (visited.has(stateKey)) return { visited, loops: true };
-          visited.add(stateKey);
-          break;
-        }
-
-        direction = rotate(direction, 90);
-      } catch {
+      if (!adjacent) {
         escaped = true;
         break;
       }
+
+      if (adjacent.value !== '#') {
+        [x, y] = adjacent.position;
+        const stateKey = `${x},${y},${direction}`;
+
+        if (visited.has(stateKey)) return { visited, loops: true };
+        visited.add(stateKey);
+        break;
+      }
+
+      direction = rotate(direction, 90);
     }
   }
 

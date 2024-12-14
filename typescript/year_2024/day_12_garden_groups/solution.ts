@@ -50,16 +50,14 @@ const findOpenSides = (i: number, j: number, grid: Grid<string>, region: Region)
   let corners = 0;
 
   for (const direction of STRAIGHT_DIRECTIONS) {
-    try {
-      const { value, position } = grid.getAdjacent(i, j, direction);
-
-      if (value !== plantType) perimeter += 1;
+    const adjacent = grid.getAdjacent(i, j, direction);
+    if (!adjacent) perimeter += 1;
+    else {
+      if (adjacent.value !== plantType) perimeter += 1;
       else {
-        if (!region.locations.some((coord) => coordEquals(coord, position))) openSides.push(position);
+        if (!region.locations.some((coord) => coordEquals(coord, adjacent.position))) openSides.push(adjacent.position);
         openDirections.push(direction);
       }
-    } catch {
-      perimeter += 1;
     }
   }
 
@@ -74,37 +72,30 @@ const findOpenSides = (i: number, j: number, grid: Grid<string>, region: Region)
     case 2:
       if (openDirections[0] !== rotate(openDirections[1], 180)) {
         const diagonal = getDiagonalDirectionForLShape(openDirections);
-        try {
-          const { value } = grid.getAdjacent(i, j, diagonal);
-          if (value === plantType)
+        const adjacent = grid.getAdjacent(i, j, diagonal);
+        if (!adjacent) corners = 2;
+        else {
+          if (adjacent.value === plantType)
             corners = 1; // valid position directly diagonal from L shape corner (no addtional corner needed)
           else corners = 2; // corner direction diagonal from L shape corner
-        } catch {
-          corners = 2; // corner direction diagonal from L shape corner
         }
       }
       break;
     case 3: {
       const diagonalDirections = getDiagonalDirectionsForTShape(openDirections);
       const invalidDiags = diagonalDirections.filter((direction) => {
-        try {
-          const { value } = grid.getAdjacent(i, j, direction);
-          return value !== plantType;
-        } catch {
-          return true;
-        }
+        const adjacent = grid.getAdjacent(i, j, direction);
+        if (!adjacent) return true;
+        return adjacent.value !== plantType;
       }).length;
       corners = invalidDiags;
       break;
     }
     case 4:
       corners = DIAGONAL_DIRECTIONS.filter((direction) => {
-        try {
-          const { value } = grid.getAdjacent(i, j, direction);
-          return value !== plantType;
-        } catch {
-          return true;
-        }
+        const adjacent = grid.getAdjacent(i, j, direction);
+        if (!adjacent) return true;
+        return adjacent.value !== plantType;
       }).length;
       break;
   }
@@ -154,6 +145,6 @@ export const partTwo = (puzzleInput: string[]) => {
 };
 
 if (require.main === module) {
-  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.INPUT));
+  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
   runPuzzle('12', 'garden_groups', partOne, partTwo, puzzleInput);
 }

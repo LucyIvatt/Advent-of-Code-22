@@ -91,7 +91,7 @@ export class Grid<Type> {
    * @returns An object containing the value of the adjacent cell and its position as a tuple [row, column].
    * @throws Will throw an error if the direction is invalid or if the resulting position is out of bounds.
    */
-  getAdjacent(i: number, j: number, direction: Direction): { value: Type; position: Coord } {
+  getAdjacent(i: number, j: number, direction: Direction): { value: Type; position: Coord } | undefined {
     const offset = directionOffsets.get(direction);
 
     if (!offset) {
@@ -101,7 +101,7 @@ export class Grid<Type> {
     const position = [i + offset.dy, j + offset.dx] as Coord;
 
     if (position[0] < 0 || position[0] >= this.array.length || position[1] < 0 || position[1] >= this.array[0].length) {
-      throw new Error(`Position out of bounds at [${i}, ${j}] moving ${direction} to [${position[0]}, ${position[1]}]`);
+      return undefined;
     }
     return { value: this.array[position[0]][position[1]], position };
   }
@@ -111,12 +111,8 @@ export class Grid<Type> {
     const adjacents: { value: Type; position: Coord }[] = [];
 
     for (const direction of directions) {
-      try {
-        const { value, position } = this.getAdjacent(i, j, direction);
-        adjacents.push({ value, position });
-      } catch {
-        continue;
-      }
+      const adjacent = this.getAdjacent(i, j, direction);
+      if (adjacent) adjacents.push(adjacent);
     }
 
     return adjacents;
@@ -139,15 +135,13 @@ export class Grid<Type> {
     const positions = [[i, j]];
 
     while (values.length < length) {
-      try {
-        const adjacent = this.getAdjacent(i, j, direction);
-        values.push(adjacent.value);
-        positions.push(adjacent.position);
-        i = adjacent.position[0];
-        j = adjacent.position[1];
-      } catch {
-        break;
-      }
+      const adjacent = this.getAdjacent(i, j, direction);
+      if (!adjacent) break;
+
+      values.push(adjacent.value);
+      positions.push(adjacent.position);
+      i = adjacent.position[0];
+      j = adjacent.position[1];
     }
 
     return { values, positions };

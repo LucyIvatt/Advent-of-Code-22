@@ -13,12 +13,10 @@ const findTrailheads = (grid: Grid<number>) =>
   );
 
 const isValidLocation = (grid: Grid<number>, i: number, j: number, direction: Direction) => {
-  try {
-    const { value: height, position } = grid.getAdjacent(i, j, direction);
-    return { isReachable: height === grid.array[i][j] + 1, position };
-  } catch {
-    return { isReachable: false };
-  }
+  const adjacent = grid.getAdjacent(i, j, direction);
+  if (!adjacent) return { isReachable: false };
+
+  return { isReachable: adjacent.value === grid.array[i][j] + 1, position: adjacent.position };
 };
 
 const findReachableSummits = (grid: Grid<number>, trailhead: Coord) => {
