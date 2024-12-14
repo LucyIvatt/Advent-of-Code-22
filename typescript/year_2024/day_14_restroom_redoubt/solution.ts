@@ -84,8 +84,8 @@ export const partOne = (puzzleInput: string[], gridWidth: number, gridHeight: nu
 export const partTwo = (puzzleInput: string[], gridWidth: number, gridHeight: number, log = false) => {
   const robots = puzzleInput.map((data) => new Robot(data, gridWidth, gridHeight));
   const grid = createGrid(gridWidth, gridHeight);
-  let seconds = 0;
 
+  let seconds = 0;
   while (!hasTreeStump(grid, robots)) {
     robots.forEach((robot) => robot.movePosition());
     updateGrid(grid, robots);
