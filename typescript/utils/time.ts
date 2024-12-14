@@ -5,9 +5,9 @@
  * @param input - The input array of strings to be passed to the function.
  * @returns A promise that resolves to an object containing the output of the function and the time taken to execute it in seconds, formatted to three significant digits.
  */
-export const functionTimer = async (fn: (input: string[]) => string | Promise<string>, input: string[]) => {
+export const functionTimer = async (fn: (...args: string[][]) => string | Promise<string>, ...args: string[][]) => {
   const start = performance.now();
-  const output = await fn(input);
+  const output = await fn(...args);
   const end = performance.now();
 
   return { output, time: Number((end - start) / 1000).toPrecision(3) };
