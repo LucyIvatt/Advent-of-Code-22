@@ -2,6 +2,8 @@ import path from 'path';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 
+const ROBOT_SYMBOL = '#';
+
 class Robot {
   x: number;
   y: number;
@@ -20,17 +22,12 @@ class Robot {
     this.gridHeight = gridHeight;
   }
 
-  movePos() {
-    const newX = this.x + this.dx;
-    const newY = this.y + this.dy;
+  movePosition() {
+    const newX = (this.x + this.dx) % this.gridWidth;
+    const newY = (this.y + this.dy) % this.gridHeight;
 
-    if (newX < 0) this.x = this.gridWidth + newX;
-    else if (newX >= this.gridWidth) this.x = newX - this.gridWidth;
-    else this.x = newX;
-
-    if (newY < 0) this.y = this.gridHeight + newY;
-    else if (newY >= this.gridHeight) this.y = newY - this.gridHeight;
-    else this.y = newY;
+    this.x = newX < 0 ? this.gridWidth + newX : newX;
+    this.y = newY < 0 ? this.gridHeight + newY : newY;
   }
 }
 
@@ -42,7 +39,7 @@ function createGrid(width: number, height: number) {
 
 function printGrid(grid: string[][], width: number, height: number) {
   for (let i = 0; i < height; i++) {
-    let row = '';
+    let row = '.';
     for (let j = 0; j < width; j++) {
       row += grid[i][j];
     }
@@ -50,45 +47,66 @@ function printGrid(grid: string[][], width: number, height: number) {
   }
 }
 
-export const partOne = (puzzleInput: string[], width: number, height: number) => {
-  const seconds = 100;
-  const robots = puzzleInput.map((robot) => new Robot(robot, width, height));
-
-  for (let s = 0; s < seconds; s++) {
-    for (const robot of robots) {
-      robot.movePos();
+function hasTreeStump(grid: string[][], width: number, height: number): boolean {
+  for (let r = 0; r <= height - 3; r++) {
+    for (let c = 0; c <= width - 3; c++) {
+      let isMatch = true;
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (grid[r + i][c + j] !== ROBOT_SYMBOL) {
+            isMatch = false;
+            break;
+          }
+        }
+        if (!isMatch) break;
+      }
+      if (isMatch) return true;
     }
   }
 
-  const midX = (width - 1) / 2;
-  const midY = (height - 1) / 2;
+  return false;
+}
 
-  console.log(midX);
-  console.log(midY);
+export const partOne = (puzzleInput: string[], gridWidth: number, gridHeight: number) => {
+  const totalSeconds = 100;
+  const robots = puzzleInput.map((data) => new Robot(data, gridWidth, gridHeight));
 
-  const quadrants = { quad_1: 0, quad_2: 0, quad_3: 0, quad_4: 0 };
-
-  const grid = createGrid(width, height);
-  for (const robot of robots) {
-    console.log(robot);
-    if (robot.x < midX && robot.y < midY) quadrants.quad_1++;
-    if (robot.x < midX && robot.y > midY) quadrants.quad_2++;
-    if (robot.x > midX && robot.y < midY) quadrants.quad_3++;
-    if (robot.x > midX && robot.y > midY) quadrants.quad_4++;
-
-    if (grid[robot.y][robot.x] == 'o') grid[robot.y][robot.x] = 'O';
-    else grid[robot.y][robot.x] = 'o';
+  for (let second = 0; second < totalSeconds; second++) {
+    robots.forEach((robot) => robot.movePosition());
   }
 
-  printGrid(grid, width, height);
+  const centerX = (gridWidth - 1) / 2;
+  const centerY = (gridHeight - 1) / 2;
 
-  console.log(quadrants);
+  const quadrantCounts = { first: 0, second: 0, third: 0, fourth: 0 };
 
-  return (quadrants.quad_1 * quadrants.quad_2 * quadrants.quad_3 * quadrants.quad_4).toString();
+  const grid = createGrid(gridWidth, gridHeight);
+  robots.forEach((robot) => {
+    if (robot.x < centerX && robot.y < centerY) quadrantCounts.first++;
+    else if (robot.x < centerX && robot.y > centerY) quadrantCounts.second++;
+    else if (robot.x > centerX && robot.y < centerY) quadrantCounts.third++;
+    else if (robot.x > centerX && robot.y > centerY) quadrantCounts.fourth++;
+  });
+
+  return (quadrantCounts.first * quadrantCounts.second * quadrantCounts.third * quadrantCounts.fourth).toString();
 };
 
-export const partTwo = (puzzleInput: string[]) => {
-  return 'Part 2 Answer';
+export const partTwo = (puzzleInput: string[], gridWidth: number, gridHeight: number) => {
+  const robots = puzzleInput.map((data) => new Robot(data, gridWidth, gridHeight));
+  let grid = createGrid(gridWidth, gridHeight);
+  let seconds = 0;
+
+  while (!hasTreeStump(grid, gridWidth, gridHeight)) {
+    grid = createGrid(gridWidth, gridHeight);
+    robots.forEach((robot) => {
+      robot.movePosition();
+      grid[robot.y][robot.x] = ROBOT_SYMBOL;
+    });
+    seconds += 1;
+  }
+
+  printGrid(grid, gridWidth, gridHeight);
+  return seconds.toString();
 };
 
 if (require.main === module) {

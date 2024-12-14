@@ -19,14 +19,9 @@ describe('TestDay14', () => {
   });
 
   describe('Part two', () => {
-    it('should return correct answer for the example input', () => {
-      const result = partTwo(exampleInput);
-      expect(result).toBe('Part 2 Answer');
-    });
-
     it('should return correct answer for the real input', () => {
-      const result = partTwo(input);
-      expect(result).toBe('Part 2 Answer');
+      const result = partTwo(input, 101, 103);
+      expect(result).toBe('7858');
     });
   });
 });
