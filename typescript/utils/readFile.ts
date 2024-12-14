@@ -18,3 +18,17 @@ export const readPuzzleInput = (fileName: string): string[] => {
     .split('\n')
     .map((line) => line.trim());
 };
+
+export const split2DArray = (puzzleInput: string[], delimiter: string): string[][] => {
+  return puzzleInput.reduce(
+    (acc, curr) => {
+      if (curr === delimiter) {
+        acc.push([]);
+      } else {
+        acc[acc.length - 1].push(curr);
+      }
+      return acc;
+    },
+    [[]] as string[][]
+  );
+};
