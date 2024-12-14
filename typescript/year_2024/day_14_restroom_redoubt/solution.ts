@@ -3,127 +3,106 @@ import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 
 const ROBOT_SYMBOL = '#';
+const EMPTY_SYMBOL = '.';
 
 class Robot {
-  x: number;
-  y: number;
-  dx: number;
-  dy: number;
+  position: { x: number; y: number };
+  velocity: { dx: number; dy: number };
   gridWidth: number;
   gridHeight: number;
 
   constructor(robotData: string, gridWidth: number, gridHeight: number) {
     const [x, y, dx, dy] = robotData.match(/-?\d+/g)!.map(Number);
-    this.x = x;
-    this.y = y;
-    this.dx = dx;
-    this.dy = dy;
+    this.position = { x, y };
+    this.velocity = { dx, dy };
     this.gridWidth = gridWidth;
     this.gridHeight = gridHeight;
   }
 
-  movePosition() {
-    const newX = (this.x + this.dx) % this.gridWidth;
-    const newY = (this.y + this.dy) % this.gridHeight;
+  movePosition(steps: number = 1) {
+    this.position.x = this.teleport(this.position.x + this.velocity.dx * steps, this.gridWidth);
+    this.position.y = this.teleport(this.position.y + this.velocity.dy * steps, this.gridHeight);
+  }
 
-    this.x = newX < 0 ? this.gridWidth + newX : newX;
-    this.y = newY < 0 ? this.gridHeight + newY : newY;
+  private teleport(position: number, limit: number) {
+    return ((position % limit) + limit) % limit;
   }
 }
 
-function createGrid(width: number, height: number) {
-  return Array(height)
-    .fill(0)
-    .map(() => Array(width).fill('.'));
-}
+const createGrid = (width: number, height: number) =>
+  Array.from({ length: height }, () => Array(width).fill(EMPTY_SYMBOL));
 
-function printGrid(grid: string[][], width: number, height: number) {
-  for (let i = 0; i < height; i++) {
-    let row = '.';
-    for (let j = 0; j < width; j++) {
-      row += grid[i][j];
-    }
-    console.log(row);
-  }
-}
+const printGrid = (grid: string[][]) => grid.forEach((row) => console.log(row.join('')));
 
-function hasTreeStump(grid: string[][], width: number, height: number): boolean {
-  for (let r = 0; r <= height - 3; r++) {
-    for (let c = 0; c <= width - 3; c++) {
-      let isMatch = true;
-      for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-          if (grid[r + i][c + j] !== ROBOT_SYMBOL) {
-            isMatch = false;
-            break;
-          }
-        }
-        if (!isMatch) break;
-      }
-      if (isMatch) return true;
+const updateGrid = (grid: string[][], robots: Robot[]) => {
+  for (let y = 0; y < grid.length; y++) {
+    for (let x = 0; x < grid[0].length; x++) {
+      grid[y][x] = EMPTY_SYMBOL;
     }
   }
 
+  robots.forEach(({ position: { x, y } }) => {
+    grid[y][x] = ROBOT_SYMBOL;
+  });
+};
+
+const hasTreeStump = (grid: string[][], robots: Robot[]) => {
+  for (const {
+    position: { x, y }
+  } of robots) {
+    if (x >= 1 && y >= 1 && x < grid[0].length - 1 && y < grid.length - 1) {
+      if (
+        Array.from({ length: 3 }).every((_, i) =>
+          Array.from({ length: 3 }).every((_, j) => grid[y + i - 1][x + j - 1] === ROBOT_SYMBOL)
+        )
+      )
+        return true;
+    }
+  }
   return false;
-}
+};
 
 export const partOne = (puzzleInput: string[], gridWidth: number, gridHeight: number) => {
-  const totalSeconds = 100;
   const robots = puzzleInput.map((data) => new Robot(data, gridWidth, gridHeight));
 
-  for (let second = 0; second < totalSeconds; second++) {
-    robots.forEach((robot) => robot.movePosition());
-  }
+  robots.forEach((robot) => robot.movePosition(100));
 
   const centerX = (gridWidth - 1) / 2;
   const centerY = (gridHeight - 1) / 2;
+  const quadrants = [0, 0, 0, 0];
 
-  const quadrantCounts = { first: 0, second: 0, third: 0, fourth: 0 };
+  robots
+    .filter(({ position: { x, y } }) => x !== centerX && y !== centerY) // excludes the robots on axes
+    .forEach(({ position: { x, y } }) => {
+      const quadrant = (x > centerX ? 2 : 0) + (y > centerY ? 1 : 0);
+      quadrants[quadrant]++;
+    });
 
-  const grid = createGrid(gridWidth, gridHeight);
-  robots.forEach((robot) => {
-    if (robot.x < centerX && robot.y < centerY) quadrantCounts.first++;
-    else if (robot.x < centerX && robot.y > centerY) quadrantCounts.second++;
-    else if (robot.x > centerX && robot.y < centerY) quadrantCounts.third++;
-    else if (robot.x > centerX && robot.y > centerY) quadrantCounts.fourth++;
-  });
-
-  return (quadrantCounts.first * quadrantCounts.second * quadrantCounts.third * quadrantCounts.fourth).toString();
+  return quadrants.reduce((val, acc) => (acc *= val)).toString();
 };
 
-export const partTwo = (puzzleInput: string[], gridWidth: number, gridHeight: number) => {
+export const partTwo = (puzzleInput: string[], gridWidth: number, gridHeight: number, log = false) => {
   const robots = puzzleInput.map((data) => new Robot(data, gridWidth, gridHeight));
-  let grid = createGrid(gridWidth, gridHeight);
+  const grid = createGrid(gridWidth, gridHeight);
   let seconds = 0;
 
-  while (!hasTreeStump(grid, gridWidth, gridHeight)) {
-    grid = createGrid(gridWidth, gridHeight);
-    robots.forEach((robot) => {
-      robot.movePosition();
-      grid[robot.y][robot.x] = ROBOT_SYMBOL;
-    });
-    seconds += 1;
+  while (!hasTreeStump(grid, robots)) {
+    robots.forEach((robot) => robot.movePosition());
+    updateGrid(grid, robots);
+    seconds++;
   }
 
-  printGrid(grid, gridWidth, gridHeight);
+  log && printGrid(grid);
+
   return seconds.toString();
 };
 
 if (require.main === module) {
-  let width;
-  let height;
-
   const inputType = InputFile.INPUT;
 
   // @ts-expect-error so I can switch input files without needing to redefine width/height
-  if (inputType === InputFile.EXAMPLE) {
-    width = 11;
-    height = 7;
-  } else {
-    width = 101;
-    height = 103;
-  }
+  const { width, height } = inputType === InputFile.EXAMPLE ? { width: 11, height: 7 } : { width: 101, height: 103 };
 
   const puzzleInput = readPuzzleInput(path.resolve(__dirname, inputType));
-  runPuzzle('14', 'restroom_redoubt', partOne, partTwo, puzzleInput, width, height);
+  runPuzzle('14', 'restroom_redoubt', partOne, partTwo, puzzleInput, width, height, true);
 }
