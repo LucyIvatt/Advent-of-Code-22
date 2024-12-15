@@ -1,11 +1,12 @@
 import path from 'path';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
+import chalk from 'chalk';
 
 const ROBOT_SYMBOL = '#';
 const EMPTY_SYMBOL = '.';
 
-class Robot {
+export class Robot {
   position: { x: number; y: number };
   velocity: { dx: number; dy: number };
   gridWidth: number;
@@ -29,12 +30,15 @@ class Robot {
   }
 }
 
-const createGrid = (width: number, height: number) =>
+export const createGrid = (width: number, height: number) =>
   Array.from({ length: height }, () => Array(width).fill(EMPTY_SYMBOL));
 
-const printGrid = (grid: string[][]) => grid.forEach((row) => console.log(row.join('')));
+export const printGrid = (grid: string[][], green = false) => {
+  const print = green ? chalk.green : (x: any) => x;
+  grid.forEach((row) => console.log(print(row.join(''))));
+};
 
-const updateGrid = (grid: string[][], robots: Robot[]) => {
+export const updateGrid = (grid: string[][], robots: Robot[]) => {
   for (let y = 0; y < grid.length; y++) {
     for (let x = 0; x < grid[0].length; x++) {
       grid[y][x] = EMPTY_SYMBOL;
@@ -46,7 +50,7 @@ const updateGrid = (grid: string[][], robots: Robot[]) => {
   });
 };
 
-const hasTreeStump = (grid: string[][], robots: Robot[]) => {
+export const hasTreeStump = (grid: string[][], robots: Robot[]) => {
   for (const {
     position: { x, y }
   } of robots) {
@@ -92,7 +96,7 @@ export const partTwo = (puzzleInput: string[], gridWidth: number, gridHeight: nu
     seconds++;
   }
 
-  log && printGrid(grid);
+  if (log) printGrid(grid);
 
   return seconds.toString();
 };
@@ -105,4 +109,6 @@ if (require.main === module) {
 
   const puzzleInput = readPuzzleInput(path.resolve(__dirname, inputType));
   runPuzzle('14', 'restroom_redoubt', partOne, partTwo, puzzleInput, width, height, true);
+
+  // partTwoAnimation(puzzleInput, width, height);
 }
