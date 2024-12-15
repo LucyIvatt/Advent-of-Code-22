@@ -96,7 +96,6 @@ const evaluateVerticalBoxes = (i: number, j: number, grid: Grid<string>, directi
   const boxes = [firstBox];
   const boxesToProcess = [firstBox];
   let willMove = true;
-  const possiblyBlocking: number[][] = [];
 
   while (boxesToProcess.length > 0) {
     const { dy } = directionOffsets.get(direction)!;
@@ -144,17 +143,14 @@ const evaluateVerticalBoxes = (i: number, j: number, grid: Grid<string>, directi
   return { boxes, willMove };
 };
 
-export const partTwo = async (puzzleInput: string[]) => {
+export const partTwo = (puzzleInput: string[]) => {
   const formattedInput = split2DArray(puzzleInput, '');
   const grid = new Grid(expandGrid(formattedInput[0]));
 
   const directions = formattedInput[1].flatMap((line) => line.split('').map((char) => DIRECTION_MAP.get(char)!));
   let robotPosition = grid.find('@')[0];
 
-  console.log(grid.toString());
-
   for (const direction of directions) {
-    console.log(direction);
     const nextCell = grid.getAdjacent(robotPosition[0], robotPosition[1], direction);
     const { dy } = directionOffsets.get(direction)!;
 
@@ -236,13 +232,8 @@ export const partTwo = async (puzzleInput: string[]) => {
     // console.log(direction);
     // await delay(250);
   }
-  console.log('final grid');
-  console.log(grid.toString(true));
-
   const boxes = grid.find('[');
-
   return boxes.reduce((acc, box) => (acc += 100 * box[0] + box[1]), 0).toString();
-  return 'Part 2 Answer';
 };
 
 if (require.main === module) {
