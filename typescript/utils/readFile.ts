@@ -3,6 +3,7 @@ import { readFileSync } from 'fs';
 export enum InputFile {
   EXAMPLE = 'example.txt',
   EXAMPLE_2 = 'example2.txt',
+  EXAMPLE_3 = 'example3.txt',
   INPUT = 'input.txt'
 }
 
