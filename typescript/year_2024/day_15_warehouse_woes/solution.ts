@@ -1,9 +1,7 @@
 import path from 'path';
+import { Direction, directionOffsets, Grid } from '../../utils/grid';
 import { InputFile, readPuzzleInput, split2DArray } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
-import { Coord, Direction, directionOffsets, Grid } from '../../utils/grid';
-
-import { Tree, TreeNode, defaultTraversalStrategy } from 'ts-tree-lib';
 
 const DIRECTION_MAP = new Map<string, Direction>([
   ['^', Direction.North],
@@ -98,6 +96,7 @@ const evaluateVerticalBoxes = (i: number, j: number, grid: Grid<string>, directi
   const boxes = [firstBox];
   const boxesToProcess = [firstBox];
   let willMove = true;
+  const possiblyBlocking: number[][] = [];
 
   while (boxesToProcess.length > 0) {
     const { dy } = directionOffsets.get(direction)!;
@@ -111,8 +110,8 @@ const evaluateVerticalBoxes = (i: number, j: number, grid: Grid<string>, directi
       boxes.push(newBox);
     } else if (behindBox.values.join('') === '][') {
       const newBoxLeft = [
-        [box[0][0] + dy, behindBox.positions[0][1]],
-        [box[0][0] + dy, behindBox.positions[0][1] + 1]
+        [box[0][0] + dy, behindBox.positions[0][1] - 1],
+        [box[0][0] + dy, behindBox.positions[0][1]]
       ];
       const newBoxRight = [
         [box[0][0] + dy, behindBox.positions[1][1]],
@@ -123,80 +122,130 @@ const evaluateVerticalBoxes = (i: number, j: number, grid: Grid<string>, directi
       boxesToProcess.push(newBoxRight);
       boxes.push(newBoxLeft);
       boxes.push(newBoxRight);
-    } else if (behindBox.values.join('') !== '..') {
+    } else if (behindBox.values.join('').includes('#')) {
       willMove = false;
       break;
+    } else if (behindBox.values.join('').includes('[')) {
+      const newBoxRight = [
+        [box[0][0] + dy, behindBox.positions[1][1]],
+        [box[0][0] + dy, behindBox.positions[1][1] + 1]
+      ];
+      boxesToProcess.push(newBoxRight);
+      boxes.push(newBoxRight);
+    } else if (behindBox.values.join('').includes(']')) {
+      const newBoxLeft = [
+        [box[0][0] + dy, behindBox.positions[0][1] - 1],
+        [box[0][0] + dy, behindBox.positions[0][1]]
+      ];
+      boxesToProcess.push(newBoxLeft);
+      boxes.push(newBoxLeft);
     }
   }
-  console.log(boxes);
-  console.log(willMove);
+  return { boxes, willMove };
 };
 
-export const partTwo = (puzzleInput: string[]) => {
+export const partTwo = async (puzzleInput: string[]) => {
   const formattedInput = split2DArray(puzzleInput, '');
   const grid = new Grid(expandGrid(formattedInput[0]));
 
-  console.log(grid.toString());
-
   const directions = formattedInput[1].flatMap((line) => line.split('').map((char) => DIRECTION_MAP.get(char)!));
-  const robotPosition = grid.find('@')[0];
+  let robotPosition = grid.find('@')[0];
 
-  // console.log(directions);
-  // console.log(robotPosition)
-
-  grid.array[3] = ['#', '#', '.', '.', '.', '[', ']', '[', ']', '@', '.', '.', '#', '#'];
-  grid.array[2][6] = '#';
   console.log(grid.toString());
 
-  evaluateVerticalBoxes(4, 6, grid, Direction.North);
+  for (const direction of directions) {
+    console.log(direction);
+    const nextCell = grid.getAdjacent(robotPosition[0], robotPosition[1], direction);
+    const { dy } = directionOffsets.get(direction)!;
 
-  // for (const direction of directions) {
-  //   const nextCell = grid.getAdjacent(robotPosition[0], robotPosition[1], direction);
+    if (nextCell?.value == '.') {
+      grid.array[robotPosition[0]][robotPosition[1]] = '.';
+      robotPosition = nextCell.position;
+      grid.array[robotPosition[0]][robotPosition[1]] = '@';
+    } else if (nextCell?.value == '[' || nextCell?.value == ']') {
+      if (direction === Direction.North || direction === Direction.South) {
+        const { boxes, willMove } = evaluateVerticalBoxes(nextCell.position[0], nextCell.position[1], grid, direction);
 
-  //   // clear space
-  //   if (nextCell?.value == '.') {
-  //     grid.array[robotPosition[0]][robotPosition[1]] = '.';
-  //     robotPosition = nextCell.position;
-  //     grid.array[robotPosition[0]][robotPosition[1]] = '@';
-  //   } // Box found
-  //   else if (nextCell?.value === '[' || nextCell?.value === ']') {
-  //     const firstBox = [nextCell.position];
+        if (direction === Direction.North) {
+          boxes.sort((a, b) => a[0][0] - b[0][0]);
+        } else {
+          boxes.sort((a, b) => b[0][0] - a[0][0]);
+        }
 
-  //     // get second half of the box
-  //   if (nextCell?.value === '[')
-  //     firstBox.push(grid.getAdjacent(nextCell.position[0], nextCell.position[1], Direction.East)!.position);
-  // else firstBox.push(grid.getAdjacent(nextCell.position[0], nextCell.position[1], Direction.West)!.position);
+        if (willMove) {
+          for (const box of boxes) {
+            const [left, right] = box;
+            // reset
+            grid.array[left[0]][left[1]] = '.';
+            grid.array[right[0]][right[1]] = '.';
 
-  // firstBox.sort((a, b) => a[1] - b[1]);
-  // const boxes = [firstBox];
-  // const boxesToProcess = [firstBox];
+            // set box
+            grid.array[left[0] + dy][left[1]] = '[';
+            grid.array[right[0] + dy][right[1]] = ']';
+          }
+          grid.array[robotPosition[0]][robotPosition[1]] = '.';
+          robotPosition = nextCell.position;
+          grid.array[robotPosition[0]][robotPosition[1]] = '@';
+        }
+      } else {
+        const [i, j] = nextCell.position;
+        const boxParts = [nextCell.position];
 
-  // while (boxesToProcess) {
-  //   const { dy } = directionOffsets.get(direction)!;
-  //   const box = boxesToProcess.shift()!;
-  //   console.log(box);
-  //   const behindBox = grid.walk(box[0][0] + dy, box[0][1], Direction.East, 2);
+        if (grid.array[i][j] === '[') boxParts.push(grid.getAdjacent(i, j, Direction.East)!.position);
+        else boxParts.push(grid.getAdjacent(i, j, Direction.West)!.position);
 
-  //     // check cases
-  //     // if [][] add two boxes
-  //     // if ? [] ? add single box
+        let currentBoxPosition = boxParts.at(-1)!;
+        let willMove = true;
+        while (true) {
+          const nextBoxPosition = grid.getAdjacent(currentBoxPosition[0], currentBoxPosition[1], direction)!;
+          if (nextBoxPosition?.value === '.') break;
+          if (nextBoxPosition?.value === '#') {
+            willMove = false;
+            break;
+          }
+          currentBoxPosition = nextBoxPosition.position;
+          boxParts.push(currentBoxPosition);
+        }
 
-  //     console.log(behindBox);
-  //   }
+        if (direction === Direction.West) {
+          boxParts.sort((a, b) => a[1] - b[1]);
+        } else {
+          boxParts.sort((a, b) => b[1] - a[1]);
+        }
 
-  //   console.log(firstBox);
+        const { dx } = directionOffsets.get(direction)!;
 
-  //   // while ()
-  // }
-  // }
-  // console.log(grid.toString(false));
-  // const boxes = grid.find('O');
+        let start = direction === Direction.West ? true : false;
+        if (willMove) {
+          for (const side of boxParts) {
+            // reset
+            grid.array[side[0]][side[1]] = '.';
 
-  // return boxes.reduce((acc, box) => (acc += 100 * box[0] + box[1]), 0).toString();
+            // set box
+            grid.array[side[0]][side[1] + dx] = start ? '[' : ']';
+            start = !start;
+          }
+          grid.array[robotPosition[0]][robotPosition[1]] = '.';
+          robotPosition = nextCell.position;
+          grid.array[robotPosition[0]][robotPosition[1]] = '@';
+        }
+      }
+    }
+    // clear();
+    // console.log(grid.toString(true));
+    // console.log(direction);
+    // await delay(250);
+  }
+  console.log('final grid');
+  console.log(grid.toString(true));
+
+  const boxes = grid.find('[');
+
+  return boxes.reduce((acc, box) => (acc += 100 * box[0] + box[1]), 0).toString();
   return 'Part 2 Answer';
 };
 
 if (require.main === module) {
-  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE_3));
+  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.INPUT));
   runPuzzle('15', 'warehouse_woes', partOne, partTwo, puzzleInput);
 }
