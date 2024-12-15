@@ -10,30 +10,23 @@ const DIRECTION_MAP = new Map<string, Direction>([
   ['<', Direction.West]
 ]);
 
-const expandGrid = (grid: string[]) => {
-  const newGrid = grid.map((row) =>
-    row.split('').flatMap((char) => {
-      switch (char) {
-        case '#': {
+const expandGrid = (grid: string[]): string[][] => {
+  return grid.map((row) =>
+    row.split('').flatMap((cell) => {
+      switch (cell) {
+        case '#':
           return ['#', '#'];
-        }
-        case 'O': {
+        case 'O':
           return ['[', ']'];
-        }
-        case '.': {
+        case '.':
           return ['.', '.'];
-        }
-        case '@': {
+        case '@':
           return ['@', '.'];
-        }
-        default: {
+        default:
           return ['.', '.'];
-        }
       }
     })
   );
-
-  return newGrid;
 };
 
 export const partOne = (puzzleInput: string[]) => {
