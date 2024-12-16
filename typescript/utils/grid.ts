@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 
 export type Coord = [number, number];
+export type Cell = { value: string | number; position: Coord };
 
 export enum Direction {
   North = 'North',
