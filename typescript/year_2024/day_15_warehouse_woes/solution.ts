@@ -1,5 +1,5 @@
 import path from 'path';
-import { Direction, directionOffsets, Grid } from '../../utils/grid';
+import { Coord, Direction, directionOffsets, Grid } from '../../utils/grid';
 import { InputFile, readPuzzleInput, split2DArray } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 
@@ -92,40 +92,37 @@ const evaluateVerticalBoxes = (i: number, j: number, grid: Grid<string>, directi
   const boxesToProcess = [firstBox];
   let willMove = true;
 
+  const addBox = (positions: Coord[]) => {
+    boxesToProcess.push(positions);
+    boxes.push(positions);
+  };
+
   while (boxesToProcess.length > 0) {
     const currentBox = boxesToProcess.shift()!;
     const behindBox = grid.walk(currentBox[0][0] + dy, currentBox[0][1], Direction.East, 2);
     const cellsBehindBox = behindBox.values.join('');
 
-    // One of the spaces are blocked so cancel search
     if (cellsBehindBox.includes('#')) {
       willMove = false;
-      break;
+      break; // Movement is blocked, terminate processing
     }
 
     if (cellsBehindBox === '[]') {
-      // Adds box directly behind current box
-      const newBox = behindBox.positions;
-      boxesToProcess.push(newBox);
-      boxes.push(newBox);
+      addBox(behindBox.positions as Coord[]); // Directly behind
     } else {
-      // Adds box one behind and to the right
       if (cellsBehindBox.includes('[')) {
-        const newBoxRight = [
+        const newBoxRight: Coord[] = [
           [currentBox[0][0] + dy, behindBox.positions[1][1]],
-          [currentBox[0][0] + dy, behindBox.positions[1][1] + 1]
+          [currentBox[0][0] + dy, behindBox.positions[1][1] + 1] // Behind and to the right
         ];
-        boxesToProcess.push(newBoxRight);
-        boxes.push(newBoxRight);
+        addBox(newBoxRight);
       }
-      // Adds box one behind and to the left
       if (cellsBehindBox.includes(']')) {
-        const newBoxLeft = [
+        const newBoxLeft: Coord[] = [
           [currentBox[0][0] + dy, behindBox.positions[0][1] - 1],
-          [currentBox[0][0] + dy, behindBox.positions[0][1]]
+          [currentBox[0][0] + dy, behindBox.positions[0][1]] // Behind and to the left
         ];
-        boxesToProcess.push(newBoxLeft);
-        boxes.push(newBoxLeft);
+        addBox(newBoxLeft);
       }
     }
   }
