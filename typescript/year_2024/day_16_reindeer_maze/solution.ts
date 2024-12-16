@@ -30,7 +30,7 @@ export const partOne = async (puzzleInput: string[]) => {
 
     if (coordEquals(coord, endPos)) {
       validPathScores.push(points);
-      if (points === 11048) {
+      if (points === 102488) {
         for (const item of visitedDirectionSet.values()) {
           const withoutDirection = item.split(',').slice(0, -1);
 
@@ -40,7 +40,7 @@ export const partOne = async (puzzleInput: string[]) => {
     }
 
     // Skip this path if it has a higher cost than the stored minimum
-    if (minCostMap.has(coordKey) && minCostMap.get(coordKey)! <= points) {
+    if (minCostMap.has(coordKey) && minCostMap.get(coordKey)! < points) {
       continue;
     }
     minCostMap.set(coordKey, points);
@@ -53,7 +53,7 @@ export const partOne = async (puzzleInput: string[]) => {
       (!minCostMap.has(coordToString(adj.position, dir)) ||
         minCostMap.get(coordToString(adj.position, dir))! > points + 1)
     ) {
-      const newVisitedDirectionSet = new Set(visitedDirectionSet);
+      const newVisitedDirectionSet = new Set([...visitedDirectionSet]);
       newVisitedDirectionSet.add(coordToString(adj.position, dir));
       currentPaths.push({
         coord: adj.position,
@@ -72,7 +72,7 @@ export const partOne = async (puzzleInput: string[]) => {
         (!minCostMap.has(coordToString(adj.position, turn)) ||
           minCostMap.get(coordToString(adj.position, turn))! > points + 1001)
       ) {
-        const newVisitedDirectionSet = new Set(visitedDirectionSet);
+        const newVisitedDirectionSet = new Set([...visitedDirectionSet]);
         newVisitedDirectionSet.add(coordToString(adj.position, turn));
         currentPaths.push({
           coord: adj.position,
@@ -84,12 +84,11 @@ export const partOne = async (puzzleInput: string[]) => {
     }
   }
 
-  console.log(validLocations);
+  console.log(validLocations.size);
   for (const coord of validLocations) {
     const lol = (coord as string).split(',').map(Number);
     grid.array[lol[0]][lol[1]] = 'O';
   }
-  console.log(grid.toString(false));
   return Math.min(...validPathScores).toString();
 };
 
@@ -98,6 +97,6 @@ export const partTwo = (puzzleInput: string[]) => {
 };
 
 if (require.main === module) {
-  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
+  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.INPUT));
   runPuzzle('16', 'reindeer_maze', partOne, partTwo, puzzleInput);
 }
