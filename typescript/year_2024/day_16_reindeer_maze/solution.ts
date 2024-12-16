@@ -1,99 +1,94 @@
+import { MinPriorityQueue } from '@datastructures-js/priority-queue';
 import path from 'path';
-import { coordEquals, Direction, Grid, rotate } from '../../utils/grid';
+import { Coord, coordEquals, Direction, Grid, rotate } from '../../utils/grid';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 
-function coordToString(coord: [number, number], dir: Direction) {
-  return `${coord[0]},${coord[1]},${dir}`;
-}
-
-export const partOne = async (puzzleInput: string[]) => {
+const exploreMaze = (puzzleInput: string[]) => {
   const grid = new Grid(puzzleInput.map((row) => row.split('')));
   const startPos = grid.find('S')[0];
   const endPos = grid.find('E')[0];
 
-  const validPathScores: number[] = [];
-  const validLocations = new Set();
-  const currentPaths = [
-    {
-      coord: startPos,
-      dir: Direction.East,
-      points: 0,
-      visitedDirectionSet: new Set([coordToString(startPos, Direction.East)])
-    }
-  ];
-  const minCostMap = new Map<string, number>();
+  let minCost = Infinity;
+  const validCoordinates: Set<string> = new Set();
 
-  while (currentPaths.length > 0) {
-    const { coord, dir, points, visitedDirectionSet } = currentPaths.shift()!;
-    const coordKey = coordToString(coord, dir);
+  const pq = new MinPriorityQueue<Path>((path) => path.points);
+  pq.enqueue({
+    coord: startPos,
+    dir: Direction.East,
+    points: 0,
+    visitedKeys: new Set([createCoordKey(startPos, Direction.East)])
+  });
+
+  const visitedMap = new Map<string, number>();
+
+  while (!pq.isEmpty()) {
+    const { coord, dir, points, visitedKeys } = pq.dequeue()!;
+    const coordKey = createCoordKey(coord, dir);
+
+    if ((visitedMap.has(coordKey) && visitedMap.get(coordKey)! < points) || points > minCost) {
+      continue;
+    }
+
+    visitedMap.set(coordKey, points);
 
     if (coordEquals(coord, endPos)) {
-      validPathScores.push(points);
-      if (points === 102488) {
-        for (const item of visitedDirectionSet.values()) {
-          const withoutDirection = item.split(',').slice(0, -1);
+      minCost = points;
 
-          validLocations.add(withoutDirection.join());
-        }
+      for (const item of visitedKeys.values()) {
+        const withoutDirection = item.split(',').slice(0, -1); // Remove direction
+        validCoordinates.add(withoutDirection.join());
       }
     }
 
-    // Skip this path if it has a higher cost than the stored minimum
-    if (minCostMap.has(coordKey) && minCostMap.get(coordKey)! < points) {
-      continue;
-    }
-    minCostMap.set(coordKey, points);
-
     // Directly in front
     const adj = grid.getAdjacent(coord[0], coord[1], dir);
-    if (
-      adj &&
-      adj.value !== '#' &&
-      (!minCostMap.has(coordToString(adj.position, dir)) ||
-        minCostMap.get(coordToString(adj.position, dir))! > points + 1)
-    ) {
-      const newVisitedDirectionSet = new Set([...visitedDirectionSet]);
-      newVisitedDirectionSet.add(coordToString(adj.position, dir));
-      currentPaths.push({
+    if (adj && adj.value !== '#' && !visitedKeys.has(createCoordKey(adj.position, dir))) {
+      const newvisitedKeys = new Set([...visitedKeys]);
+      newvisitedKeys.add(createCoordKey(adj.position, dir));
+      pq.enqueue({
         coord: adj.position,
         dir: dir,
         points: points + 1,
-        visitedDirectionSet: newVisitedDirectionSet
+        visitedKeys: newvisitedKeys
       });
     }
 
     // Rotate left or right
     for (const turn of [rotate(dir, -90), rotate(dir, 90)]) {
       const adj = grid.getAdjacent(coord[0], coord[1], turn);
-      if (
-        adj &&
-        adj.value !== '#' &&
-        (!minCostMap.has(coordToString(adj.position, turn)) ||
-          minCostMap.get(coordToString(adj.position, turn))! > points + 1001)
-      ) {
-        const newVisitedDirectionSet = new Set([...visitedDirectionSet]);
-        newVisitedDirectionSet.add(coordToString(adj.position, turn));
-        currentPaths.push({
+      if (adj && adj.value !== '#' && !visitedKeys.has(createCoordKey(adj.position, turn))) {
+        const newvisitedKeys = new Set([...visitedKeys]);
+        newvisitedKeys.add(createCoordKey(adj.position, turn));
+        pq.enqueue({
           coord: adj.position,
           dir: turn,
           points: points + 1001,
-          visitedDirectionSet: newVisitedDirectionSet
+          visitedKeys: newvisitedKeys
         });
       }
     }
   }
+  return { minCost, tiles: validCoordinates.size };
+};
 
-  console.log(validLocations.size);
-  for (const coord of validLocations) {
-    const lol = (coord as string).split(',').map(Number);
-    grid.array[lol[0]][lol[1]] = 'O';
-  }
-  return Math.min(...validPathScores).toString();
+interface Path {
+  coord: Coord;
+  dir: Direction;
+  points: number;
+  visitedKeys: Set<string>;
+}
+
+const createCoordKey = (coord: [number, number], dir: Direction) => {
+  return `${coord[0]},${coord[1]},${dir}`;
+};
+
+export const partOne = (puzzleInput: string[]) => {
+  return exploreMaze(puzzleInput).minCost.toString();
 };
 
 export const partTwo = (puzzleInput: string[]) => {
-  return 'Part 2 Answer';
+  return exploreMaze(puzzleInput).tiles.toString();
 };
 
 if (require.main === module) {
