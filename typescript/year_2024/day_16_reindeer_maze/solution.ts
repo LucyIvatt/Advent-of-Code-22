@@ -4,6 +4,17 @@ import { Coord, coordEquals, Direction, Grid, rotate } from '../../utils/grid';
 import { InputFile, readPuzzleInput } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 
+interface Path {
+  coord: Coord;
+  dir: Direction;
+  points: number;
+  visitedKeys: Set<string>;
+}
+
+const createCoordKey = (coord: [number, number], dir: Direction) => {
+  return `${coord[0]},${coord[1]},${dir}`;
+};
+
 const exploreMaze = (puzzleInput: string[]) => {
   const grid = new Grid(puzzleInput.map((row) => row.split('')));
   const startPos = grid.find('S')[0];
@@ -24,63 +35,46 @@ const exploreMaze = (puzzleInput: string[]) => {
 
   while (!pq.isEmpty()) {
     const { coord, dir, points, visitedKeys } = pq.dequeue()!;
-    const coordKey = createCoordKey(coord, dir);
 
-    if ((visitedMap.has(coordKey) && visitedMap.get(coordKey)! < points) || points > minCost) {
+    if (points > minCost) break; // finish early if this is true as nothing left in queue that is cheaper
+
+    const coordKey = createCoordKey(coord, dir);
+    if (visitedMap.has(coordKey) && visitedMap.get(coordKey)! < points) {
       continue;
     }
-
     visitedMap.set(coordKey, points);
 
     if (coordEquals(coord, endPos)) {
       minCost = points;
 
       for (const item of visitedKeys.values()) {
-        const withoutDirection = item.split(',').slice(0, -1); // Remove direction
+        const withoutDirection = item.split(',').slice(0, -1);
         validCoordinates.add(withoutDirection.join());
       }
     }
 
-    // Directly in front
-    const adj = grid.getAdjacent(coord[0], coord[1], dir);
-    if (adj && adj.value !== '#' && !visitedKeys.has(createCoordKey(adj.position, dir))) {
-      const newvisitedKeys = new Set([...visitedKeys]);
-      newvisitedKeys.add(createCoordKey(adj.position, dir));
-      pq.enqueue({
-        coord: adj.position,
-        dir: dir,
-        points: points + 1,
-        visitedKeys: newvisitedKeys
-      });
-    }
-
-    // Rotate left or right
-    for (const turn of [rotate(dir, -90), rotate(dir, 90)]) {
-      const adj = grid.getAdjacent(coord[0], coord[1], turn);
-      if (adj && adj.value !== '#' && !visitedKeys.has(createCoordKey(adj.position, turn))) {
-        const newvisitedKeys = new Set([...visitedKeys]);
-        newvisitedKeys.add(createCoordKey(adj.position, turn));
+    const processAdjacent = (coord: Coord, dir: Direction, points: number, visitedKeys: Set<string>, cost: number) => {
+      const adj = grid.getAdjacent(coord[0], coord[1], dir);
+      // tries to avoid loop with the visitedKeys check
+      if (adj && adj.value !== '#' && !visitedKeys.has(createCoordKey(adj.position, dir))) {
+        const newVisitedKeys = new Set([...visitedKeys]);
+        newVisitedKeys.add(createCoordKey(adj.position, dir));
         pq.enqueue({
           coord: adj.position,
-          dir: turn,
-          points: points + 1001,
-          visitedKeys: newvisitedKeys
+          dir: dir,
+          points: points + cost,
+          visitedKeys: newVisitedKeys
         });
       }
+    };
+
+    processAdjacent(coord, dir, points, visitedKeys, 1); // move straight
+
+    for (const turn of [rotate(dir, -90), rotate(dir, 90)]) {
+      processAdjacent(coord, turn, points, visitedKeys, 1001); // rotate 90 degrees
     }
   }
   return { minCost, tiles: validCoordinates.size };
-};
-
-interface Path {
-  coord: Coord;
-  dir: Direction;
-  points: number;
-  visitedKeys: Set<string>;
-}
-
-const createCoordKey = (coord: [number, number], dir: Direction) => {
-  return `${coord[0]},${coord[1]},${dir}`;
 };
 
 export const partOne = (puzzleInput: string[]) => {
