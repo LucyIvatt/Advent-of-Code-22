@@ -157,12 +157,12 @@ export class Grid<Type> {
    *
    * @returns {string} The string representation of the grid.
    */
-  toString(showHeaders = true): string {
+  toString(showHeaders = true, colours?: { [key: string]: string }): string {
     const cols = this.array[0].length;
     const cellWidth = this.getMaxCellWidth();
 
     const columnHeaders = showHeaders ? this.createColumnHeaders(cols, cellWidth) : '';
-    const gridRows = this.createGridRows(cellWidth, showHeaders);
+    const gridRows = this.createGridRows(cellWidth, showHeaders, colours);
 
     return showHeaders ? `${columnHeaders}\n${gridRows}` : gridRows;
   }
@@ -204,12 +204,15 @@ export class Grid<Type> {
    * @param cellWidth - The width to pad each cell to.
    * @returns A string representation of the grid with formatted rows.
    */
-  private createGridRows(cellWidth: number, showHeaders: boolean): string {
+  private createGridRows(cellWidth: number, showHeaders: boolean, colors?: { [key: string]: string }): string {
+    const resetColor = '\x1b[0m';
     return this.array
       .map(
         (row, rowIndex) =>
           `${showHeaders ? chalk.blue(rowIndex.toString().padStart(cellWidth)) + ' ' : ''}${row
             .map((cell) => (cell ?? ' ').toString().padStart(cellWidth))
+            .map((cell) => (colors && colors[cell] ? `${colors[cell]}${cell}${resetColor}` : cell))
+
             .join(' ')}`
       )
       .join('\n');

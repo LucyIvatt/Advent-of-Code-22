@@ -196,6 +196,18 @@ export const partTwo = (puzzleInput: string[]) => {
         }
       }
     }
+    // clear();
+    // console.log(
+    //   grid.toString(false, {
+    //     '@': '\x1b[35m',
+    //     '#': '\x1b[34m',
+    //     '[': '\x1b[33m',
+    //     ']': '\x1b[33m',
+    //     '.': '\x1b[90m'
+    //   })
+    // );
+    // console.log(direction);
+    // await delay(50);
   }
   return grid
     .find('[')
