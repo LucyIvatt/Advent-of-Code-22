@@ -17,6 +17,8 @@ export enum Direction {
 export const STRAIGHT_DIRECTIONS = [Direction.North, Direction.East, Direction.South, Direction.West];
 export const DIAGONAL_DIRECTIONS = [Direction.NorthEast, Direction.SouthEast, Direction.SouthWest, Direction.NorthWest];
 
+export const coordEquals = (a: Coord, b: Coord): boolean => a[0] === b[0] && a[1] === b[1];
+
 /**
  * A map that associates each direction with its corresponding offset in the grid,
  * representing the change in the x and y coordinates when moving a single cell in that direction.
