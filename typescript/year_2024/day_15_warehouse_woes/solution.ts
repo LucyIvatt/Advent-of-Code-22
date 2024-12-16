@@ -29,6 +29,12 @@ const expandGrid = (grid: string[]): string[][] => {
   );
 };
 
+const moveRobot = (grid: Grid<string>, currentPos: [number, number], nextPos: [number, number]) => {
+  grid.array[currentPos[0]][currentPos[1]] = '.';
+  grid.array[nextPos[0]][nextPos[1]] = '@';
+  return nextPos;
+};
+
 export const partOne = (puzzleInput: string[]) => {
   const formattedInput = split2DArray(puzzleInput, '');
 
@@ -38,12 +44,10 @@ export const partOne = (puzzleInput: string[]) => {
   let robotPosition = grid.find('@')[0];
 
   for (const direction of directions) {
-    const nextCell = grid.getAdjacent(robotPosition[0], robotPosition[1], direction);
+    const nextCell = grid.getAdjacent(robotPosition[0], robotPosition[1], direction)!;
 
     if (nextCell?.value == '.') {
-      grid.array[robotPosition[0]][robotPosition[1]] = '.';
-      robotPosition = nextCell.position;
-      grid.array[robotPosition[0]][robotPosition[1]] = '@';
+      robotPosition = moveRobot(grid, robotPosition, nextCell.position);
     } else if (nextCell?.value === 'O') {
       const adjBoxCells = [nextCell.position];
 
@@ -59,9 +63,7 @@ export const partOne = (puzzleInput: string[]) => {
       const nextNonBoxCell = grid.getAdjacent(i, j, direction);
 
       if (nextNonBoxCell?.value === '.') {
-        grid.array[robotPosition[0]][robotPosition[1]] = '.';
-        robotPosition = nextCell.position;
-        grid.array[robotPosition[0]][robotPosition[1]] = '@';
+        robotPosition = moveRobot(grid, robotPosition, nextCell.position);
 
         adjBoxCells.shift();
 
@@ -79,58 +81,52 @@ export const partOne = (puzzleInput: string[]) => {
 };
 
 const evaluateVerticalBoxes = (i: number, j: number, grid: Grid<string>, direction: Direction) => {
-  const firstBox = [[i, j]];
+  const { dy } = directionOffsets.get(direction)!;
 
-  if (grid.array[i][j] === '[') firstBox.push(grid.getAdjacent(i, j, Direction.East)!.position);
-  else firstBox.push(grid.getAdjacent(i, j, Direction.West)!.position);
-
-  firstBox.sort((a, b) => a[1] - b[1]);
+  const firstBox =
+    grid.array[i][j] === '['
+      ? [[i, j], grid.getAdjacent(i, j, Direction.East)!.position]
+      : [grid.getAdjacent(i, j, Direction.West)!.position, [i, j]];
 
   const boxes = [firstBox];
   const boxesToProcess = [firstBox];
   let willMove = true;
 
   while (boxesToProcess.length > 0) {
-    const { dy } = directionOffsets.get(direction)!;
-    const box = boxesToProcess.shift()!;
+    const currentBox = boxesToProcess.shift()!;
+    const behindBox = grid.walk(currentBox[0][0] + dy, currentBox[0][1], Direction.East, 2);
+    const cellsBehindBox = behindBox.values.join('');
 
-    const behindBox = grid.walk(box[0][0] + dy, box[0][1], Direction.East, 2);
+    // One of the spaces are blocked so cancel search
+    if (cellsBehindBox.includes('#')) {
+      willMove = false;
+      break;
+    }
 
-    if (behindBox.values.join('') === '[]') {
+    if (cellsBehindBox === '[]') {
+      // Adds box directly behind current box
       const newBox = behindBox.positions;
       boxesToProcess.push(newBox);
       boxes.push(newBox);
-    } else if (behindBox.values.join('') === '][') {
-      const newBoxLeft = [
-        [box[0][0] + dy, behindBox.positions[0][1] - 1],
-        [box[0][0] + dy, behindBox.positions[0][1]]
-      ];
-      const newBoxRight = [
-        [box[0][0] + dy, behindBox.positions[1][1]],
-        [box[0][0] + dy, behindBox.positions[1][1] + 1]
-      ];
-
-      boxesToProcess.push(newBoxLeft);
-      boxesToProcess.push(newBoxRight);
-      boxes.push(newBoxLeft);
-      boxes.push(newBoxRight);
-    } else if (behindBox.values.join('').includes('#')) {
-      willMove = false;
-      break;
-    } else if (behindBox.values.join('').includes('[')) {
-      const newBoxRight = [
-        [box[0][0] + dy, behindBox.positions[1][1]],
-        [box[0][0] + dy, behindBox.positions[1][1] + 1]
-      ];
-      boxesToProcess.push(newBoxRight);
-      boxes.push(newBoxRight);
-    } else if (behindBox.values.join('').includes(']')) {
-      const newBoxLeft = [
-        [box[0][0] + dy, behindBox.positions[0][1] - 1],
-        [box[0][0] + dy, behindBox.positions[0][1]]
-      ];
-      boxesToProcess.push(newBoxLeft);
-      boxes.push(newBoxLeft);
+    } else {
+      // Adds box one behind and to the right
+      if (cellsBehindBox.includes('[')) {
+        const newBoxRight = [
+          [currentBox[0][0] + dy, behindBox.positions[1][1]],
+          [currentBox[0][0] + dy, behindBox.positions[1][1] + 1]
+        ];
+        boxesToProcess.push(newBoxRight);
+        boxes.push(newBoxRight);
+      }
+      // Adds box one behind and to the left
+      if (cellsBehindBox.includes(']')) {
+        const newBoxLeft = [
+          [currentBox[0][0] + dy, behindBox.positions[0][1] - 1],
+          [currentBox[0][0] + dy, behindBox.positions[0][1]]
+        ];
+        boxesToProcess.push(newBoxLeft);
+        boxes.push(newBoxLeft);
+      }
     }
   }
   return { boxes, willMove };
