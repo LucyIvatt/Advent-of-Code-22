@@ -2,7 +2,7 @@ import path from 'path';
 import { InputFile, readPuzzleInput, split2DArray } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
 
-const extractNumbers = (input: string): number[] => {
+export const extractNumbers = (input: string): number[] => {
   return (input.match(/\d+/g) || []).map(Number);
 };
 
