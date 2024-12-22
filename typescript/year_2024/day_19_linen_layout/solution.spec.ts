@@ -26,7 +26,7 @@ describe('TestDay19', () => {
 
     it('should return correct answer for the real input', () => {
       const result = partTwo(input);
-      expect(result).toBe('Part 2 Answer');
+      expect(result).toBe('777669668613191');
     });
   });
 });

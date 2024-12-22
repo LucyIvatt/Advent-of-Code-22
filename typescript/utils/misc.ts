@@ -34,3 +34,7 @@ export function* generateCombinations(allowedCharacters: string[], length: numbe
     }
   }
 }
+
+export const substringAtIndex = (str: string, subStr: string, index: number) => {
+  return str.slice(index, index + subStr.length) === subStr;
+};

@@ -1,13 +1,7 @@
 import path from 'path';
 import { InputFile, readPuzzleInput, split2DArray } from '../../utils/readFile';
 import { runPuzzle } from '../../utils/runPuzzle';
-import { MinPriorityQueue } from '@datastructures-js/priority-queue';
-
-type Match = { towel: string; currentString: string };
-
-const substringAtStart = (str: string, subStr: string): boolean => {
-  return str.slice(0, subStr.length) === subStr;
-};
+import { substringAtIndex } from '../../utils/misc';
 
 const formatInput = (puzzleInput: string[]) => {
   const input = split2DArray(puzzleInput, '');
@@ -16,37 +10,41 @@ const formatInput = (puzzleInput: string[]) => {
 
 const findPatternMatches = (puzzleInput: string[], exhaustive = false) => {
   const { towels, patterns } = formatInput(puzzleInput);
-  let validPatterns = 0;
+  const cache = new Map<string, number>();
 
-  for (const pattern of patterns) {
-    const pq = new MinPriorityQueue<Match>((match) => match.currentString.length);
+  const countMatches = (remainingPattern: string) => {
+    if (remainingPattern.length === 0) return 1;
 
-    towels.forEach((towel) => {
-      if (substringAtStart(pattern, towel)) pq.enqueue({ towel, currentString: pattern });
-    });
+    if (cache.has(remainingPattern)) return cache.get(remainingPattern)!;
 
-    while (!pq.isEmpty()) {
-      const { towel, currentString } = pq.dequeue()!;
-      const newPattern = currentString.slice(towel.length);
+    let count = 0;
 
-      if (newPattern.length === 0) {
-        validPatterns++;
-        if (!exhaustive) break;
-      } else {
-        towels.forEach((towel) => {
-          if (substringAtStart(newPattern, towel)) pq.enqueue({ towel, currentString: newPattern });
-        });
+    for (const towel of towels) {
+      if (substringAtIndex(remainingPattern, towel, 0)) {
+        const newPattern = remainingPattern.slice(towel.length);
+        count += countMatches(newPattern);
+        if (!exhaustive && count > 0) break;
       }
     }
+
+    cache.set(remainingPattern, count);
+    return count;
+  };
+
+  let totalMatches = 0;
+
+  for (const pattern of patterns) {
+    const patternMatches = countMatches(pattern);
+    totalMatches += patternMatches;
   }
-  return validPatterns.toString();
+
+  return totalMatches;
 };
 
-export const partOne = (puzzleInput: string[]) => findPatternMatches(puzzleInput);
-
-export const partTwo = (puzzleInput: string[]) => findPatternMatches(puzzleInput, true);
+export const partOne = (puzzleInput: string[]) => findPatternMatches(puzzleInput).toString();
+export const partTwo = (puzzleInput: string[]) => findPatternMatches(puzzleInput, true).toString();
 
 if (require.main === module) {
-  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
+  const puzzleInput = readPuzzleInput(path.resolve(__dirname, InputFile.INPUT));
   runPuzzle('19', 'linen_layout', partOne, partTwo, puzzleInput);
 }
