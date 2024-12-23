@@ -102,9 +102,10 @@ export const partTwo = (puzzleInput: string[], gridWidth: number, gridHeight: nu
 };
 
 if (require.main === module) {
-  const inputType = InputFile.INPUT;
+  const inputType = InputFile.EXAMPLE;
 
-  // @ts-expect-error so I can switch input files without needing to redefine width/height
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore so I can switch input files without needing to redefine width/height
   const { width, height } = inputType === InputFile.EXAMPLE ? { width: 11, height: 7 } : { width: 101, height: 103 };
 
   const puzzleInput = readPuzzleInput(path.resolve(__dirname, inputType));

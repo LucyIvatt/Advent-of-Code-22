@@ -32,7 +32,7 @@ Python: 🐍 Typescript: ⌨️
 | Day 15 |    ⭐     |    ⭐     |    ⭐     |    ⭐     |
 | Day 16 |    ⭐     |           |    ⭐     |    ⭐     |
 | Day 17 |    ⭐     |           |           |     ⭑     |
-| Day 18 |           |           |           |           |
+| Day 18 |           |           |           |    ⭐     |
 | Day 19 |           |           |           |    ⭐     |
 | Day 20 |           |           |           |           |
 | Day 21 |           |           |           |           |
@@ -40,7 +40,7 @@ Python: 🐍 Typescript: ⌨️
 | Day 23 |           |           |           |           |
 | Day 24 |           |           |           |           |
 | Day 25 |           |           |           |           |
-| Total  |    34     |    30     |    28     |    35     |
+| Total  |    34     |    30     |    28     |    37     |
 
 ## Python Solution Code Runner Executor
 
