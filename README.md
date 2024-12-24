@@ -31,7 +31,7 @@ Python: 🐍 Typescript: ⌨️
 | Day 14 |    ⭐     |    ⭐     |    ⭐     |    ⭐     |
 | Day 15 |    ⭐     |    ⭐     |    ⭐     |    ⭐     |
 | Day 16 |    ⭐     |           |    ⭐     |    ⭐     |
-| Day 17 |    ⭐     |           |           |     ⭑     |
+| Day 17 |    ⭐     |           |           |   ⭐\*    |
 | Day 18 |           |           |           |    ⭐     |
 | Day 19 |           |           |           |    ⭐     |
 | Day 20 |           |           |           |           |
@@ -41,6 +41,8 @@ Python: 🐍 Typescript: ⌨️
 | Day 24 |           |           |           |           |
 | Day 25 |           |           |           |           |
 | Total  |    34     |    30     |    28     |    37     |
+
+_\*with the amount of help I needed from reddit & friends, I don't think this one reaaaally counts_ 😂
 
 ## Python Solution Code Runner Executor
 

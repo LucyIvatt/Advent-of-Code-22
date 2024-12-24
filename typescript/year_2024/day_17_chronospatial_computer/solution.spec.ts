@@ -4,6 +4,7 @@ import { partOne, partTwo } from './solution';
 
 describe('TestDay17', () => {
   const exampleInput = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE));
+  const exampleInput2 = readPuzzleInput(path.resolve(__dirname, InputFile.EXAMPLE_2));
   const input = readPuzzleInput(path.resolve(__dirname, InputFile.INPUT));
 
   describe('Part one', () => {
@@ -20,13 +21,13 @@ describe('TestDay17', () => {
 
   describe('Part two', () => {
     it('should return correct answer for the example input', () => {
-      const result = partTwo(exampleInput);
-      expect(result).toBe('Part 2 Answer');
+      const result = partTwo(exampleInput2);
+      expect(result).toBe('117440');
     });
 
     it('should return correct answer for the real input', () => {
       const result = partTwo(input);
-      expect(result).toBe('Part 2 Answer');
+      expect(result).toBe('236548287712877');
     });
   });
 });
