@@ -40,7 +40,7 @@ Python: 🐍 Typescript: ⌨️
 | Day 23 |           |           |           |           |
 | Day 24 |           |           |           |           |
 | Day 25 |           |           |           |           |
-| Total  |    34     |    30     |    28     |    37     |
+| Total  |    34     |    30     |    28     |    38     |
 
 _\*with the amount of help I needed from reddit & friends, I don't think p2 for this one reaaaally counts_ 😂
 
